@@ -1,0 +1,24 @@
+  # Application properties
+spring:
+  application:
+    name: "Your Review"
+
+  # Datasource properties
+  datasource:
+    url: jdbc:postgresql://localhost:5432/your-review-db
+    username: user
+    password: 1234
+
+  # JPA properties
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  # Flyway properties
+  flyway:
+    table: flyway_schema_history_your_review
