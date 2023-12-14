@@ -1,0 +1,1 @@
+INSERT INTO tb_authority(name) VALUES ('USER'), ('ADMIN');
