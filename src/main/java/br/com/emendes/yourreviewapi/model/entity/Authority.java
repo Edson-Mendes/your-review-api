@@ -2,6 +2,7 @@ package br.com.emendes.yourreviewapi.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
 
 /**
  * Classe que representa a entidade Authority do banco de dados.
@@ -13,7 +14,7 @@ import lombok.*;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "tb_authority")
-public class Authority {
+public class Authority implements GrantedAuthority {
 
   @EqualsAndHashCode.Include
   @Id
@@ -23,4 +24,8 @@ public class Authority {
   @Column(name = "name", nullable = false, length = 150, unique = true)
   private String name;
 
+  @Override
+  public String getAuthority() {
+    return name;
+  }
 }

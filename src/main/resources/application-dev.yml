@@ -22,3 +22,10 @@ spring:
   # Flyway properties
   flyway:
     table: flyway_schema_history_your_review
+
+# App properties
+your-review-api:
+  jwt:
+    secret: ${JWT_SECRET:12341234123412341234123412341234}
+    expiration:
+      authentication: ${AUTHENTICATION_TOKEN_EXPIRATION:1800000}
