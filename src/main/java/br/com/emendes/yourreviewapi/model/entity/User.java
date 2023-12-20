@@ -3,6 +3,8 @@ package br.com.emendes.yourreviewapi.model.entity;
 import br.com.emendes.yourreviewapi.model.Status;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -19,7 +21,7 @@ import java.util.HashSet;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "tb_user")
-public class User {
+public class User implements UserDetails {
 
   @EqualsAndHashCode.Include
   @Id
@@ -50,4 +52,41 @@ public class User {
 
     authorities.add(authority);
   }
+
+  @Override
+  public String getPassword() {
+    return password;
+  }
+
+  @Override
+  public String getUsername() {
+    return email;
+  }
+
+  @Override
+  public Collection<? extends GrantedAuthority> getAuthorities() {
+    return authorities;
+  }
+
+  @Override
+  public boolean isAccountNonExpired() {
+    return !status.equals(Status.DELETED);
+  }
+
+  @Override
+  public boolean isAccountNonLocked() {
+    return !status.equals(Status.BLOCKED);
+  }
+
+  @Override
+  public boolean isCredentialsNonExpired() {
+    return true;
+  }
+
+  @Override
+  public boolean isEnabled() {
+    return status.equals(Status.ENABLED);
+  }
+
+
 }

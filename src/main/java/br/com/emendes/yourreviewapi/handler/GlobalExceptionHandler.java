@@ -7,6 +7,9 @@ import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -63,6 +66,36 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     ProblemDetail body = ProblemDetail.forStatus(400);
     body.setTitle("Bad request");
     body.setDetail(exception.getMessage());
+    body.setType(URI.create("https://github.com/Edson-Mendes/your-review-api"));
+
+    return ResponseEntity.badRequest().body(body);
+  }
+
+  @ExceptionHandler(LockedException.class)
+  public ResponseEntity<ProblemDetail> handleBadCredentials(LockedException exception) {
+    ProblemDetail body = ProblemDetail.forStatus(400);
+    body.setTitle("Bad request");
+    body.setDetail(exception.getMessage() + ", check your email for activate your account");
+    body.setType(URI.create("https://github.com/Edson-Mendes/your-review-api"));
+
+    return ResponseEntity.badRequest().body(body);
+  }
+
+  @ExceptionHandler(BadCredentialsException.class)
+  public ResponseEntity<ProblemDetail> handleBadCredentials(BadCredentialsException exception) {
+    ProblemDetail body = ProblemDetail.forStatus(400);
+    body.setTitle(exception.getMessage());
+    body.setDetail("wrong email or password");
+    body.setType(URI.create("https://github.com/Edson-Mendes/your-review-api"));
+
+    return ResponseEntity.badRequest().body(body);
+  }
+
+  @ExceptionHandler(DisabledException.class)
+  public ResponseEntity<ProblemDetail> handleBadCredentials(DisabledException exception) {
+    ProblemDetail body = ProblemDetail.forStatus(400);
+    body.setTitle(exception.getMessage());
+    body.setDetail("wrong email or password");
     body.setType(URI.create("https://github.com/Edson-Mendes/your-review-api"));
 
     return ResponseEntity.badRequest().body(body);
