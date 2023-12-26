@@ -39,7 +39,7 @@ public class User implements UserDetails {
   private Status status;
   @Column(name = "created_at", nullable = false)
   private LocalDateTime createdAt;
-  @ManyToMany
+  @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(
       name = "tb_user_authorities",
       joinColumns = {@JoinColumn(name = "user_id", nullable = false)},
