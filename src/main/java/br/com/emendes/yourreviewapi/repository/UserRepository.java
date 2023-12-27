@@ -1,6 +1,8 @@
 package br.com.emendes.yourreviewapi.repository;
 
 import br.com.emendes.yourreviewapi.model.entity.User;
+import br.com.emendes.yourreviewapi.util.constants.CacheConstants;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
@@ -16,6 +18,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
    * @param email E-mail do usuário a ser buscado.
    * @return {@code Optional<User>} objeto wrapper de User.
    */
+  @Cacheable(value = {CacheConstants.USERS_CACHE_NAME})
   Optional<User> findByEmail(String email);
 
 }
