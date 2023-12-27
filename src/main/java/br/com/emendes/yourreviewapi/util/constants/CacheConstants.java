@@ -12,5 +12,6 @@ public final class CacheConstants {
    * Nome da cache de usuários.
    */
   public static final String USERS_CACHE_NAME = "users";
+  public static final String AUTHORITY_CACHE_NAME = "authorities";
 
 }
