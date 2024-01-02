@@ -3,6 +3,7 @@ package br.com.emendes.yourreviewapi.config;
 import br.com.emendes.yourreviewapi.util.constants.CacheConstants;
 import org.springframework.boot.autoconfigure.cache.CacheManagerCustomizer;
 import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;
@@ -11,6 +12,7 @@ import java.util.Set;
  * Classe com as configurações do cache manager.
  */
 @Component
+@Profile({"default-cache"})
 public class CacheCustomizer implements CacheManagerCustomizer<ConcurrentMapCacheManager> {
 
   @Override
