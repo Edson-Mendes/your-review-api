@@ -13,5 +13,13 @@ services:
     volumes:
       - yr-db-volume:/var/lib/postgresql/data
 
+  cache:
+    image: redis
+    container_name: yr_cache
+    ports:
+      - "6379:6379"
+    volumes:
+      - yr-cache-volume:/data
 volumes:
   yr-db-volume:
+  yr-cache-volume:
