@@ -18,7 +18,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
    * @param email E-mail do usuário a ser buscado.
    * @return {@code Optional<User>} objeto wrapper de User.
    */
-  @Cacheable(value = {CacheConstants.USERS_CACHE_NAME})
+  @Cacheable(value = {CacheConstants.USERS_CACHE_NAME}, unless = "#result == null")
   Optional<User> findByEmail(String email);
 
 }
