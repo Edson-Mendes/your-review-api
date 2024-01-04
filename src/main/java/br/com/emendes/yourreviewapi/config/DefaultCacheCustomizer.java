@@ -9,11 +9,12 @@ import org.springframework.stereotype.Component;
 import java.util.Set;
 
 /**
- * Classe com as configurações do cache manager.
+ * Classe com as configurações de cache manager padrão, ou seja, caso não seja usado um banco de dados para cache
+ * será usaado um cache padrão em memória.
  */
 @Component
 @Profile({"default-cache"})
-public class CacheCustomizer implements CacheManagerCustomizer<ConcurrentMapCacheManager> {
+public class DefaultCacheCustomizer implements CacheManagerCustomizer<ConcurrentMapCacheManager> {
 
   @Override
   public void customize(ConcurrentMapCacheManager cacheManager) {

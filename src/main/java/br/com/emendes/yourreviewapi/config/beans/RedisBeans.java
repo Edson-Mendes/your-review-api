@@ -1,4 +1,4 @@
-package br.com.emendes.yourreviewapi.config;
+package br.com.emendes.yourreviewapi.config.beans;
 
 import org.springframework.boot.autoconfigure.cache.RedisCacheManagerBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
@@ -12,11 +12,11 @@ import static br.com.emendes.yourreviewapi.util.constants.CacheConstants.AUTHORI
 import static br.com.emendes.yourreviewapi.util.constants.CacheConstants.USERS_CACHE_NAME;
 
 /**
- * Classe com as configurações de cache com Redis.
+ * Classe com as configurações das caches do sistema.
  */
 @Configuration
 @Profile({"redis"})
-public class RedisConfig {
+public class RedisBeans {
 
   @Bean
   public RedisCacheManagerBuilderCustomizer redisCacheManagerBuilderCustomizer() {
