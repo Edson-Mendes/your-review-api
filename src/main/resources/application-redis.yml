@@ -1,0 +1,5 @@
+# Redis Properties
+spring:
+  data:
+    redis:
+      timeout: 2000
