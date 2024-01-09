@@ -20,8 +20,13 @@ public class AuthenticationController {
 
   private final AuthenticationService authenticationService;
 
+  /**
+   * Método responsável por POST /api/v1/auth/signin.
+   *
+   * @param authenticationRequest objeto contendo as credenciais do usuário.
+   */
   @PostMapping("/signin")
-  public ResponseEntity<AuthenticationResponse> singIn(@RequestBody AuthenticationRequest authenticationRequest) {
+  public ResponseEntity<AuthenticationResponse> signIn(@RequestBody AuthenticationRequest authenticationRequest) {
     return ResponseEntity.ok(authenticationService.authenticate(authenticationRequest));
   }
 
