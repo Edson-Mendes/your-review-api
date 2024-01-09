@@ -36,3 +36,6 @@ your-review-api:
     secret: ${JWT_SECRET:12341234123412341234123412341234}
     expiration:
       authentication: ${AUTHENTICATION_TOKEN_EXPIRATION:1800000}
+  tmdb:
+    api-key: ${TMDB_API_KEY}
+    search-movies-path: /search/movie
