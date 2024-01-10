@@ -2,7 +2,6 @@ package br.com.emendes.yourreviewapi.dto.response;
 
 import lombok.Builder;
 
-import java.net.URI;
 import java.time.LocalDate;
 
 /**
@@ -11,7 +10,7 @@ import java.time.LocalDate;
 @Builder
 public record MovieSummaryResponse(
     String id,
-    String originalTitle,
+    String title,
     LocalDate releaseDate,
     String posterPath
 ) {

@@ -15,7 +15,7 @@ services:
 
   cache:
     image: redis
-    container_name: yr_cache
+    container_name: yr-cache
     ports:
       - "6379:6379"
     volumes:

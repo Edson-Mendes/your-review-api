@@ -1,6 +1,7 @@
 package br.com.emendes.yourreviewapi.service.impl;
 
 import br.com.emendes.yourreviewapi.client.MovieClient;
+import br.com.emendes.yourreviewapi.dto.response.MovieDetailsResponse;
 import br.com.emendes.yourreviewapi.dto.response.MovieSummaryResponse;
 import br.com.emendes.yourreviewapi.mapper.MovieMapper;
 import br.com.emendes.yourreviewapi.service.MovieService;
@@ -25,6 +26,13 @@ public class MovieServiceImpl implements MovieService {
     log.info("Searching for movies with name: {} and page: {}", name, page);
 
     return movieClient.findByName(name, page).map(movieMapper::toMovieSummaryResponse);
+  }
+
+  @Override
+  public MovieDetailsResponse findById(String movieId) {
+    log.info("Searching for movie with id: {}", movieId);
+
+    return movieMapper.toMovieDetailsResponse(movieClient.findById(movieId));
   }
 
 }
