@@ -1,14 +1,12 @@
 package br.com.emendes.yourreviewapi.controller;
 
+import br.com.emendes.yourreviewapi.dto.response.MovieDetailsResponse;
 import br.com.emendes.yourreviewapi.dto.response.MovieSummaryResponse;
 import br.com.emendes.yourreviewapi.service.MovieService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Classe controller reponsável pelo endpoint /api/v1/movies/**.
@@ -31,6 +29,17 @@ public class MovieController {
       @RequestParam("name") String name,
       @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
     return ResponseEntity.ok(movieService.findByName(name, page));
+  }
+
+  /**
+   * Método responsável por GET /api/v1/movies/{id}.
+   *
+   * @param movieId identificador do filme a ser buscado.
+   */
+  @GetMapping("/{id}")
+  public ResponseEntity<MovieDetailsResponse> findById(
+      @PathVariable("id") String movieId) {
+    return ResponseEntity.ok(movieService.findById(movieId));
   }
 
 }

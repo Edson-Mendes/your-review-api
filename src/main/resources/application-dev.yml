@@ -38,4 +38,6 @@ your-review-api:
       authentication: ${AUTHENTICATION_TOKEN_EXPIRATION:1800000}
   tmdb:
     api-key: ${TMDB_API_KEY}
-    search-movies-path: /search/movie
+    path:
+      search-movies: /search/movie
+      find-by-id: /movie/{movieId}
