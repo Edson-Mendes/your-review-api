@@ -2,6 +2,7 @@ package br.com.emendes.yourreviewapi.mapper.impl;
 
 import br.com.emendes.yourreviewapi.dto.response.MovieDetailsResponse;
 import br.com.emendes.yourreviewapi.dto.response.MovieSummaryResponse;
+import br.com.emendes.yourreviewapi.dto.response.TMDbMovieResponse;
 import br.com.emendes.yourreviewapi.mapper.MovieMapper;
 import br.com.emendes.yourreviewapi.model.Movie;
 import org.springframework.stereotype.Component;
@@ -36,6 +37,20 @@ public class MovieMapperImpl implements MovieMapper {
         .releaseDate(movie.releaseDate())
         .originalLanguage(movie.originalLanguage())
         .posterPath(movie.posterPath())
+        .build();
+  }
+
+  @Override
+  public Movie toMovie(TMDbMovieResponse tmdbMovieResponse) {
+    Assert.notNull(tmdbMovieResponse, "tmdbMovieResponse must not be null");
+
+    return Movie.builder()
+        .id(tmdbMovieResponse.id())
+        .title(tmdbMovieResponse.title())
+        .overview(tmdbMovieResponse.overview())
+        .originalLanguage(tmdbMovieResponse.originalLanguage())
+        .releaseDate(tmdbMovieResponse.releaseDate())
+        .posterPath(tmdbMovieResponse.posterPath())
         .build();
   }
 

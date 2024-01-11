@@ -39,5 +39,5 @@ your-review-api:
   tmdb:
     api-key: ${TMDB_API_KEY}
     path:
-      search-movies: /search/movie
-      find-by-id: /movie/{movieId}
+      searchMovieByName: /search/movie
+      findMovieById: /movie/{movieId}
