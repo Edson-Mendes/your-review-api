@@ -1,6 +1,5 @@
-package br.com.emendes.yourreviewapi.client;
+package br.com.emendes.yourreviewapi.dto.response;
 
-import br.com.emendes.yourreviewapi.model.Movie;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
@@ -19,7 +18,7 @@ import java.util.List;
 public class TMDbSearchMovieResponse {
 
   private int page;
-  private List<Movie> results;
+  private List<TMDbMovieResponse> results;
   @JsonProperty("total_pages")
   private int totalPages;
   @JsonProperty("total_results")
