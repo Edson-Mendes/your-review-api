@@ -3,6 +3,7 @@ package br.com.emendes.yourreviewapi.client.impl;
 import br.com.emendes.yourreviewapi.client.MovieClient;
 import br.com.emendes.yourreviewapi.dto.response.TMDbMovieResponse;
 import br.com.emendes.yourreviewapi.dto.response.TMDbSearchMovieResponse;
+import br.com.emendes.yourreviewapi.exception.InvalidTMDbApiKeyException;
 import br.com.emendes.yourreviewapi.exception.MovieNotFoundException;
 import br.com.emendes.yourreviewapi.mapper.MovieMapper;
 import br.com.emendes.yourreviewapi.model.Movie;
@@ -14,10 +15,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * Implementação de {@link MovieClient}.
@@ -46,7 +49,9 @@ public class TMDbMovieClient implements MovieClient {
             .queryParam("page", page)
             .queryParam(API_KEY_PARAM_NAME, tmdbApiKey)
             .build())
-        .retrieve().bodyToMono(TMDbSearchMovieResponse.class).block();
+        .retrieve()
+        .onStatus(httpStatusCode -> httpStatusCode.value() == 401, handleUnauthorizedStatusCode())
+        .bodyToMono(TMDbSearchMovieResponse.class).block();
 
     assert response != null;
     List<Movie> movies = response.getResults().stream().map(movieMapper::toMovie).toList();
@@ -68,9 +73,21 @@ public class TMDbMovieClient implements MovieClient {
               log.info(errorMessage);
               return Mono.error(new MovieNotFoundException(errorMessage));
             })
+        .onStatus(httpStatusCode -> httpStatusCode.value() == 401, handleUnauthorizedStatusCode())
         .bodyToMono(TMDbMovieResponse.class).block();
 
     return movieMapper.toMovie(tmDbMovieResponse);
+  }
+
+  /**
+   * handle para quando houver response status 401 (Unauthorized).
+   */
+  private static Function<ClientResponse, Mono<? extends Throwable>> handleUnauthorizedStatusCode() {
+    return response -> {
+      String errorMessage = "invalid TMDb API Key";
+      log.info(errorMessage);
+      return Mono.error(new InvalidTMDbApiKeyException("invalid TMDb API Key"));
+    };
   }
 
 }
