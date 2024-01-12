@@ -6,6 +6,7 @@ import br.com.emendes.yourreviewapi.exception.PasswordsDoesNotMatchException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -13,6 +14,7 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.net.URI;
@@ -117,6 +119,27 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     ProblemDetail body = ProblemDetail.forStatus(500);
     body.setTitle("Internal server error");
     body.setDetail(exception.getMessage());
+    body.setType(URI.create("https://github.com/Edson-Mendes/your-review-api"));
+
+    return ResponseEntity.internalServerError().body(body);
+  }
+
+  @ExceptionHandler(WebClientResponseException.class)
+  public ResponseEntity<ProblemDetail> handleWebClientResponse(WebClientResponseException exception) {
+    ProblemDetail body = ProblemDetail.forStatus(500);
+    body.setTitle("Internal server error");
+    String detailsMessageTemplate = "The request %s %s responded with status %d";
+
+    String httpMethod = "*";
+    String uri = "**";
+    HttpRequest request = exception.getRequest();
+    if (request != null) {
+      httpMethod = request.getMethod().name();
+      uri = request.getURI().getHost() + request.getURI().getPath();
+    }
+
+    body.setDetail(detailsMessageTemplate.formatted(httpMethod, uri, exception.getStatusCode().value()));
+
     body.setType(URI.create("https://github.com/Edson-Mendes/your-review-api"));
 
     return ResponseEntity.internalServerError().body(body);
