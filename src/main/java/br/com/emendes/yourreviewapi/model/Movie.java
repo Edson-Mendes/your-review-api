@@ -8,7 +8,7 @@ import java.time.LocalDate;
  * Record que representa um filme.
  *
  * @param id               identificador do Movie.
- * @param originalTitle    título original do filme (no idioma original).
+ * @param title            título original do filme (no idioma original).
  * @param overview         sinopse do filme.
  * @param releaseDate      data de lançamento do filme.
  * @param posterPath       URI da imagem do poster do filme.

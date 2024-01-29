@@ -7,6 +7,11 @@ import lombok.Builder;
 
 /**
  * Record DTO com os dados de registro de usuário.
+ *
+ * @param name            nome do usuário.
+ * @param email           endereço de E-mail do usuário.
+ * @param password        senha do usuário
+ * @param confirmPassword confirmação de senha do usuário.
  */
 @Builder
 public record UserRegisterRequest(
