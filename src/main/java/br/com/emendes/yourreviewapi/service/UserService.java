@@ -14,8 +14,8 @@ public interface UserService {
   /**
    * Cadastrar um usuário no sistema.
    *
-   * @param userRegisterRequest objeto DTO contendo os dados para criação do usuário.
-   * @return UserSummaryResponse contendo dados resumidos do usuário cadastrado.
+   * @param userRegisterRequest objeto contendo os dados para criação do usuário.
+   * @return UserDetailsResponse contendo dados detalhados do usuário cadastrado.
    */
   UserDetailsResponse register(@Valid UserRegisterRequest userRegisterRequest);
 

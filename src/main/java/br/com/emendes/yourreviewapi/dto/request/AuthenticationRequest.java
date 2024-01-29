@@ -6,6 +6,9 @@ import lombok.Builder;
 
 /**
  * Record DTO com os dados de autenticação do usuário.
+ *
+ * @param username username do usuário para autenticação.
+ * @param password senha do usuário para autenticação.
  */
 @Builder
 public record AuthenticationRequest(

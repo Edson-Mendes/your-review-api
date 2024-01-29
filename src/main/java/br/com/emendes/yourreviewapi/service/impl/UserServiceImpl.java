@@ -33,6 +33,11 @@ public class UserServiceImpl implements UserService {
   private final UserMapper userMapper;
   private final PasswordEncoder passwordEncoder;
 
+  /**
+   * @throws PasswordsDoesNotMatchException caso {@link UserRegisterRequest#password()} e
+   *                                        {@link UserRegisterRequest#confirmPassword()} não corresponderem.
+   * @throws EmailAlreadyInUseException     caso o email fornecido já esteja em uso no sistema.
+   */
   @Override
   public UserDetailsResponse register(UserRegisterRequest userRegisterRequest) {
     log.info("attempt to register user with email: {}", userRegisterRequest.email());
