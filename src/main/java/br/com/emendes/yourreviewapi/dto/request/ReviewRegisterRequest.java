@@ -1,5 +1,6 @@
 package br.com.emendes.yourreviewapi.dto.request;
 
+import br.com.emendes.yourreviewapi.validation.annotation.CustomNotBlank;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -19,6 +20,7 @@ public record ReviewRegisterRequest(
     @Max(value = 10, message = "{review.vote.max}")
     int vote,
     @Size(max = 500, message = "{review.opinion.size}")
+    @CustomNotBlank(message = "{review.opinion.customnotblank}")
     String opinion,
     @NotBlank(message = "{review.movieid.notblank}")
     String movieId
