@@ -2,6 +2,7 @@ package br.com.emendes.yourreviewapi.service.impl;
 
 import br.com.emendes.yourreviewapi.dto.request.ReviewRegisterRequest;
 import br.com.emendes.yourreviewapi.dto.response.ReviewDetailsResponse;
+import br.com.emendes.yourreviewapi.exception.ReviewAlreadyExistsException;
 import br.com.emendes.yourreviewapi.mapper.ReviewMapper;
 import br.com.emendes.yourreviewapi.model.entity.MovieVotes;
 import br.com.emendes.yourreviewapi.model.entity.Review;
@@ -34,6 +35,14 @@ public class ReviewServiceImpl implements ReviewService {
     log.info("Attempt to register a review for movie with id: {}", reviewRegisterRequest.movieId());
     User currentUser = authenticatedUserComponent.getCurrentUser();
     MovieVotes movieVotes = movieVotesService.findByMovieId(reviewRegisterRequest.movieId());
+
+    if (reviewRepository.existsByUserAndMovieVotes(currentUser, movieVotes)) {
+      String message = "User %s has already reviewed the movie with id %s"
+          .formatted(currentUser.getEmail(), movieVotes.getMovieId());
+
+      log.info(message);
+      throw new ReviewAlreadyExistsException(message);
+    }
 
     Review review = reviewMapper.toReview(reviewRegisterRequest);
     review.setUser(currentUser);
