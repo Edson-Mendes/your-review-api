@@ -38,6 +38,8 @@ pesquisar pelos filmes mais bem avaliados (ou pior avaliados).
 <a href="https://www.postman.com/" target="_blank"><img src="https://img.shields.io/badge/postman-ff6c37.svg?&style=for-the-badge&logo=postman&logoColor=white" target="_blank"></a>
 <a href="https://en.wikipedia.org/wiki/Unit_testing" target="_blank"><img src="https://img.shields.io/badge/Unit%20Tests-5a61d6.svg?&style=for-the-badge&logo=unittest&logoColor=white" target="_blank"></a>
 
+<a href="https://developer.themoviedb.org/docs/getting-started" target="_blank"><img src="https://img.shields.io/badge/TMDb%20API-01B4E4.svg?&style=for-the-badge&logo=themoviedatabase&logoColor=white" target="_blank"></a>
+
 ## Funcionalidades
 
 ### API de gerenciamento de usuário
@@ -287,7 +289,7 @@ e **movieId** em um JSON no corpo da requisição.
     }
     ```
 
-    Em caso de sucesso a resposta tem status 201 com um JSON no corpo da resposta contendo **id**, **vote**, **opinion**,
+  Em caso de sucesso a resposta tem status 201 com um JSON no corpo da resposta contendo **id**, **vote**, **opinion**,
   **userId** e **movieId** da avaliação cadastrada.
     ```json
     {
@@ -298,6 +300,63 @@ e **movieId** em um JSON no corpo da requisição.
       "movieId": "120"
     }
     ```
+  
+- `Buscar avaliações por ID do filme - GET /api/v1/reviews?movieId={movieId}&page={pageNumber}`: Buscar avaliações por 
+id do filme informando o id do filme como query string. A busca é paginada de forma zero-based (começa em 0), 
+caso o cliente queira outra página da pesquisa deve passar a query param **page**, o valor padrão de page é 0. 
+O tamanho da página solicitada (page size) é 20.
+
+  - É necessário estar autenticado.
+
+  Em caso de sucesso a resposta tem status 200 com um JSON no corpo da resposta.
+
+  Segue abaixo um exemplo do corpo da resposta para a requisição **GET /api/v1/reviews?movieId=299536&page=0**
+    ```json
+    {
+      "content": [
+        {
+          "id": 3,
+          "vote": 8,
+          "opinion": "É um épico cinematográfico que reúne uma variedade impressionante de super-heróis da Marvel em uma batalha contra o poderoso vilão Thanos.",
+          "userId": 2,
+          "movieId": "299536"
+        },
+        {
+          "id": 4,
+          "vote": 9,
+          "opinion": "O filme é repleto de ação espetacular, efeitos visuais impressionantes e uma trama intricada que tece várias narrativas.",
+          "userId": 1,
+          "movieId": "299536"
+        }
+      ],
+      "pageable": {
+        "pageNumber": 0,
+        "pageSize": 20,
+        "sort": {
+          "sorted": false,
+          "empty": true,
+          "unsorted": true
+        },
+        "offset": 0,
+        "paged": true,
+        "unpaged": false
+      },
+      "totalPages": 1,
+      "totalElements": 2,
+      "last": true,
+      "size": 20,
+      "number": 0,
+      "sort": {
+        "sorted": false,
+        "empty": true,
+        "unsorted": true
+      },
+      "numberOfElements": 2,
+      "first": true,
+      "empty": false
+    }
+    ```
+
 
 ## Diagramas
 
