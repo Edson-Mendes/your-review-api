@@ -2,6 +2,7 @@ package br.com.emendes.yourreviewapi.mapper;
 
 import br.com.emendes.yourreviewapi.dto.request.ReviewRegisterRequest;
 import br.com.emendes.yourreviewapi.dto.response.ReviewDetailsResponse;
+import br.com.emendes.yourreviewapi.dto.response.ReviewSummaryResponse;
 import br.com.emendes.yourreviewapi.model.entity.Review;
 
 /**
@@ -26,5 +27,14 @@ public interface ReviewMapper {
    * @throws IllegalArgumentException caso review seja null.
    */
   ReviewDetailsResponse toReviewDetailsResponse(Review review);
+
+  /**
+   * Mapeia um objeto {@link Review} para {@link ReviewSummaryResponse}.
+   *
+   * @param review objeto a ser mapeado para ReviewSummaryResponse.
+   * @return Objeto ReviewSummaryResponse com os dados de Review.
+   * @throws IllegalArgumentException caso review seja null.
+   */
+  ReviewSummaryResponse toReviewSummaryResponse(Review review);
 
 }

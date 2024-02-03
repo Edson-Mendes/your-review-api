@@ -3,6 +3,8 @@ package br.com.emendes.yourreviewapi.repository;
 import br.com.emendes.yourreviewapi.model.entity.MovieVotes;
 import br.com.emendes.yourreviewapi.model.entity.Review;
 import br.com.emendes.yourreviewapi.model.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
@@ -18,5 +20,14 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
    * @return {@code true} caso já exista uma avaliação do usuário para o dado filme, {@code false} caso contrário.
    */
   boolean existsByUserAndMovieVotes(User user, MovieVotes movieVotes);
+
+  /**
+   * Busca paginada de MovieVotes.
+   *
+   * @param movieVotes objeto MovieVotes ao qual as reviews deve estar relacionadas.
+   * @param pageable   objeto com o modo como deve ser feito a paginação.
+   * @return {@code Page<Review>} objeto com a paginação de Review.
+   */
+  Page<Review> findByMovieVotes(MovieVotes movieVotes, Pageable pageable);
 
 }

@@ -2,13 +2,12 @@ package br.com.emendes.yourreviewapi.controller;
 
 import br.com.emendes.yourreviewapi.dto.request.ReviewRegisterRequest;
 import br.com.emendes.yourreviewapi.dto.response.ReviewDetailsResponse;
+import br.com.emendes.yourreviewapi.dto.response.ReviewSummaryResponse;
 import br.com.emendes.yourreviewapi.service.ReviewService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
@@ -38,6 +37,19 @@ public class ReviewController {
     URI uri = uriBuilder.path("/api/v1/reviews/{id}").build(reviewDetailsResponse.id());
 
     return ResponseEntity.created(uri).body(reviewDetailsResponse);
+  }
+
+  /**
+   * Método responsável por GET /api/v1/reviews.
+   *
+   * @param movieId identificador do filme relacionado as reviews.
+   * @param page    página a ser buscada.
+   */
+  @GetMapping
+  public ResponseEntity<Page<ReviewSummaryResponse>> fetchByMovieId(
+      @RequestParam("movieId") String movieId,
+      @RequestParam(value = "page", required = false, defaultValue = "0") int page) {
+    return ResponseEntity.ok(reviewService.fetchByMovieId(movieId, page));
   }
 
 }
