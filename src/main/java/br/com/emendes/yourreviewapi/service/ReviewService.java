@@ -2,7 +2,12 @@ package br.com.emendes.yourreviewapi.service;
 
 import br.com.emendes.yourreviewapi.dto.request.ReviewRegisterRequest;
 import br.com.emendes.yourreviewapi.dto.response.ReviewDetailsResponse;
+import br.com.emendes.yourreviewapi.dto.response.ReviewSummaryResponse;
+import br.com.emendes.yourreviewapi.model.entity.Review;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.PositiveOrZero;
+import org.springframework.data.domain.Page;
 import org.springframework.validation.annotation.Validated;
 
 /**
@@ -18,5 +23,17 @@ public interface ReviewService {
    * @return ReviewDetailResponse contendo informações detalhadas da Review cadastrada.
    */
   ReviewDetailsResponse register(@Valid ReviewRegisterRequest reviewRegisterRequest);
+
+
+  /**
+   * Buscar paginada de {@link Review} por movieId.
+   *
+   * @param movieId identificador do filme.
+   * @param page    página a ser buscada.
+   * @return {@code Page<ReviewSummaryResponse>} objeto paginado com as reviews encontradas.
+   */
+  Page<ReviewSummaryResponse> fetchByMovieId(
+      @NotBlank(message = "{fetchbymovieid.movieid.notblank}") String movieId,
+      @PositiveOrZero(message = "{fetchbymovieid.page.positiveorzero}") int page);
 
 }

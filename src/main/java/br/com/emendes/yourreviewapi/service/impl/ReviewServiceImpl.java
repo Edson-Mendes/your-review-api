@@ -2,6 +2,7 @@ package br.com.emendes.yourreviewapi.service.impl;
 
 import br.com.emendes.yourreviewapi.dto.request.ReviewRegisterRequest;
 import br.com.emendes.yourreviewapi.dto.response.ReviewDetailsResponse;
+import br.com.emendes.yourreviewapi.dto.response.ReviewSummaryResponse;
 import br.com.emendes.yourreviewapi.exception.ReviewAlreadyExistsException;
 import br.com.emendes.yourreviewapi.mapper.ReviewMapper;
 import br.com.emendes.yourreviewapi.model.entity.MovieVotes;
@@ -14,6 +15,9 @@ import br.com.emendes.yourreviewapi.util.component.AuthenticatedUserComponent;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -53,6 +57,17 @@ public class ReviewServiceImpl implements ReviewService {
 
     log.info("Review registered successfully with id: {}", review.getId());
     return reviewMapper.toReviewDetailsResponse(review);
+  }
+
+  @Override
+  public Page<ReviewSummaryResponse> fetchByMovieId(String movieId, int page) {
+    log.info("Attempt to fetch review for movie with id: {}", movieId);
+
+    MovieVotes movieVotes = movieVotesService.findByMovieId(movieId);
+    Pageable pageable = PageRequest.of(page, 20);
+
+    Page<Review> reviewPage = reviewRepository.findByMovieVotes(movieVotes, pageable);
+    return reviewPage.map(reviewMapper::toReviewSummaryResponse);
   }
 
 }
