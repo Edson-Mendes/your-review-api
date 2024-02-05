@@ -24,7 +24,7 @@ public class MovieVotesServiceImpl implements MovieVotesService {
   private final MovieClient movieClient;
 
   @Override
-  public MovieVotes findByMovieId(String movieId) {
+  public Optional<MovieVotes> findByMovieId(String movieId) {
     log.info("Attempt to find MovieVotes with movieId: {}", movieId);
     if (movieId == null || movieId.isBlank()) {
       String errorMessage = "movieId must not be null, empty or blank";
@@ -32,8 +32,7 @@ public class MovieVotesServiceImpl implements MovieVotesService {
       throw new IllegalArgumentException(errorMessage);
     }
 
-    Optional<MovieVotes> movieVotesOptional = movieVotesRepository.findByMovieId(movieId);
-    return movieVotesOptional.orElseGet(() -> registerMovieVotes(movieId));
+    return movieVotesRepository.findByMovieId(movieId);
   }
 
   @Override
@@ -55,14 +54,8 @@ public class MovieVotesServiceImpl implements MovieVotesService {
     movieVotesRepository.save(movieVotes);
   }
 
-  /**
-   * Registra MovieVotes para o dado movieId.
-   *
-   * @param movieId identificador do Movie que estará associado a MovieVotes que será cadastrado.
-   * @return MovieVotes registrado no sistema.
-   * @throws MovieNotFoundException caso não seja encontrado Movie para o dado movieId.
-   */
-  private MovieVotes registerMovieVotes(String movieId) {
+  @Override
+  public MovieVotes register(String movieId) {
     try {
       movieClient.findById(movieId);
       MovieVotes movieVotes = MovieVotes.builder()

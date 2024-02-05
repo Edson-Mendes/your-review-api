@@ -16,9 +16,13 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Implementação de {@link ReviewService}.
@@ -37,8 +41,10 @@ public class ReviewServiceImpl implements ReviewService {
   @Override
   public ReviewDetailsResponse register(ReviewRegisterRequest reviewRegisterRequest) {
     log.info("Attempt to register a review for movie with id: {}", reviewRegisterRequest.movieId());
+
     User currentUser = authenticatedUserComponent.getCurrentUser();
-    MovieVotes movieVotes = movieVotesService.findByMovieId(reviewRegisterRequest.movieId());
+    MovieVotes movieVotes = movieVotesService.findByMovieId(reviewRegisterRequest.movieId()).orElseGet(
+        () -> movieVotesService.register(reviewRegisterRequest.movieId()));
 
     if (reviewRepository.existsByUserAndMovieVotes(currentUser, movieVotes)) {
       String message = "User %s has already reviewed the movie with id %s"
@@ -63,10 +69,14 @@ public class ReviewServiceImpl implements ReviewService {
   public Page<ReviewSummaryResponse> fetchByMovieId(String movieId, int page) {
     log.info("Attempt to fetch review for movie with id: {}", movieId);
 
-    MovieVotes movieVotes = movieVotesService.findByMovieId(movieId);
     Pageable pageable = PageRequest.of(page, 20);
+    Optional<MovieVotes> movieVotesOptional = movieVotesService.findByMovieId(movieId);
 
-    Page<Review> reviewPage = reviewRepository.findByMovieVotes(movieVotes, pageable);
+    if (movieVotesOptional.isEmpty()) {
+      return new PageImpl<>(List.of(), pageable, 0);
+    }
+
+    Page<Review> reviewPage = reviewRepository.findByMovieVotes(movieVotesOptional.get(), pageable);
     return reviewPage.map(reviewMapper::toReviewSummaryResponse);
   }
 
