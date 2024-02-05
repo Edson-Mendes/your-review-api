@@ -96,12 +96,12 @@ class TMDbMovieClientTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {0, -1})
+    @ValueSource(ints = {-1, -2})
     @DisplayName("findByName must throw IllegalArgumentException when page is less than one")
-    void findByName_MustThrowIllegalArgumentException_WhenPageIsLessThanOne(int pageLessThanOne) {
+    void findByName_MustThrowIllegalArgumentException_WhenPageIsLessThanOne(int negativePage) {
       assertThatExceptionOfType(IllegalArgumentException.class)
-          .isThrownBy(() -> movieClient.findByName(VALID_NAME, pageLessThanOne))
-          .withMessage("page must not be less than 1");
+          .isThrownBy(() -> movieClient.findByName(VALID_NAME, negativePage))
+          .withMessage("page must not be negative");
     }
 
   }

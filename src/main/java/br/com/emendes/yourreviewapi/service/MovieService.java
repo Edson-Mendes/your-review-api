@@ -4,7 +4,7 @@ import br.com.emendes.yourreviewapi.dto.response.MovieDetailsResponse;
 import br.com.emendes.yourreviewapi.dto.response.MovieSummaryResponse;
 import br.com.emendes.yourreviewapi.exception.MovieNotFoundException;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import org.springframework.data.domain.Page;
 import org.springframework.validation.annotation.Validated;
 
@@ -18,12 +18,12 @@ public interface MovieService {
    * Busca filmes pelo nome.
    *
    * @param name nome do filme a ser buscado.
-   * @param page objeto com as informações de páginação.
+   * @param page número da página a ser buscada, paginação zero-based (começa em 0)..
    * @return {@code Page<MovieSummaryResponse>} objeto paginado com os filmes encontrados.
    */
   Page<MovieSummaryResponse> findByName(
       @NotBlank(message = "{find.name.notblank}") String name,
-      @Positive(message = "{find.page.positive}") int page);
+      @PositiveOrZero(message = "{find.page.positiveorzero}") int page);
 
   /**
    * Busca filme por id.

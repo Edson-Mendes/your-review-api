@@ -41,12 +41,12 @@ public class TMDbMovieClient implements MovieClient {
   @Override
   public Page<Movie> findByName(String name, int page) {
     if (name == null || name.isBlank()) throw new IllegalArgumentException("name must not be null or blank");
-    if (page < 1) throw new IllegalArgumentException("page must not be less than 1");
+    if (page < 0) throw new IllegalArgumentException("page must not be negative");
 
     TMDbSearchMovieResponse response = tmdbWebClient.get().uri(uriBuilder -> uriBuilder
             .path(tmdbPath.searchMovieByName())
             .queryParam("query", name)
-            .queryParam("page", page)
+            .queryParam("page", page + 1) //A paginação do TMDb API começa em 1.
             .queryParam(API_KEY_PARAM_NAME, tmdbApiKey)
             .build())
         .retrieve()

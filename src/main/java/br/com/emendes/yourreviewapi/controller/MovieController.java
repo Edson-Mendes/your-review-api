@@ -22,12 +22,12 @@ public class MovieController {
    * Método responsável por GET /api/v1/movies.
    *
    * @param name nome do filme a ser buscado.
-   * @param page página a ser buscada.
+   * @param page página a ser buscada. Zero-based.
    */
   @GetMapping
   public ResponseEntity<Page<MovieSummaryResponse>> findByName(
       @RequestParam("name") String name,
-      @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
+      @RequestParam(value = "page", required = false, defaultValue = "0") int page) {
     return ResponseEntity.ok(movieService.findByName(name, page));
   }
 
