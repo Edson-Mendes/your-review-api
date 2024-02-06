@@ -25,7 +25,7 @@ public class Review {
   private String opinion;
   @ManyToOne
   private User user;
-  @ManyToOne
+  @ManyToOne(cascade = {CascadeType.PERSIST})
   private MovieVotes movieVotes;
 
 }
