@@ -43,23 +43,22 @@ public class ReviewServiceImpl implements ReviewService {
     log.info("Attempt to register a review for movie with id: {}", reviewRegisterRequest.movieId());
 
     User currentUser = authenticatedUserComponent.getCurrentUser();
-    MovieVotes movieVotes = movieVotesService.findByMovieId(reviewRegisterRequest.movieId()).orElseGet(
-        () -> movieVotesService.register(reviewRegisterRequest.movieId()));
-
-    if (reviewRepository.existsByUserAndMovieVotes(currentUser, movieVotes)) {
+    if (reviewRepository.existsByUserIdAndMovieId(currentUser.getId(), reviewRegisterRequest.movieId())) {
       String message = "User %s has already reviewed the movie with id %s"
-          .formatted(currentUser.getEmail(), movieVotes.getMovieId());
+          .formatted(currentUser.getEmail(), reviewRegisterRequest.movieId());
 
       log.info(message);
       throw new ReviewAlreadyExistsException(message);
     }
+
+    MovieVotes movieVotes = movieVotesService.findByMovieId(reviewRegisterRequest.movieId())
+        .orElseGet(() -> movieVotesService.generateNonVotedMovieVotes(reviewRegisterRequest.movieId()));
 
     Review review = reviewMapper.toReview(reviewRegisterRequest);
     review.setUser(currentUser);
     review.setMovieVotes(movieVotes);
 
     review = reviewRepository.save(review);
-    movieVotesService.updateById(review.getMovieVotes().getId(), review.getVote());
 
     log.info("Review registered successfully with id: {}", review.getId());
     return reviewMapper.toReviewDetailsResponse(review);

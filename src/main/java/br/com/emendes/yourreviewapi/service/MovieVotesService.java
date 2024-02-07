@@ -1,7 +1,6 @@
 package br.com.emendes.yourreviewapi.service;
 
 import br.com.emendes.yourreviewapi.exception.MovieNotFoundException;
-import br.com.emendes.yourreviewapi.exception.MovieVotesNotFoundException;
 import br.com.emendes.yourreviewapi.model.Movie;
 import br.com.emendes.yourreviewapi.model.entity.MovieVotes;
 
@@ -22,22 +21,12 @@ public interface MovieVotesService {
   Optional<MovieVotes> findByMovieId(String movieId);
 
   /**
-   * Atualiza voteTotal e voteCount da entidade MovieVotes.
+   * Gera um objeto {@link MovieVotes} com {@code voteCount} e {@code voteTotal} iguais a zero.
    *
-   * @param movieVotesId identificador do Movie ao qual MovieVotes está associado.
-   * @param vote         novo valor do voto que deve ser juntado ao voteTotal e voteCount.
-   * @throws IllegalArgumentException    caso vote seja menor que 1 ou maior que 10.
-   * @throws MovieVotesNotFoundException caso MovieVotes não seja encontrado para o dado movieVotesId.
+   * @param movieId identificador do {@link Movie} relacionado ao {@link MovieVotes}.
+   * @return objeto MovieVotes relacionado com o movieId e {@code voteCount} e {@code voteTotal} iguais a zero.
+   * @throws MovieNotFoundException caso não exista um Movie para o dado {@code movieId}.
    */
-  void updateById(Long movieVotesId, int vote);
-
-  /**
-   * Cadastrar {@link MovieVotes} para o filme com o dado movieId.
-   *
-   * @param movieId identificador do {@link Movie} que estará relacionado ao {@link MovieVotes}.
-   * @return {@link MovieVotes} para o dado movieId.
-   * @throws MovieNotFoundException caso movieId não corresponda a nenhum filme.
-   */
-  MovieVotes register(String movieId);
+  MovieVotes generateNonVotedMovieVotes(String movieId);
 
 }

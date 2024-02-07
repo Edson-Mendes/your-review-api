@@ -2,7 +2,6 @@ package br.com.emendes.yourreviewapi.service.impl;
 
 import br.com.emendes.yourreviewapi.client.MovieClient;
 import br.com.emendes.yourreviewapi.exception.MovieNotFoundException;
-import br.com.emendes.yourreviewapi.exception.MovieVotesNotFoundException;
 import br.com.emendes.yourreviewapi.model.entity.MovieVotes;
 import br.com.emendes.yourreviewapi.repository.MovieVotesRepository;
 import br.com.emendes.yourreviewapi.service.MovieVotesService;
@@ -26,50 +25,40 @@ public class MovieVotesServiceImpl implements MovieVotesService {
   @Override
   public Optional<MovieVotes> findByMovieId(String movieId) {
     log.info("Attempt to find MovieVotes with movieId: {}", movieId);
-    if (movieId == null || movieId.isBlank()) {
-      String errorMessage = "movieId must not be null, empty or blank";
-      log.info(errorMessage);
-      throw new IllegalArgumentException(errorMessage);
-    }
+    checkMovieId(movieId);
 
     return movieVotesRepository.findByMovieId(movieId);
   }
 
   @Override
-  public void updateById(Long movieVotesId, int vote) {
-    if (vote < 1 || vote > 10) {
-      throw new IllegalArgumentException("vote must be less than 1 and greater than 10");
-    }
+  public MovieVotes generateNonVotedMovieVotes(String movieId) {
+    log.info("Attempt to generate non voted MovieVotes with movieId: {}", movieId);
+    checkMovieId(movieId);
 
-    MovieVotes movieVotes = movieVotesRepository.findById(movieVotesId)
-        .orElseThrow(() -> {
-          String errorMessage = "MovieVotes not found for id: %s".formatted(movieVotesId);
-          log.info(errorMessage);
-
-          return new MovieVotesNotFoundException(errorMessage);
-        });
-
-    movieVotes.setVoteCount(movieVotes.getVoteCount() + 1);
-    movieVotes.setVoteTotal(movieVotes.getVoteTotal() + vote);
-    movieVotesRepository.save(movieVotes);
-  }
-
-  @Override
-  public MovieVotes register(String movieId) {
     try {
       movieClient.findById(movieId);
-      MovieVotes movieVotes = MovieVotes.builder()
-          .movieId(movieId)
-          .voteTotal(0)
-          .voteCount(0)
-          .build();
 
-      movieVotes = movieVotesRepository.save(movieVotes);
-      log.info("MovieVotes registered successfully with id: {}", movieVotes.getMovieId());
-      return movieVotes;
-    } catch (MovieNotFoundException e) {
-      log.info("Movie not found with id: {}", movieId);
-      throw new MovieNotFoundException(e.getMessage(), 400);
+      return MovieVotes.builder()
+          .movieId(movieId)
+          .voteCount(0)
+          .voteTotal(0)
+          .build();
+    } catch (MovieNotFoundException exception) {
+      throw new MovieNotFoundException(exception.getMessage(), 400);
+    }
+  }
+
+  /**
+   * Verifica se movieId não é null ou em branco.
+   *
+   * @param movieId identificador de Movie a ser verificado.
+   * @throws IllegalArgumentException caso {@code movieId} seja null ou blank.
+   */
+  private static void checkMovieId(String movieId) {
+    if (movieId == null || movieId.isBlank()) {
+      String errorMessage = "movieId must not be null, empty or blank";
+      log.info(errorMessage);
+      throw new IllegalArgumentException(errorMessage);
     }
   }
 
