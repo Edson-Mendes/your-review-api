@@ -34,6 +34,7 @@ public class ReviewMapperImpl implements ReviewMapper {
         .vote(review.getVote())
         .opinion(review.getOpinion())
         .userId(review.getUser().getId())
+        .createdAt(review.getCreatedAt())
         .build();
   }
 

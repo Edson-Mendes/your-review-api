@@ -2,6 +2,8 @@ package br.com.emendes.yourreviewapi.dto.response;
 
 import lombok.Builder;
 
+import java.time.LocalDateTime;
+
 /**
  * Record DTO com dados detalhados sobre Review.
  *
@@ -17,6 +19,7 @@ public record ReviewDetailsResponse(
     int vote,
     String opinion,
     Long userId,
-    String movieId
+    String movieId,
+    LocalDateTime createdAt
 ) {
 }

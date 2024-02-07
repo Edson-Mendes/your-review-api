@@ -21,6 +21,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,6 +58,7 @@ public class ReviewServiceImpl implements ReviewService {
     Review review = reviewMapper.toReview(reviewRegisterRequest);
     review.setUser(currentUser);
     review.setMovieVotes(movieVotes);
+    review.setCreatedAt(LocalDateTime.now());
 
     review = reviewRepository.save(review);
 

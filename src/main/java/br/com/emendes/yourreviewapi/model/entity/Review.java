@@ -3,6 +3,8 @@ package br.com.emendes.yourreviewapi.model.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 /**
  * Classe que representa a entidade Review do banco de dados.
  */
@@ -27,5 +29,7 @@ public class Review {
   private User user;
   @ManyToOne(cascade = {CascadeType.PERSIST})
   private MovieVotes movieVotes;
+  @Column(name = "created_at", nullable = false)
+  private LocalDateTime createdAt;
 
 }

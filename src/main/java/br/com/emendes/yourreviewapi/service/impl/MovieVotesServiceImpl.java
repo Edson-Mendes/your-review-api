@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 /**
@@ -42,6 +43,7 @@ public class MovieVotesServiceImpl implements MovieVotesService {
           .movieId(movieId)
           .voteCount(0)
           .voteTotal(0)
+          .createdAt(LocalDateTime.now())
           .build();
     } catch (MovieNotFoundException exception) {
       throw new MovieNotFoundException(exception.getMessage(), 400);
