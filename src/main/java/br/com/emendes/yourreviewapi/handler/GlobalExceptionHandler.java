@@ -107,12 +107,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
   @ExceptionHandler(MovieNotFoundException.class)
   public ResponseEntity<ProblemDetail> handleMovieNotFound(MovieNotFoundException exception) {
-    ProblemDetail body = ProblemDetail.forStatus(404);
-    body.setTitle("Not found");
+    ProblemDetail body = ProblemDetail.forStatus(exception.getStatusCode());
+    body.setTitle("Movie not found");
     body.setDetail(exception.getMessage());
     body.setType(URI.create("https://github.com/Edson-Mendes/your-review-api"));
 
-    return ResponseEntity.status(404).body(body);
+    return ResponseEntity.status(exception.getStatusCode()).body(body);
   }
 
   @ExceptionHandler(ReviewAlreadyExistsException.class)
