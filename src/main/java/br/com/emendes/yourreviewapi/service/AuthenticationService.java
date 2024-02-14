@@ -21,4 +21,11 @@ public interface AuthenticationService {
    */
   AuthenticationResponse authenticate(@Valid AuthenticationRequest authenticationRequest);
 
+  /**
+   * Gera um novo JWT para o usuário autenticado.
+   *
+   * @return Objeto {@link AuthenticationResponse} contendo JWT que comprova a autenticidade do usuário.
+   */
+  AuthenticationResponse refreshToken();
+
 }
