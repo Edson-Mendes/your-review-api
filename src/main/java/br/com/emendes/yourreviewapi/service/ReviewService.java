@@ -33,7 +33,7 @@ public interface ReviewService {
    * @return {@code Page<ReviewSummaryResponse>} objeto paginado com as reviews encontradas.
    */
   Page<ReviewSummaryResponse> fetchByMovieId(
-      @NotBlank(message = "{fetchbymovieid.movieid.notblank}") String movieId,
-      @PositiveOrZero(message = "{fetchbymovieid.page.positiveorzero}") int page);
+      @NotBlank(message = "{ReviewService.fetchByMovieId.movieId.NotBlank.message}") String movieId,
+      @PositiveOrZero(message = "{ReviewService.fetchByMovieId.page.PositiveOrZero.message}") int page);
 
 }

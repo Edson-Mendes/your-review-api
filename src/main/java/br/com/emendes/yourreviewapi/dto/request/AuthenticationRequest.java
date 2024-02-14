@@ -12,10 +12,10 @@ import lombok.Builder;
  */
 @Builder
 public record AuthenticationRequest(
-    @NotBlank(message = "{authentication.username.notblank}")
-    @Email(message = "{authentication.username.email}")
+    @NotBlank(message = "{AuthenticationRequest.username.NotBlank.message}")
+    @Email(message = "{AuthenticationRequest.username.Email.message}")
     String username,
-    @NotBlank(message = "{authentication.password.notblank}")
+    @NotBlank(message = "{AuthenticationRequest.password.NotBlank.message}")
     String password
 ) {
 }
