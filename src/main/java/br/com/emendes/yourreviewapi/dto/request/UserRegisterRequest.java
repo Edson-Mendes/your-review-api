@@ -15,17 +15,17 @@ import lombok.Builder;
  */
 @Builder
 public record UserRegisterRequest(
-    @NotBlank(message = "{userregister.name.notblank}")
-    @Size(min = 2, max = 150, message = "{userregister.name.size}")
+    @NotBlank(message = "{UserRegisterRequest.name.NotBlank.message}")
+    @Size(min = 2, max = 150, message = "{UserRegisterRequest.name.Size.message}")
     String name,
-    @NotBlank(message = "{userregister.email.notblank}")
-    @Size(max = 320, message = "{userregister.email.size}")
-    @Email(message = "{userregister.email.email}")
+    @NotBlank(message = "{UserRegisterRequest.email.NotBlank.message}")
+    @Size(max = 320, message = "{UserRegisterRequest.email.Size.message}")
+    @Email(message = "{UserRegisterRequest.email.Email.message}")
     String email,
-    @NotBlank(message = "{userregister.password.notblank}")
-    @Size(min = 8, max = 30, message = "{userregister.password.size}")
+    @NotBlank(message = "{UserRegisterRequest.password.NotBlank.message}")
+    @Size(min = 8, max = 30, message = "{UserRegisterRequest.password.Size.message}")
     String password,
-    @NotBlank(message = "{userregister.confirmpassword.notblank}")
+    @NotBlank(message = "{UserRegisterRequest.confirmPassword.NotBlank.message}")
     String confirmPassword
 ) {
 }

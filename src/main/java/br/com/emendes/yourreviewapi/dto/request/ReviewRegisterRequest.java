@@ -16,13 +16,13 @@ import lombok.Builder;
  */
 @Builder
 public record ReviewRegisterRequest(
-    @Min(value = 1, message = "{review.vote.min}")
-    @Max(value = 10, message = "{review.vote.max}")
+    @Min(value = 1, message = "{ReviewRegisterRequest.vote.Min.message}")
+    @Max(value = 10, message = "{ReviewRegisterRequest.vote.Max.message}")
     int vote,
-    @Size(max = 500, message = "{review.opinion.size}")
-    @CustomNotBlank(message = "{review.opinion.customnotblank}")
+    @Size(max = 500, message = "{ReviewRegisterRequest.opinion.Size.message}")
+    @CustomNotBlank(message = "{ReviewRegisterRequest.opinion.CustomNotBlank.message}")
     String opinion,
-    @NotBlank(message = "{review.movieid.notblank}")
+    @NotBlank(message = "{ReviewRegisterRequest.movieId.NotBlank.message}")
     String movieId
 ) {
 }
