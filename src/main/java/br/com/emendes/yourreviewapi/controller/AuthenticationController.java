@@ -5,10 +5,7 @@ import br.com.emendes.yourreviewapi.dto.response.AuthenticationResponse;
 import br.com.emendes.yourreviewapi.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Classe controller reponsável pelo endpoint /api/v1/auth/**.
@@ -28,6 +25,14 @@ public class AuthenticationController {
   @PostMapping("/signin")
   public ResponseEntity<AuthenticationResponse> signIn(@RequestBody AuthenticationRequest authenticationRequest) {
     return ResponseEntity.ok(authenticationService.authenticate(authenticationRequest));
+  }
+
+  /**
+   * Método responsável por GET /api/v1/auth/refresh.
+   */
+  @GetMapping("/refresh")
+  public ResponseEntity<AuthenticationResponse> refreshToken() {
+    return ResponseEntity.ok(authenticationService.refreshToken());
   }
 
 }

@@ -2,8 +2,10 @@ package br.com.emendes.yourreviewapi.service.impl;
 
 import br.com.emendes.yourreviewapi.dto.request.AuthenticationRequest;
 import br.com.emendes.yourreviewapi.dto.response.AuthenticationResponse;
+import br.com.emendes.yourreviewapi.model.entity.User;
 import br.com.emendes.yourreviewapi.service.AuthenticationService;
 import br.com.emendes.yourreviewapi.service.JWTService;
+import br.com.emendes.yourreviewapi.util.component.AuthenticatedUserComponent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,6 +25,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
   private final AuthenticationManager authenticationManager;
   private final JWTService jwtService;
+  private final AuthenticatedUserComponent authenticatedUserComponent;
   @Value("${your-review-api.jwt.expiration.authentication}")
   private long authenticationTokenTime;
 
@@ -36,6 +39,20 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     String token = jwtService.generateToken(userDetails, authenticationTokenTime);
     log.info("token generate successfully for user : {}", userDetails.getUsername());
+
+    return AuthenticationResponse.builder()
+        .type("Bearer")
+        .token(token)
+        .build();
+  }
+
+  @Override
+  public AuthenticationResponse refreshToken() {
+    User currentUser = authenticatedUserComponent.getCurrentUser();
+    log.info("attempt to refresh token for user {}", currentUser.getUsername());
+
+    String token = jwtService.generateToken(currentUser, authenticationTokenTime);
+    log.info("token generate successfully for user : {}", currentUser.getUsername());
 
     return AuthenticationResponse.builder()
         .type("Bearer")
