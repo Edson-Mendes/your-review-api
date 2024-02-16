@@ -1,9 +1,6 @@
 package br.com.emendes.yourreviewapi.handler;
 
-import br.com.emendes.yourreviewapi.exception.EmailAlreadyInUseException;
-import br.com.emendes.yourreviewapi.exception.MovieNotFoundException;
-import br.com.emendes.yourreviewapi.exception.PasswordsDoesNotMatchException;
-import br.com.emendes.yourreviewapi.exception.ReviewAlreadyExistsException;
+import br.com.emendes.yourreviewapi.exception.*;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
@@ -113,6 +110,16 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     body.setType(URI.create("https://github.com/Edson-Mendes/your-review-api"));
 
     return ResponseEntity.status(exception.getStatusCode()).body(body);
+  }
+
+  @ExceptionHandler(ReviewNotFoundException.class)
+  public ResponseEntity<ProblemDetail> handleReviewNotFound(ReviewNotFoundException exception) {
+    ProblemDetail body = ProblemDetail.forStatus(404);
+    body.setTitle("Review not found");
+    body.setDetail(exception.getMessage());
+    body.setType(URI.create("https://github.com/Edson-Mendes/your-review-api"));
+
+    return ResponseEntity.status(404).body(body);
   }
 
   @ExceptionHandler(ReviewAlreadyExistsException.class)
