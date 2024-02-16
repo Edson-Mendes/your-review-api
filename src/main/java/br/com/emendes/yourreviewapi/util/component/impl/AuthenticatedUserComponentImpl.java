@@ -17,7 +17,9 @@ public class AuthenticatedUserComponentImpl implements AuthenticatedUserComponen
   public User getCurrentUser() {
     Authentication currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
 
-    if (currentAuthentication == null || !currentAuthentication.isAuthenticated()) {
+    if (currentAuthentication == null ||
+        !currentAuthentication.isAuthenticated() ||
+        !(currentAuthentication.getPrincipal() instanceof User)) {
       throw new UserIsNotAuthenticatedException("User is not authenticate");
     }
 
