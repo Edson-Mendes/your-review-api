@@ -4,6 +4,7 @@ import br.com.emendes.yourreviewapi.dto.request.ReviewRegisterRequest;
 import br.com.emendes.yourreviewapi.dto.response.ReviewDetailsResponse;
 import br.com.emendes.yourreviewapi.dto.response.ReviewSummaryResponse;
 import br.com.emendes.yourreviewapi.exception.ReviewAlreadyExistsException;
+import br.com.emendes.yourreviewapi.exception.ReviewNotFoundException;
 import br.com.emendes.yourreviewapi.mapper.ReviewMapper;
 import br.com.emendes.yourreviewapi.model.entity.MovieVotes;
 import br.com.emendes.yourreviewapi.model.entity.Review;
@@ -79,6 +80,20 @@ public class ReviewServiceImpl implements ReviewService {
 
     Page<Review> reviewPage = reviewRepository.findByMovieVotes(movieVotesOptional.get(), pageable);
     return reviewPage.map(reviewMapper::toReviewSummaryResponse);
+  }
+
+  @Override
+  public ReviewDetailsResponse findById(Long reviewId) {
+    log.info("Attempt to find review with id: {}", reviewId);
+
+    return reviewRepository.findById(reviewId)
+        .map(reviewMapper::toReviewDetailsResponse)
+        .orElseThrow(() -> {
+          String message = "Review not found for id: %d".formatted(reviewId);
+          log.info(message);
+
+          return new ReviewNotFoundException(message);
+        });
   }
 
 }

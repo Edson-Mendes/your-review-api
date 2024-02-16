@@ -52,4 +52,14 @@ public class ReviewController {
     return ResponseEntity.ok(reviewService.fetchByMovieId(movieId, page));
   }
 
+  /**
+   * Método responsável por GET /api/v1/reviews/{reviewId}.
+   *
+   * @param reviewId identificador da review a ser buscada.
+   */
+  @GetMapping("/{reviewId}")
+  public ResponseEntity<ReviewDetailsResponse> findById(@PathVariable("reviewId") Long reviewId) {
+    return ResponseEntity.ok(reviewService.findById(reviewId));
+  }
+
 }
