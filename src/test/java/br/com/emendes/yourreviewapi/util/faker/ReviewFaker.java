@@ -3,6 +3,8 @@ package br.com.emendes.yourreviewapi.util.faker;
 import br.com.emendes.yourreviewapi.dto.response.ReviewDetailsResponse;
 import br.com.emendes.yourreviewapi.dto.response.ReviewSummaryResponse;
 import br.com.emendes.yourreviewapi.model.entity.Review;
+import br.com.emendes.yourreviewapi.repository.projection.ReviewSummaryProjection;
+import br.com.emendes.yourreviewapi.util.projection.impl.ReviewSummaryProjectionImpl;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -60,10 +62,20 @@ public class ReviewFaker {
   /**
    * Retorna um objeto {@code Page<Review>}.
    */
-  public static Page<Review> reviewPage() {
+  public static Page<ReviewSummaryProjection> reviewSummaryProjectionPage() {
     Pageable pageable = PageRequest.of(0, 20);
 
-    return new PageImpl<>(List.of(review()), pageable, 1);
+    return new PageImpl<>(List.of(reviewSummaryProjection()), pageable, 1);
+  }
+
+  public static ReviewSummaryProjection reviewSummaryProjection() {
+    return ReviewSummaryProjectionImpl.builder()
+        .id(1_000_000_000L)
+        .vote(9)
+        .opinion("Lorem ipsum dolor sit amet")
+        .userId(100L)
+        .movieVotesMovieId("1000000")
+        .build();
   }
 
   /**

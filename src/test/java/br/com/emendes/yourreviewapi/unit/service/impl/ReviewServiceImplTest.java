@@ -131,10 +131,12 @@ class ReviewServiceImplTest {
     @DisplayName("fetchByMovieId must return Page<ReviewSummaryResponse> when fetch successfully")
     void fetchByMovieId_MustReturnPageReviewSummaryResponse_WhenFetchSuccessfully() {
       when(movieVotesServiceMock.findByMovieId("1000000")).thenReturn(MovieVotesFaker.movieVotesOptional());
-      when(reviewRepositoryMock.findByMovieVotes(any(), any())).thenReturn(ReviewFaker.reviewPage());
+      when(reviewRepositoryMock.findProjectedByMovieVotesMovieId(any(), any()))
+          .thenReturn(ReviewFaker.reviewSummaryProjectionPage());
       when(reviewMapperMock.toReviewSummaryResponse(any())).thenReturn(ReviewFaker.reviewSummaryResponse());
 
-      Page<ReviewSummaryResponse> actualReviewSummaryResponsePage = reviewService.fetchByMovieId("1000000", 0);
+      Page<ReviewSummaryResponse> actualReviewSummaryResponsePage =
+          reviewService.fetchByMovieId("1000000", 0);
 
       assertThat(actualReviewSummaryResponsePage).isNotNull().isNotEmpty().hasSize(1);
     }
@@ -142,7 +144,8 @@ class ReviewServiceImplTest {
     @Test
     @DisplayName("fetchByMovieId must return empty Page when there are no reviews")
     void fetchByMovieId_MustReturnEmptyPage_WhenThereAreNoReviews() {
-      when(movieVotesServiceMock.findByMovieId("1000000")).thenReturn(Optional.empty());
+      when(reviewRepositoryMock.findProjectedByMovieVotesMovieId(any(), any()))
+          .thenReturn(Page.empty());
 
       Page<ReviewSummaryResponse> actualReviewSummaryResponsePage = reviewService.fetchByMovieId("1000000", 0);
 
