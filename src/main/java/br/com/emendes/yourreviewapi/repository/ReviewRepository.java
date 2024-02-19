@@ -3,11 +3,14 @@ package br.com.emendes.yourreviewapi.repository;
 import br.com.emendes.yourreviewapi.model.entity.MovieVotes;
 import br.com.emendes.yourreviewapi.model.entity.Review;
 import br.com.emendes.yourreviewapi.model.entity.User;
+import br.com.emendes.yourreviewapi.repository.projection.ReviewDetailsProjection;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
+import java.util.Optional;
 
 /**
  * Interface repository com as abstrações para interação com o recurso Review no banco de dados.
@@ -38,4 +41,14 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
         AND r.movieVotes.movieId = :movieId
       """)
   boolean existsByUserIdAndMovieId(@Param("userId") Long userId, @Param("movieId") String movieId);
+
+  /**
+   * Busca campos {@link Review} de acordo com a projection {@link ReviewDetailsProjection} por identificador da Review.
+   *
+   * @param reviewId identificador da {@link Review}.
+   * @return {@code Optional<ReviewDetailsProjection>} com dados detalhados da Review caso exista,
+   * e {@link Optional#empty} caso não exista review para o dado reviewId.
+   */
+  Optional<ReviewDetailsProjection> findProjectedById(Long reviewId);
+
 }
