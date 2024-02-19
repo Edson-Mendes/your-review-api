@@ -1,4 +1,4 @@
-package br.com.emendes.yourreviewapi.util.faker.projection.impl;
+package br.com.emendes.yourreviewapi.util.projection.impl;
 
 import br.com.emendes.yourreviewapi.repository.projection.ReviewDetailsProjection;
 import lombok.AllArgsConstructor;

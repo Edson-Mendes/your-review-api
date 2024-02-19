@@ -6,6 +6,7 @@ import br.com.emendes.yourreviewapi.dto.response.ReviewSummaryResponse;
 import br.com.emendes.yourreviewapi.mapper.ReviewMapper;
 import br.com.emendes.yourreviewapi.model.entity.Review;
 import br.com.emendes.yourreviewapi.repository.projection.ReviewDetailsProjection;
+import br.com.emendes.yourreviewapi.repository.projection.ReviewSummaryProjection;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
@@ -54,15 +55,15 @@ public class ReviewMapperImpl implements ReviewMapper {
   }
 
   @Override
-  public ReviewSummaryResponse toReviewSummaryResponse(Review review) {
-    Assert.notNull(review, "review must not be null");
+  public ReviewSummaryResponse toReviewSummaryResponse(ReviewSummaryProjection reviewSummaryProjection) {
+    Assert.notNull(reviewSummaryProjection, "reviewSummaryProjection must not be null");
 
     return ReviewSummaryResponse.builder()
-        .id(review.getId())
-        .movieId(review.getMovieVotes().getMovieId())
-        .vote(review.getVote())
-        .opinion(review.getOpinion())
-        .userId(review.getUser().getId())
+        .id(reviewSummaryProjection.getId())
+        .movieId(reviewSummaryProjection.getMovieVotesMovieId())
+        .vote(reviewSummaryProjection.getVote())
+        .opinion(reviewSummaryProjection.getOpinion())
+        .userId(reviewSummaryProjection.getUserId())
         .build();
   }
 

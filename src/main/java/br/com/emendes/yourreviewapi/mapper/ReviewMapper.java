@@ -5,6 +5,7 @@ import br.com.emendes.yourreviewapi.dto.response.ReviewDetailsResponse;
 import br.com.emendes.yourreviewapi.dto.response.ReviewSummaryResponse;
 import br.com.emendes.yourreviewapi.model.entity.Review;
 import br.com.emendes.yourreviewapi.repository.projection.ReviewDetailsProjection;
+import br.com.emendes.yourreviewapi.repository.projection.ReviewSummaryProjection;
 
 /**
  * Interface com as abstrações para mapeamento do recurso {@link Review}.
@@ -41,10 +42,10 @@ public interface ReviewMapper {
   /**
    * Mapeia um objeto {@link Review} para {@link ReviewSummaryResponse}.
    *
-   * @param review objeto a ser mapeado para ReviewSummaryResponse.
+   * @param reviewSummaryProjection objeto a ser mapeado para ReviewSummaryResponse.
    * @return Objeto ReviewSummaryResponse com os dados de Review.
    * @throws IllegalArgumentException caso review seja null.
    */
-  ReviewSummaryResponse toReviewSummaryResponse(Review review);
+  ReviewSummaryResponse toReviewSummaryResponse(ReviewSummaryProjection reviewSummaryProjection);
 
 }

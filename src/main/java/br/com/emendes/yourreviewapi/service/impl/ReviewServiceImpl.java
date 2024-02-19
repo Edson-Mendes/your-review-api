@@ -17,14 +17,11 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
 
 /**
  * Implementação de {@link ReviewService}.
@@ -72,14 +69,8 @@ public class ReviewServiceImpl implements ReviewService {
     log.info("Attempt to fetch review for movie with id: {}", movieId);
 
     Pageable pageable = PageRequest.of(page, 20);
-    Optional<MovieVotes> movieVotesOptional = movieVotesService.findByMovieId(movieId);
-
-    if (movieVotesOptional.isEmpty()) {
-      return new PageImpl<>(List.of(), pageable, 0);
-    }
-
-    Page<Review> reviewPage = reviewRepository.findByMovieVotes(movieVotesOptional.get(), pageable);
-    return reviewPage.map(reviewMapper::toReviewSummaryResponse);
+    return reviewRepository.findProjectedByMovieVotesMovieId(movieId, pageable)
+        .map(reviewMapper::toReviewSummaryResponse);
   }
 
   @Override

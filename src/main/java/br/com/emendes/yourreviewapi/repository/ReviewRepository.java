@@ -1,9 +1,9 @@
 package br.com.emendes.yourreviewapi.repository;
 
-import br.com.emendes.yourreviewapi.model.entity.MovieVotes;
 import br.com.emendes.yourreviewapi.model.entity.Review;
 import br.com.emendes.yourreviewapi.model.entity.User;
 import br.com.emendes.yourreviewapi.repository.projection.ReviewDetailsProjection;
+import br.com.emendes.yourreviewapi.repository.projection.ReviewSummaryProjection;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,13 +18,14 @@ import java.util.Optional;
 public interface ReviewRepository extends JpaRepository<Review, Long> {
 
   /**
-   * Busca paginada de MovieVotes.
+   * Busca paginada de {@link Review} por {@code movieId}.<br>
+   * Os campos buscados são de acordo com a projection {@link ReviewSummaryProjection}.
    *
-   * @param movieVotes objeto MovieVotes ao qual as reviews deve estar relacionadas.
-   * @param pageable   objeto com o modo como deve ser feito a paginação.
-   * @return {@code Page<Review>} objeto com a paginação de Review.
+   * @param movieId  identificador do Movie relacionado com a Review.
+   * @param pageable objeto com o modo como deve ser feito a paginação.
+   * @return {@code Page<ReviewSummaryProjection>} objeto com a paginação de ReviewSummaryProjection.
    */
-  Page<Review> findByMovieVotes(MovieVotes movieVotes, Pageable pageable);
+  Page<ReviewSummaryProjection> findProjectedByMovieVotesMovieId(String movieId, Pageable pageable);
 
   /**
    * Verifica se existe {@link Review} para o dado {@code user} e {@code movieId}.

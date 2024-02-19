@@ -6,9 +6,11 @@ import br.com.emendes.yourreviewapi.dto.response.ReviewSummaryResponse;
 import br.com.emendes.yourreviewapi.mapper.impl.ReviewMapperImpl;
 import br.com.emendes.yourreviewapi.model.entity.Review;
 import br.com.emendes.yourreviewapi.repository.projection.ReviewDetailsProjection;
+import br.com.emendes.yourreviewapi.repository.projection.ReviewSummaryProjection;
 import br.com.emendes.yourreviewapi.util.faker.MovieVotesFaker;
 import br.com.emendes.yourreviewapi.util.faker.UserFaker;
-import br.com.emendes.yourreviewapi.util.faker.projection.impl.ReviewDetailsProjectionImpl;
+import br.com.emendes.yourreviewapi.util.projection.impl.ReviewDetailsProjectionImpl;
+import br.com.emendes.yourreviewapi.util.projection.impl.ReviewSummaryProjectionImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -51,18 +53,17 @@ class ReviewMapperImplTest {
   }
 
   @Test
-  @DisplayName("toReviewSummaryResponse must return ReviewSummaryResponse when map successfully")
-  void toReviewSummaryResponse_MustReturnReviewSummaryResponse_WhenMapSuccessfully() {
-    Review review = Review.builder()
+  @DisplayName("toReviewSummaryResponse must return ReviewSummaryResponse when map ReviewSummaryProjection successfully")
+  void toReviewSummaryResponse_MustReturnReviewSummaryResponse_WhenMapReviewSummaryProjectionSuccessfully() {
+    ReviewSummaryProjection reviewSummaryProjection = ReviewSummaryProjectionImpl.builder()
         .id(1_000_000_000L)
         .vote(9)
         .opinion("Lorem ipsum dolor sit amet")
-        .createdAt(LocalDateTime.parse("2024-02-08T10:00:00"))
-        .user(UserFaker.user())
-        .movieVotes(MovieVotesFaker.movieVotes())
+        .userId(100L)
+        .movieVotesMovieId("1000000")
         .build();
 
-    ReviewSummaryResponse actualReviewSummaryResponse = reviewMapper.toReviewSummaryResponse(review);
+    ReviewSummaryResponse actualReviewSummaryResponse = reviewMapper.toReviewSummaryResponse(reviewSummaryProjection);
 
     assertThat(actualReviewSummaryResponse).isNotNull();
     assertThat(actualReviewSummaryResponse.id()).isNotNull().isEqualTo(1_000_000_000L);
@@ -77,7 +78,7 @@ class ReviewMapperImplTest {
   void toReviewSummaryResponse_MustThrowIllegalArgumentException_WhenReviewParameterIsNull() {
     assertThatExceptionOfType(IllegalArgumentException.class)
         .isThrownBy(() -> reviewMapper.toReviewSummaryResponse(null))
-        .withMessage("review must not be null");
+        .withMessage("reviewSummaryProjection must not be null");
   }
 
   @Test
