@@ -5,8 +5,10 @@ import br.com.emendes.yourreviewapi.dto.response.ReviewDetailsResponse;
 import br.com.emendes.yourreviewapi.dto.response.ReviewSummaryResponse;
 import br.com.emendes.yourreviewapi.mapper.impl.ReviewMapperImpl;
 import br.com.emendes.yourreviewapi.model.entity.Review;
+import br.com.emendes.yourreviewapi.repository.projection.ReviewDetailsProjection;
 import br.com.emendes.yourreviewapi.util.faker.MovieVotesFaker;
 import br.com.emendes.yourreviewapi.util.faker.UserFaker;
+import br.com.emendes.yourreviewapi.util.faker.projection.impl.ReviewDetailsProjectionImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -79,7 +81,7 @@ class ReviewMapperImplTest {
   }
 
   @Test
-  @DisplayName("toReviewDetailsResponse must return ReviewDetailsResponse when map successfully")
+  @DisplayName("toReviewDetailsResponse must return ReviewDetailsResponse when map Review successfully")
   void toReviewDetailsResponse_MustReturnReviewDetailsResponse_WhenMapSuccessfully() {
     Review review = Review.builder()
         .id(1_000_000_000L)
@@ -105,8 +107,39 @@ class ReviewMapperImplTest {
   @DisplayName("toReviewDetailsResponse must throw IllegalArgumentException when review parameter is null")
   void toReviewDetailsResponse_MustThrowIllegalArgumentException_WhenReviewParameterIsNull() {
     assertThatExceptionOfType(IllegalArgumentException.class)
-        .isThrownBy(() -> reviewMapper.toReviewDetailsResponse(null))
+        .isThrownBy(() -> reviewMapper.toReviewDetailsResponse((Review) null))
         .withMessage("review must not be null");
+  }
+
+  @Test
+  @DisplayName("toReviewDetailsResponse must return ReviewDetailsResponse when map ReviewDetailsProjection successfully")
+  void toReviewDetailsResponse_MustReturnReviewDetailsResponse_WhenMapReviewDetailsProjectionSuccessfully() {
+    ReviewDetailsProjection reviewDetailsProjection = ReviewDetailsProjectionImpl.builder()
+        .id(1_000_000_000L)
+        .vote(9)
+        .opinion("Lorem ipsum dolor sit amet")
+        .createdAt(LocalDateTime.parse("2024-02-08T10:00:00"))
+        .userId(100L)
+        .movieVotesMovieId("1000000")
+        .build();
+
+    ReviewDetailsResponse actualReviewDetailsResponse = reviewMapper.toReviewDetailsResponse(reviewDetailsProjection);
+
+    assertThat(actualReviewDetailsResponse).isNotNull();
+    assertThat(actualReviewDetailsResponse.id()).isNotNull().isEqualTo(1_000_000_000L);
+    assertThat(actualReviewDetailsResponse.vote()).isEqualTo(9);
+    assertThat(actualReviewDetailsResponse.opinion()).isNotNull().isEqualTo("Lorem ipsum dolor sit amet");
+    assertThat(actualReviewDetailsResponse.createdAt()).isNotNull().isEqualTo("2024-02-08T10:00:00");
+    assertThat(actualReviewDetailsResponse.userId()).isNotNull().isEqualTo(100L);
+    assertThat(actualReviewDetailsResponse.movieId()).isNotNull().isEqualTo("1000000");
+  }
+
+  @Test
+  @DisplayName("toReviewDetailsResponse must throw IllegalArgumentException when reviewDetailsProjection parameter is null")
+  void toReviewDetailsResponse_MustThrowIllegalArgumentException_WhenReviewDetailsProjectionParameterIsNull() {
+    assertThatExceptionOfType(IllegalArgumentException.class)
+        .isThrownBy(() -> reviewMapper.toReviewDetailsResponse((ReviewDetailsProjection) null))
+        .withMessage("reviewDetailsProjection must not be null");
   }
 
 }

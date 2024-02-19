@@ -86,7 +86,7 @@ public class ReviewServiceImpl implements ReviewService {
   public ReviewDetailsResponse findById(Long reviewId) {
     log.info("Attempt to find review with id: {}", reviewId);
 
-    return reviewRepository.findById(reviewId)
+    return reviewRepository.findProjectedById(reviewId)
         .map(reviewMapper::toReviewDetailsResponse)
         .orElseThrow(() -> {
           String message = "Review not found for id: %d".formatted(reviewId);

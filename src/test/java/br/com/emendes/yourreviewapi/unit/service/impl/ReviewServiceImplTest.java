@@ -5,6 +5,7 @@ import br.com.emendes.yourreviewapi.dto.response.ReviewDetailsResponse;
 import br.com.emendes.yourreviewapi.dto.response.ReviewSummaryResponse;
 import br.com.emendes.yourreviewapi.exception.ReviewAlreadyExistsException;
 import br.com.emendes.yourreviewapi.mapper.ReviewMapper;
+import br.com.emendes.yourreviewapi.model.entity.Review;
 import br.com.emendes.yourreviewapi.repository.ReviewRepository;
 import br.com.emendes.yourreviewapi.service.MovieVotesService;
 import br.com.emendes.yourreviewapi.service.impl.ReviewServiceImpl;
@@ -55,7 +56,7 @@ class ReviewServiceImplTest {
       when(movieVotesServiceMock.findByMovieId("1000000")).thenReturn(MovieVotesFaker.movieVotesOptional());
       when(reviewMapperMock.toReview(any())).thenReturn(ReviewFaker.nonRegisteredReview());
       when(reviewRepositoryMock.save(any())).thenReturn(ReviewFaker.review());
-      when(reviewMapperMock.toReviewDetailsResponse(any())).thenReturn(ReviewFaker.reviewDetailsResponse());
+      when(reviewMapperMock.toReviewDetailsResponse(any(Review.class))).thenReturn(ReviewFaker.reviewDetailsResponse());
 
       ReviewRegisterRequest reviewRegisterRequest = ReviewRegisterRequest.builder()
           .vote(9)
@@ -84,7 +85,7 @@ class ReviewServiceImplTest {
           .thenReturn(MovieVotesFaker.nonRegisteredMovieVotes());
       when(reviewMapperMock.toReview(any())).thenReturn(ReviewFaker.nonRegisteredReview());
       when(reviewRepositoryMock.save(any())).thenReturn(ReviewFaker.review());
-      when(reviewMapperMock.toReviewDetailsResponse(any())).thenReturn(ReviewFaker.reviewDetailsResponse());
+      when(reviewMapperMock.toReviewDetailsResponse(any(Review.class))).thenReturn(ReviewFaker.reviewDetailsResponse());
 
       ReviewRegisterRequest reviewRegisterRequest = ReviewRegisterRequest.builder()
           .vote(9)
