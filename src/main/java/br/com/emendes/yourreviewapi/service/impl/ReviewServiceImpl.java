@@ -59,6 +59,9 @@ public class ReviewServiceImpl implements ReviewService {
     review.setMovieVotes(movieVotes);
     review.setCreatedAt(LocalDateTime.now());
 
+    movieVotes.setVoteTotal(movieVotes.getVoteTotal() + review.getVote());
+    movieVotes.setVoteCount(movieVotes.getVoteCount() + 1);
+
     review = reviewRepository.save(review);
 
     log.info("Review registered successfully with id: {}", review.getId());
