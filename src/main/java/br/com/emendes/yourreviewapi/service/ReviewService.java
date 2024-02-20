@@ -1,6 +1,7 @@
 package br.com.emendes.yourreviewapi.service;
 
 import br.com.emendes.yourreviewapi.dto.request.ReviewRegisterRequest;
+import br.com.emendes.yourreviewapi.dto.request.ReviewUpdateRequest;
 import br.com.emendes.yourreviewapi.dto.response.ReviewDetailsResponse;
 import br.com.emendes.yourreviewapi.dto.response.ReviewSummaryResponse;
 import br.com.emendes.yourreviewapi.exception.ReviewNotFoundException;
@@ -46,5 +47,17 @@ public interface ReviewService {
    * @throws ReviewNotFoundException caso não seja encontrada review para o dado reviewId.
    */
   ReviewDetailsResponse findById(@NotNull(message = "{ReviewService.findById.reviewId.NotNull.message}") Long reviewId);
+
+  /**
+   * Atualiza {@link Review} por id.
+   *
+   * @param reviewId            identificador da review a ser atualizada.
+   * @param reviewUpdateRequest objeto com os novos dados da Review.
+   * @return Objeto ReviewDetailsResponse com os dados atualizados.
+   * @throws ReviewNotFoundException caso não seja encontrada review para o dado reviewId.
+   */
+  ReviewDetailsResponse updateById(
+      @NotNull(message = "{ReviewService.findById.reviewId.NotNull.message}") Long reviewId,
+      @Valid ReviewUpdateRequest reviewUpdateRequest);
 
 }

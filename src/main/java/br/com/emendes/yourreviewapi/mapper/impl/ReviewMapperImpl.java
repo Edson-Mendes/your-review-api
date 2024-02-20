@@ -1,6 +1,7 @@
 package br.com.emendes.yourreviewapi.mapper.impl;
 
 import br.com.emendes.yourreviewapi.dto.request.ReviewRegisterRequest;
+import br.com.emendes.yourreviewapi.dto.request.ReviewUpdateRequest;
 import br.com.emendes.yourreviewapi.dto.response.ReviewDetailsResponse;
 import br.com.emendes.yourreviewapi.dto.response.ReviewSummaryResponse;
 import br.com.emendes.yourreviewapi.mapper.ReviewMapper;
@@ -65,6 +66,16 @@ public class ReviewMapperImpl implements ReviewMapper {
         .opinion(reviewSummaryProjection.getOpinion())
         .userId(reviewSummaryProjection.getUserId())
         .build();
+  }
+
+
+  @Override
+  public void merge(Review review, ReviewUpdateRequest reviewUpdateRequest) {
+    Assert.notNull(review, "review must not be null");
+    Assert.notNull(reviewUpdateRequest, "reviewUpdateRequest must not be null");
+
+    review.setVote(reviewUpdateRequest.vote());
+    review.setOpinion(reviewUpdateRequest.opinion());
   }
 
 }

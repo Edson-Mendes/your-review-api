@@ -52,4 +52,13 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
    */
   Optional<ReviewDetailsProjection> findProjectedById(Long reviewId);
 
+  /**
+   * Busca {@link Review} por reviewId e user.
+   *
+   * @param reviewId identificador da Review.
+   * @param user     user relacionado com a review de id reviewId.
+   * @return {@code Optional<Review>}
+   */
+  Optional<Review> findByIdAndUser(Long reviewId, User user);
+
 }
