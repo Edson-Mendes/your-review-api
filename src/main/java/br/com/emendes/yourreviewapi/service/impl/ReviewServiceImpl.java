@@ -1,6 +1,7 @@
 package br.com.emendes.yourreviewapi.service.impl;
 
 import br.com.emendes.yourreviewapi.dto.request.ReviewRegisterRequest;
+import br.com.emendes.yourreviewapi.dto.request.ReviewUpdateRequest;
 import br.com.emendes.yourreviewapi.dto.response.ReviewDetailsResponse;
 import br.com.emendes.yourreviewapi.dto.response.ReviewSummaryResponse;
 import br.com.emendes.yourreviewapi.exception.ReviewAlreadyExistsException;
@@ -85,6 +86,40 @@ public class ReviewServiceImpl implements ReviewService {
 
           return new ReviewNotFoundException(message);
         });
+  }
+
+  @Override
+  public ReviewDetailsResponse updateById(Long reviewId, ReviewUpdateRequest reviewUpdateRequest) {
+    log.info("Attempt to update review with id: {}", reviewId);
+    User currentUser = authenticatedUserComponent.getCurrentUser();
+
+    Review review = reviewRepository.findByIdAndUser(reviewId, currentUser).orElseThrow(() -> {
+      String message = "Review not found for id: %d".formatted(reviewId);
+      log.info(message);
+
+      return new ReviewNotFoundException(message);
+    });
+
+    updateVoteTotal(review.getMovieVotes(), review.getVote(), reviewUpdateRequest.vote());
+
+    reviewMapper.merge(review, reviewUpdateRequest);
+    review = reviewRepository.save(review);
+
+    log.info("Review with id: {} updated successfully", reviewId);
+
+    return reviewMapper.toReviewDetailsResponse(review);
+  }
+
+  /**
+   * Atualiza {@link MovieVotes#getVoteTotal} de acordo com o valor antigo de {@link Review#getVote()}
+   * e o novo valor do voto da review.
+   *
+   * @param movieVotes Objeto MovieVotes que terá seu campo MovieVotes.voteTotal atualizado.
+   * @param oldVote    antigo valor do vote da Review.
+   * @param newVote    novo valor do vote da Review.
+   */
+  private static void updateVoteTotal(MovieVotes movieVotes, long oldVote, long newVote) {
+    movieVotes.setVoteTotal(movieVotes.getVoteTotal() - (oldVote - newVote));
   }
 
 }

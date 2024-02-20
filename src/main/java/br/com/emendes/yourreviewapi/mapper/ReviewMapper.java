@@ -1,6 +1,7 @@
 package br.com.emendes.yourreviewapi.mapper;
 
 import br.com.emendes.yourreviewapi.dto.request.ReviewRegisterRequest;
+import br.com.emendes.yourreviewapi.dto.request.ReviewUpdateRequest;
 import br.com.emendes.yourreviewapi.dto.response.ReviewDetailsResponse;
 import br.com.emendes.yourreviewapi.dto.response.ReviewSummaryResponse;
 import br.com.emendes.yourreviewapi.model.entity.Review;
@@ -48,4 +49,12 @@ public interface ReviewMapper {
    */
   ReviewSummaryResponse toReviewSummaryResponse(ReviewSummaryProjection reviewSummaryProjection);
 
+  /**
+   * Mescla as informações de review com reviewUpdateRequest.
+   *
+   * @param review              objeto que receberá dado de reviewUpdateRequest.
+   * @param reviewUpdateRequest objeto com novos dados de review.
+   * @throws IllegalArgumentException caso review ou reviewUpdateRequest sejam nulos.
+   */
+  void merge(Review review, ReviewUpdateRequest reviewUpdateRequest);
 }

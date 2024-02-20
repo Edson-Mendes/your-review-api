@@ -1,6 +1,7 @@
 package br.com.emendes.yourreviewapi.controller;
 
 import br.com.emendes.yourreviewapi.dto.request.ReviewRegisterRequest;
+import br.com.emendes.yourreviewapi.dto.request.ReviewUpdateRequest;
 import br.com.emendes.yourreviewapi.dto.response.ReviewDetailsResponse;
 import br.com.emendes.yourreviewapi.dto.response.ReviewSummaryResponse;
 import br.com.emendes.yourreviewapi.service.ReviewService;
@@ -60,6 +61,19 @@ public class ReviewController {
   @GetMapping("/{reviewId}")
   public ResponseEntity<ReviewDetailsResponse> findById(@PathVariable("reviewId") Long reviewId) {
     return ResponseEntity.ok(reviewService.findById(reviewId));
+  }
+
+  /**
+   * Método responsável por PUT /api/v1/reviews/{reviewId}.
+   *
+   * @param reviewId            identificador da review a ser atualizada.
+   * @param reviewUpdateRequest objeto com os novos dados da Review.
+   */
+  @PutMapping("/{reviewId}")
+  public ResponseEntity<ReviewDetailsResponse> updateById(
+      @PathVariable("reviewId") Long reviewId,
+      @RequestBody ReviewUpdateRequest reviewUpdateRequest) {
+    return ResponseEntity.ok(reviewService.updateById(reviewId, reviewUpdateRequest));
   }
 
 }
