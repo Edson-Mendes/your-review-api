@@ -76,4 +76,15 @@ public class ReviewController {
     return ResponseEntity.ok(reviewService.updateById(reviewId, reviewUpdateRequest));
   }
 
+  /**
+   * Método responsável por DELETE /api/v1/reviews/{reviewId}.
+   *
+   * @param reviewId identificador da review a ser deletada.
+   */
+  @DeleteMapping("/{reviewId}")
+  public ResponseEntity<Void> deleteById(@PathVariable("reviewId") Long reviewId) {
+    reviewService.deleteById(reviewId);
+    return ResponseEntity.noContent().build();
+  }
+
 }

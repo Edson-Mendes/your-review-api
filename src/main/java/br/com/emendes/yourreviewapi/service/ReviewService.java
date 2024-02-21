@@ -60,4 +60,12 @@ public interface ReviewService {
       @NotNull(message = "{ReviewService.findById.reviewId.NotNull.message}") Long reviewId,
       @Valid ReviewUpdateRequest reviewUpdateRequest);
 
+  /**
+   * Deleta {@link Review} por id. A review a ser deletada deve estar relacionado com o usuário atual da requisição.
+   *
+   * @param reviewId identificador da Review a ser deletada.
+   * @throws ReviewNotFoundException caso não seja encontrada Review para o dado {@code reviewId}.
+   */
+  void deleteById(@NotNull(message = "{ReviewService.deleteById.reviewId.NotNull.message}") Long reviewId);
+
 }

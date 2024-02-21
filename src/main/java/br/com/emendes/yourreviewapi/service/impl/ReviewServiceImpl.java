@@ -23,6 +23,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 /**
  * Implementação de {@link ReviewService}.
@@ -83,12 +84,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     return reviewRepository.findProjectedById(reviewId)
         .map(reviewMapper::toReviewDetailsResponse)
-        .orElseThrow(() -> {
-          String message = "Review not found for id: %d".formatted(reviewId);
-          log.info(message);
-
-          return new ReviewNotFoundException(message);
-        });
+        .orElseThrow(() -> getReviewNotFoundException(reviewId));
   }
 
   @Override
@@ -96,12 +92,8 @@ public class ReviewServiceImpl implements ReviewService {
     log.info("Attempt to update review with id: {}", reviewId);
     User currentUser = authenticatedUserComponent.getCurrentUser();
 
-    Review review = reviewRepository.findByIdAndUser(reviewId, currentUser).orElseThrow(() -> {
-      String message = "Review not found for id: %d".formatted(reviewId);
-      log.info(message);
-
-      return new ReviewNotFoundException(message);
-    });
+    Review review = reviewRepository.findByIdAndUser(reviewId, currentUser)
+        .orElseThrow(() -> getReviewNotFoundException(reviewId));
 
     updateVoteTotal(review.getMovieVotes(), review.getVote(), reviewUpdateRequest.vote());
 
@@ -111,6 +103,26 @@ public class ReviewServiceImpl implements ReviewService {
     log.info("Review with id: {} updated successfully", reviewId);
 
     return reviewMapper.toReviewDetailsResponse(review);
+  }
+
+  @Transactional
+  @Override
+  public void deleteById(Long reviewId) {
+    log.info("Attempt to delete review with id: {}", reviewId);
+    User currentUser = authenticatedUserComponent.getCurrentUser();
+
+    Optional<Review> reviewOptional = reviewRepository.findByIdAndUser(reviewId, currentUser);
+    if (reviewOptional.isEmpty()) {
+      throw getReviewNotFoundException(reviewId);
+    }
+    Review review = reviewOptional.get();
+
+    MovieVotes movieVotes = review.getMovieVotes();
+    movieVotes.setVoteCount(movieVotes.getVoteCount() - 1);
+    movieVotes.setVoteTotal(movieVotes.getVoteTotal() - review.getVote());
+
+    reviewRepository.delete(review);
+    log.info("Review with id: {} deleted successfully", reviewId);
   }
 
   /**
@@ -123,6 +135,19 @@ public class ReviewServiceImpl implements ReviewService {
    */
   private static void updateVoteTotal(MovieVotes movieVotes, long oldVote, long newVote) {
     movieVotes.setVoteTotal(movieVotes.getVoteTotal() - (oldVote - newVote));
+  }
+
+  /**
+   * Retorna {@link ReviewNotFoundException} para o dado {@code reviewId}.
+   *
+   * @param reviewId identificador a ser mostrado na mensagem da exception.
+   * @return {@link ReviewNotFoundException} com a mensage para o dado {@code reviewId}.
+   */
+  private static ReviewNotFoundException getReviewNotFoundException(Long reviewId) {
+    String message = "Review not found for id: %d".formatted(reviewId);
+    log.info(message);
+
+    return new ReviewNotFoundException(message);
   }
 
 }
