@@ -1,7 +1,6 @@
 package br.com.emendes.yourreviewapi.integration.repository;
 
 import br.com.emendes.yourreviewapi.model.entity.Review;
-import br.com.emendes.yourreviewapi.model.entity.User;
 import br.com.emendes.yourreviewapi.repository.ReviewRepository;
 import br.com.emendes.yourreviewapi.repository.projection.ReviewDetailsProjection;
 import br.com.emendes.yourreviewapi.repository.projection.ReviewSummaryProjection;
@@ -157,19 +156,17 @@ class ReviewRepositoryTest {
   }
 
   @Nested
-  @DisplayName("FindByIdAndUser Method")
-  class findByIdAndUserMethod {
+  @DisplayName("FindByIdAndUserId Method")
+  class findByIdAndUserIdMethod {
 
     @SqlMergeMode(SqlMergeMode.MergeMode.MERGE)
     @Sql(scripts = {INSERT_REVIEW_SQL_PATH})
     @Test
-    @DisplayName("findByIdAndUser must return Optional<Review> when found Review for given reviewId and user")
-    void findByIdAndUser_MustReturnOptionalReview_WhenFoundReviewForGivenReviewIdAndUser() {
-      User user = User.builder()
-          .id(1L)
-          .build();
+    @DisplayName("findByIdAndUserId must return Optional<Review> when found Review for given reviewId and user")
+    void findByIdAndUserId_MustReturnOptionalReview_WhenFoundReviewForGivenReviewIdAndUser() {
+      Long userId = 1L;
 
-      Optional<Review> actualReviewOptional = reviewRepository.findByIdAndUser(1L, user);
+      Optional<Review> actualReviewOptional = reviewRepository.findByIdAndUserId(1L, userId);
 
       assertThat(actualReviewOptional).isNotEmpty();
 
@@ -187,13 +184,11 @@ class ReviewRepositoryTest {
     @SqlMergeMode(SqlMergeMode.MergeMode.MERGE)
     @Sql(scripts = {INSERT_REVIEW_SQL_PATH})
     @Test
-    @DisplayName("findByIdAndUser must return empty Optional when not found Review for given reviewId and user")
-    void findByIdAndUser_MustReturnEmptyOptional_WhenNotFoundReviewForGivenReviewId() {
-      User user = User.builder()
-          .id(1L)
-          .build();
+    @DisplayName("findByIdAndUserId must return empty Optional when not found Review for given reviewId and user")
+    void findByIdAndUserId_MustReturnEmptyOptional_WhenNotFoundReviewForGivenReviewId() {
+      Long userId = 1L;
 
-      Optional<Review> actualReviewOptional = reviewRepository.findByIdAndUser(2L, user);
+      Optional<Review> actualReviewOptional = reviewRepository.findByIdAndUserId(2L, userId);
 
       assertThat(actualReviewOptional).isEmpty();
     }

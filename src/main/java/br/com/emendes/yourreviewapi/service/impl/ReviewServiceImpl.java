@@ -92,7 +92,7 @@ public class ReviewServiceImpl implements ReviewService {
     log.info("Attempt to update review with id: {}", reviewId);
     User currentUser = authenticatedUserComponent.getCurrentUser();
 
-    Review review = reviewRepository.findByIdAndUser(reviewId, currentUser)
+    Review review = reviewRepository.findByIdAndUserId(reviewId, currentUser.getId())
         .orElseThrow(() -> getReviewNotFoundException(reviewId));
 
     updateVoteTotal(review.getMovieVotes(), review.getVote(), reviewUpdateRequest.vote());
@@ -111,7 +111,7 @@ public class ReviewServiceImpl implements ReviewService {
     log.info("Attempt to delete review with id: {}", reviewId);
     User currentUser = authenticatedUserComponent.getCurrentUser();
 
-    Optional<Review> reviewOptional = reviewRepository.findByIdAndUser(reviewId, currentUser);
+    Optional<Review> reviewOptional = reviewRepository.findByIdAndUserId(reviewId, currentUser.getId());
     if (reviewOptional.isEmpty()) {
       throw getReviewNotFoundException(reviewId);
     }
