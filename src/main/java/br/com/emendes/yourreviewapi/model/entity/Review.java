@@ -25,7 +25,7 @@ public class Review {
   private int vote;
   @Column(name = "opinion")
   private String opinion;
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   private User user;
   @ManyToOne(cascade = {CascadeType.PERSIST})
   private MovieVotes movieVotes;
