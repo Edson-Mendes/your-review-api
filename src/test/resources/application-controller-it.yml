@@ -1,0 +1,4 @@
+your-review-api:
+  jwt:
+    expiration:
+      authentication: 1800000
