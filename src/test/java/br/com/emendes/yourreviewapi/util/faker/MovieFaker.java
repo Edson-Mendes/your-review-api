@@ -36,7 +36,7 @@ public class MovieFaker {
    * Retorna {@code Page<Movie>} com um elemento ({@link MovieFaker#movie()}), Pageable.page = 1 e Pageable.size = 20, e total = 1
    */
   public static Page<Movie> moviePage() {
-    return new PageImpl<>(List.of(movie()), PageRequest.of(1, 20), 1);
+    return new PageImpl<>(List.of(movie()), PageRequest.of(0, 20), 1);
   }
 
   /**
@@ -63,6 +63,13 @@ public class MovieFaker {
         .releaseDate(LocalDate.parse("2024-01-16"))
         .originalLanguage("en")
         .build();
+  }
+
+  /**
+   * Retorna {@code Page<Movie>} empty.
+   */
+  public static Page<Movie> emptyPage() {
+    return new PageImpl<>(List.of(), PageRequest.of(0, 20), 0);
   }
 
 }
