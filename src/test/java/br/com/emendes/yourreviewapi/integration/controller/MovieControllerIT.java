@@ -50,7 +50,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         @ComponentScan.Filter(classes = {RestControllerAdvice.class})
     }
 )
-@DisplayName("Test dos endpoints de AuthenticationController")
+@DisplayName("Test dos endpoints de MovieController")
 public class MovieControllerIT {
 
   @Autowired
