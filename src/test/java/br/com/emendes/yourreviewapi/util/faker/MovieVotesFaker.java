@@ -19,8 +19,8 @@ public class MovieVotesFaker {
   public static MovieVotes movieVotes() {
     return MovieVotes.builder()
         .id(1_000L)
-        .voteCount(123)
-        .voteTotal(40)
+        .voteCount(40)
+        .voteTotal(123)
         .movieId("1000000")
         .createdAt(LocalDateTime.parse("2024-02-09T12:00:00"))
         .build();
