@@ -2,8 +2,11 @@ package br.com.emendes.yourreviewapi.mapper;
 
 import br.com.emendes.yourreviewapi.dto.request.ReviewRegisterRequest;
 import br.com.emendes.yourreviewapi.dto.request.ReviewUpdateRequest;
+import br.com.emendes.yourreviewapi.dto.response.MovieSummaryResponse;
 import br.com.emendes.yourreviewapi.dto.response.ReviewDetailsResponse;
+import br.com.emendes.yourreviewapi.dto.response.ReviewResponse;
 import br.com.emendes.yourreviewapi.dto.response.ReviewSummaryResponse;
+import br.com.emendes.yourreviewapi.model.Movie;
 import br.com.emendes.yourreviewapi.model.entity.Review;
 import br.com.emendes.yourreviewapi.repository.projection.ReviewDetailsProjection;
 import br.com.emendes.yourreviewapi.repository.projection.ReviewSummaryProjection;
@@ -23,22 +26,23 @@ public interface ReviewMapper {
   Review toReview(ReviewRegisterRequest reviewRegisterRequest);
 
   /**
-   * Mapeia um objeto {@link Review} para {@link ReviewDetailsResponse}.
+   * Mapeia um objeto {@link Review} para {@link ReviewResponse}.
    *
-   * @param review objeto a ser mapeado para ReviewDetailsResponse.
-   * @return Objeto ReviewDetailsResponse com os dados de Review.
+   * @param review objeto a ser mapeado para ReviewResponse.
+   * @return Objeto ReviewResponse com os dados de Review.
    * @throws IllegalArgumentException caso review seja null.
    */
-  ReviewDetailsResponse toReviewDetailsResponse(Review review);
+  ReviewResponse toReviewResponse(Review review);
 
   /**
    * Mapeia um objeto {@link ReviewDetailsProjection} para {@link ReviewDetailsResponse}.
    *
    * @param reviewDetailsProjection objeto a ser mapeado para ReviewDetailsResponse.
+   * @param movie                   objeto a ser mapeado e adicionado a ReviewDetailsResponse.
    * @return Objeto ReviewDetailsResponse com os dados de ReviewDetailsProjection.
    * @throws IllegalArgumentException caso reviewDetailsProjection seja null.
    */
-  ReviewDetailsResponse toReviewDetailsResponse(ReviewDetailsProjection reviewDetailsProjection);
+  ReviewDetailsResponse toReviewDetailsResponse(ReviewDetailsProjection reviewDetailsProjection, MovieSummaryResponse movie);
 
   /**
    * Mapeia um objeto {@link Review} para {@link ReviewSummaryResponse}.

@@ -1,7 +1,7 @@
 package br.com.emendes.yourreviewapi.unit.service.impl;
 
 import br.com.emendes.yourreviewapi.dto.request.ReviewRegisterRequest;
-import br.com.emendes.yourreviewapi.dto.response.ReviewDetailsResponse;
+import br.com.emendes.yourreviewapi.dto.response.ReviewResponse;
 import br.com.emendes.yourreviewapi.dto.response.ReviewSummaryResponse;
 import br.com.emendes.yourreviewapi.exception.ReviewAlreadyExistsException;
 import br.com.emendes.yourreviewapi.mapper.ReviewMapper;
@@ -49,14 +49,14 @@ class ReviewServiceImplTest {
   class RegisterMethod {
 
     @Test
-    @DisplayName("register must return ReviewDetailsResponse when MovieVotes already exists and register successfully")
+    @DisplayName("register must return ReviewResponse when MovieVotes already exists and register successfully")
     void register_MustReturnReviewDetailsResponse_WhenMovieVotesAlreadyExistsAndRegisterSuccessfully() {
       when(authenticatedUserComponentMock.getCurrentUser()).thenReturn(UserFaker.user());
       when(reviewRepositoryMock.existsByUserIdAndMovieId(100L, "1000000")).thenReturn(false);
       when(movieVotesServiceMock.findByMovieId("1000000")).thenReturn(MovieVotesFaker.movieVotesOptional());
       when(reviewMapperMock.toReview(any())).thenReturn(ReviewFaker.nonRegisteredReview());
       when(reviewRepositoryMock.save(any())).thenReturn(ReviewFaker.review());
-      when(reviewMapperMock.toReviewDetailsResponse(any(Review.class))).thenReturn(ReviewFaker.reviewDetailsResponse());
+      when(reviewMapperMock.toReviewResponse(any(Review.class))).thenReturn(ReviewFaker.reviewResponse());
 
       ReviewRegisterRequest reviewRegisterRequest = ReviewRegisterRequest.builder()
           .vote(9)
@@ -64,19 +64,19 @@ class ReviewServiceImplTest {
           .movieId("1000000")
           .build();
 
-      ReviewDetailsResponse actualReviewDetailsResponse = reviewService.register(reviewRegisterRequest);
+      ReviewResponse actualReviewResponse = reviewService.register(reviewRegisterRequest);
 
-      assertThat(actualReviewDetailsResponse).isNotNull();
-      assertThat(actualReviewDetailsResponse.id()).isNotNull().isEqualTo(2_000_000L);
-      assertThat(actualReviewDetailsResponse.vote()).isEqualTo(9);
-      assertThat(actualReviewDetailsResponse.opinion()).isNotNull().isEqualTo("Lorem ipsum dolor sit amet");
-      assertThat(actualReviewDetailsResponse.userId()).isNotNull().isEqualTo(100L);
-      assertThat(actualReviewDetailsResponse.movieId()).isNotNull().isEqualTo("1000000");
-      assertThat(actualReviewDetailsResponse.createdAt()).isNotNull().isEqualTo("2024-02-09T10:00:00");
+      assertThat(actualReviewResponse).isNotNull();
+      assertThat(actualReviewResponse.id()).isNotNull().isEqualTo(2_000_000L);
+      assertThat(actualReviewResponse.vote()).isEqualTo(9);
+      assertThat(actualReviewResponse.opinion()).isNotNull().isEqualTo("Lorem ipsum dolor sit amet");
+      assertThat(actualReviewResponse.userId()).isNotNull().isEqualTo(100L);
+      assertThat(actualReviewResponse.movieId()).isNotNull().isEqualTo("1000000");
+      assertThat(actualReviewResponse.createdAt()).isNotNull().isEqualTo("2024-02-09T10:00:00");
     }
 
     @Test
-    @DisplayName("register must return ReviewDetailsResponse when MovieVotes non exists and register successfully")
+    @DisplayName("register must return ReviewResponse when MovieVotes non exists and register successfully")
     void register_MustReturnReviewDetailsResponse_WhenMovieVotesNonExistsAndRegisterSuccessfully() {
       when(authenticatedUserComponentMock.getCurrentUser()).thenReturn(UserFaker.user());
       when(reviewRepositoryMock.existsByUserIdAndMovieId(100L, "1000000")).thenReturn(false);
@@ -85,7 +85,7 @@ class ReviewServiceImplTest {
           .thenReturn(MovieVotesFaker.nonRegisteredMovieVotes());
       when(reviewMapperMock.toReview(any())).thenReturn(ReviewFaker.nonRegisteredReview());
       when(reviewRepositoryMock.save(any())).thenReturn(ReviewFaker.review());
-      when(reviewMapperMock.toReviewDetailsResponse(any(Review.class))).thenReturn(ReviewFaker.reviewDetailsResponse());
+      when(reviewMapperMock.toReviewResponse(any(Review.class))).thenReturn(ReviewFaker.reviewResponse());
 
       ReviewRegisterRequest reviewRegisterRequest = ReviewRegisterRequest.builder()
           .vote(9)
@@ -93,15 +93,15 @@ class ReviewServiceImplTest {
           .movieId("1000000")
           .build();
 
-      ReviewDetailsResponse actualReviewDetailsResponse = reviewService.register(reviewRegisterRequest);
+      ReviewResponse actualReviewResponse = reviewService.register(reviewRegisterRequest);
 
-      assertThat(actualReviewDetailsResponse).isNotNull();
-      assertThat(actualReviewDetailsResponse.id()).isNotNull().isEqualTo(2_000_000L);
-      assertThat(actualReviewDetailsResponse.vote()).isEqualTo(9);
-      assertThat(actualReviewDetailsResponse.opinion()).isNotNull().isEqualTo("Lorem ipsum dolor sit amet");
-      assertThat(actualReviewDetailsResponse.userId()).isNotNull().isEqualTo(100L);
-      assertThat(actualReviewDetailsResponse.movieId()).isNotNull().isEqualTo("1000000");
-      assertThat(actualReviewDetailsResponse.createdAt()).isNotNull().isEqualTo("2024-02-09T10:00:00");
+      assertThat(actualReviewResponse).isNotNull();
+      assertThat(actualReviewResponse.id()).isNotNull().isEqualTo(2_000_000L);
+      assertThat(actualReviewResponse.vote()).isEqualTo(9);
+      assertThat(actualReviewResponse.opinion()).isNotNull().isEqualTo("Lorem ipsum dolor sit amet");
+      assertThat(actualReviewResponse.userId()).isNotNull().isEqualTo(100L);
+      assertThat(actualReviewResponse.movieId()).isNotNull().isEqualTo("1000000");
+      assertThat(actualReviewResponse.createdAt()).isNotNull().isEqualTo("2024-02-09T10:00:00");
     }
 
     @Test

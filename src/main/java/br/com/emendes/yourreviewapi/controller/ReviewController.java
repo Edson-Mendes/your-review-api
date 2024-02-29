@@ -3,6 +3,7 @@ package br.com.emendes.yourreviewapi.controller;
 import br.com.emendes.yourreviewapi.dto.request.ReviewRegisterRequest;
 import br.com.emendes.yourreviewapi.dto.request.ReviewUpdateRequest;
 import br.com.emendes.yourreviewapi.dto.response.ReviewDetailsResponse;
+import br.com.emendes.yourreviewapi.dto.response.ReviewResponse;
 import br.com.emendes.yourreviewapi.dto.response.ReviewSummaryResponse;
 import br.com.emendes.yourreviewapi.service.ReviewService;
 import lombok.RequiredArgsConstructor;
@@ -31,13 +32,13 @@ public class ReviewController {
    *                              location do recurso criado.
    */
   @PostMapping
-  public ResponseEntity<ReviewDetailsResponse> register(
+  public ResponseEntity<ReviewResponse> register(
       @RequestBody ReviewRegisterRequest reviewRegisterRequest,
       UriComponentsBuilder uriBuilder) {
-    ReviewDetailsResponse reviewDetailsResponse = reviewService.register(reviewRegisterRequest);
-    URI uri = uriBuilder.path("/api/v1/reviews/{id}").build(reviewDetailsResponse.id());
+    ReviewResponse reviewResponse = reviewService.register(reviewRegisterRequest);
+    URI uri = uriBuilder.path("/api/v1/reviews/{id}").build(reviewResponse.id());
 
-    return ResponseEntity.created(uri).body(reviewDetailsResponse);
+    return ResponseEntity.created(uri).body(reviewResponse);
   }
 
   /**
@@ -70,7 +71,7 @@ public class ReviewController {
    * @param reviewUpdateRequest objeto com os novos dados da Review.
    */
   @PutMapping("/{reviewId}")
-  public ResponseEntity<ReviewDetailsResponse> updateById(
+  public ResponseEntity<ReviewResponse> updateById(
       @PathVariable("reviewId") Long reviewId,
       @RequestBody ReviewUpdateRequest reviewUpdateRequest) {
     return ResponseEntity.ok(reviewService.updateById(reviewId, reviewUpdateRequest));

@@ -29,10 +29,17 @@ public class MovieServiceImpl implements MovieService {
   }
 
   @Override
-  public MovieDetailsResponse findById(String movieId) {
+  public MovieDetailsResponse findDetailedById(String movieId) {
     log.info("Searching for movie with id: {}", movieId);
 
     return movieMapper.toMovieDetailsResponse(movieClient.findById(movieId));
+  }
+
+  @Override
+  public MovieSummaryResponse findSummarizedById(String movieId) {
+    log.info("Searching for movie with id: {}", movieId);
+
+    return movieMapper.toMovieSummaryResponse(movieClient.findById(movieId));
   }
 
 }

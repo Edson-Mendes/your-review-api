@@ -2,16 +2,18 @@ package br.com.emendes.yourreviewapi.integration.controller;
 
 import br.com.emendes.yourreviewapi.controller.ReviewController;
 import br.com.emendes.yourreviewapi.dto.response.ReviewDetailsResponse;
+import br.com.emendes.yourreviewapi.dto.response.ReviewResponse;
 import br.com.emendes.yourreviewapi.dto.response.ReviewSummaryResponse;
 import br.com.emendes.yourreviewapi.exception.UserIsNotAuthenticatedException;
 import br.com.emendes.yourreviewapi.mapper.ReviewMapper;
 import br.com.emendes.yourreviewapi.model.entity.Review;
 import br.com.emendes.yourreviewapi.repository.ReviewRepository;
-import br.com.emendes.yourreviewapi.repository.projection.ReviewDetailsProjection;
+import br.com.emendes.yourreviewapi.service.MovieService;
 import br.com.emendes.yourreviewapi.service.MovieVotesService;
 import br.com.emendes.yourreviewapi.service.ReviewService;
 import br.com.emendes.yourreviewapi.util.PageableResponse;
 import br.com.emendes.yourreviewapi.util.component.AuthenticatedUserComponent;
+import br.com.emendes.yourreviewapi.util.faker.MovieFaker;
 import br.com.emendes.yourreviewapi.util.faker.MovieVotesFaker;
 import br.com.emendes.yourreviewapi.util.faker.ReviewFaker;
 import br.com.emendes.yourreviewapi.util.faker.UserFaker;
@@ -63,6 +65,8 @@ class ReviewControllerIT {
   @MockBean
   private MovieVotesService movieVotesServiceMock;
   @MockBean
+  private MovieService movieServiceMock;
+  @MockBean
   private ReviewMapper reviewMapperMock;
   @MockBean
   private ReviewRepository reviewRepositoryMock;
@@ -83,7 +87,7 @@ class ReviewControllerIT {
       when(movieVotesServiceMock.findByMovieId("1000000")).thenReturn(MovieVotesFaker.movieVotesOptional());
       when(reviewMapperMock.toReview(any())).thenReturn(ReviewFaker.nonRegisteredReview());
       when(reviewRepositoryMock.save(any())).thenReturn(ReviewFaker.review());
-      when(reviewMapperMock.toReviewDetailsResponse(any(Review.class))).thenReturn(ReviewFaker.reviewDetailsResponse());
+      when(reviewMapperMock.toReviewResponse(any(Review.class))).thenReturn(ReviewFaker.reviewResponse());
 
       String requestBody = """
           {
@@ -105,7 +109,7 @@ class ReviewControllerIT {
       when(movieVotesServiceMock.findByMovieId("1000000")).thenReturn(MovieVotesFaker.movieVotesOptional());
       when(reviewMapperMock.toReview(any())).thenReturn(ReviewFaker.nonRegisteredReview());
       when(reviewRepositoryMock.save(any())).thenReturn(ReviewFaker.review());
-      when(reviewMapperMock.toReviewDetailsResponse(any(Review.class))).thenReturn(ReviewFaker.reviewDetailsResponse());
+      when(reviewMapperMock.toReviewResponse(any(Review.class))).thenReturn(ReviewFaker.reviewResponse());
 
       String requestBody = """
           {
@@ -118,7 +122,7 @@ class ReviewControllerIT {
       String actualContent = mockMvc.perform(post(REGISTER_URI).contentType(CONTENT_TYPE).content(requestBody))
           .andReturn().getResponse().getContentAsString();
 
-      ReviewDetailsResponse actualResponseBody = mapper.readValue(actualContent, ReviewDetailsResponse.class);
+      ReviewResponse actualResponseBody = mapper.readValue(actualContent, ReviewResponse.class);
 
       assertThat(actualResponseBody).isNotNull();
       assertThat(actualResponseBody.id()).isNotNull().isEqualTo(2_000_000L);
@@ -139,7 +143,7 @@ class ReviewControllerIT {
           .thenReturn(MovieVotesFaker.nonRegisteredMovieVotes());
       when(reviewMapperMock.toReview(any())).thenReturn(ReviewFaker.nonRegisteredReview());
       when(reviewRepositoryMock.save(any())).thenReturn(ReviewFaker.review());
-      when(reviewMapperMock.toReviewDetailsResponse(any(Review.class))).thenReturn(ReviewFaker.reviewDetailsResponse());
+      when(reviewMapperMock.toReviewResponse(any(Review.class))).thenReturn(ReviewFaker.reviewResponse());
 
       String requestBody = """
           {
@@ -163,7 +167,7 @@ class ReviewControllerIT {
           .thenReturn(MovieVotesFaker.nonRegisteredMovieVotes());
       when(reviewMapperMock.toReview(any())).thenReturn(ReviewFaker.nonRegisteredReview());
       when(reviewRepositoryMock.save(any())).thenReturn(ReviewFaker.review());
-      when(reviewMapperMock.toReviewDetailsResponse(any(Review.class))).thenReturn(ReviewFaker.reviewDetailsResponse());
+      when(reviewMapperMock.toReviewResponse(any(Review.class))).thenReturn(ReviewFaker.reviewResponse());
 
       String requestBody = """
           {
@@ -176,7 +180,7 @@ class ReviewControllerIT {
       String actualContent = mockMvc.perform(post(REGISTER_URI).contentType(CONTENT_TYPE).content(requestBody))
           .andReturn().getResponse().getContentAsString();
 
-      ReviewDetailsResponse actualResponseBody = mapper.readValue(actualContent, ReviewDetailsResponse.class);
+      ReviewResponse actualResponseBody = mapper.readValue(actualContent, ReviewResponse.class);
 
       assertThat(actualResponseBody).isNotNull();
       assertThat(actualResponseBody.id()).isNotNull().isEqualTo(2_000_000L);
@@ -194,8 +198,8 @@ class ReviewControllerIT {
       when(movieVotesServiceMock.findByMovieId("1000000")).thenReturn(MovieVotesFaker.movieVotesOptional());
       when(reviewMapperMock.toReview(any())).thenReturn(ReviewFaker.nonRegisteredReviewWithoutOpinion());
       when(reviewRepositoryMock.save(any())).thenReturn(ReviewFaker.reviewWithoutOpinion());
-      when(reviewMapperMock.toReviewDetailsResponse(any(Review.class)))
-          .thenReturn(ReviewFaker.reviewDetailsResponseWithoutOpinion());
+      when(reviewMapperMock.toReviewResponse(any(Review.class)))
+          .thenReturn(ReviewFaker.reviewResponseWithoutOpinion());
 
       String requestBody = """
           {
@@ -216,8 +220,8 @@ class ReviewControllerIT {
       when(movieVotesServiceMock.findByMovieId("1000000")).thenReturn(MovieVotesFaker.movieVotesOptional());
       when(reviewMapperMock.toReview(any())).thenReturn(ReviewFaker.nonRegisteredReviewWithoutOpinion());
       when(reviewRepositoryMock.save(any())).thenReturn(ReviewFaker.reviewWithoutOpinion());
-      when(reviewMapperMock.toReviewDetailsResponse(any(Review.class)))
-          .thenReturn(ReviewFaker.reviewDetailsResponseWithoutOpinion());
+      when(reviewMapperMock.toReviewResponse(any(Review.class)))
+          .thenReturn(ReviewFaker.reviewResponseWithoutOpinion());
 
       String requestBody = """
           {
@@ -229,7 +233,7 @@ class ReviewControllerIT {
       String actualContent = mockMvc.perform(post(REGISTER_URI).contentType(CONTENT_TYPE).content(requestBody))
           .andReturn().getResponse().getContentAsString();
 
-      ReviewDetailsResponse actualResponseBody = mapper.readValue(actualContent, ReviewDetailsResponse.class);
+      ReviewResponse actualResponseBody = mapper.readValue(actualContent, ReviewResponse.class);
 
       assertThat(actualResponseBody).isNotNull();
       assertThat(actualResponseBody.id()).isNotNull().isEqualTo(2_000_000L);
@@ -504,10 +508,11 @@ class ReviewControllerIT {
     void findById_MustReturnStatus200_WhenFetchSuccessfully() throws Exception {
       when(reviewRepositoryMock.findProjectedById(any()))
           .thenReturn(ReviewFaker.reviewDetailsProjectionOptional());
-      when(reviewMapperMock.toReviewDetailsResponse(any(ReviewDetailsProjection.class)))
+      when(movieServiceMock.findSummarizedById("1000000")).thenReturn(MovieFaker.movieSummaryResponse());
+      when(reviewMapperMock.toReviewDetailsResponse(any(), any()))
           .thenReturn(ReviewFaker.reviewDetailsResponse());
 
-      mockMvc.perform(get(FETCH_BY_MOVIE_ID_URI, "2000000").contentType(CONTENT_TYPE))
+      mockMvc.perform(get(FETCH_BY_MOVIE_ID_URI, "1000000000").contentType(CONTENT_TYPE))
           .andExpect(status().isOk());
     }
 
@@ -516,20 +521,25 @@ class ReviewControllerIT {
     void findById_MustReturnReviewDetailsResponse_WhenFetchSuccessfully() throws Exception {
       when(reviewRepositoryMock.findProjectedById(any()))
           .thenReturn(ReviewFaker.reviewDetailsProjectionOptional());
-      when(reviewMapperMock.toReviewDetailsResponse(any(ReviewDetailsProjection.class)))
+      when(movieServiceMock.findSummarizedById("1000000")).thenReturn(MovieFaker.movieSummaryResponse());
+      when(reviewMapperMock.toReviewDetailsResponse(any(), any()))
           .thenReturn(ReviewFaker.reviewDetailsResponse());
 
-      String actualContent = mockMvc.perform(get(FETCH_BY_MOVIE_ID_URI, "2000000").contentType(CONTENT_TYPE))
+      String actualContent = mockMvc.perform(get(FETCH_BY_MOVIE_ID_URI, "1000000000").contentType(CONTENT_TYPE))
           .andReturn().getResponse().getContentAsString();
 
       ReviewDetailsResponse actualResponseBody = mapper.readValue(actualContent, ReviewDetailsResponse.class);
 
       assertThat(actualResponseBody).isNotNull();
-      assertThat(actualResponseBody.id()).isNotNull().isEqualTo(2_000_000L);
+      assertThat(actualResponseBody.id()).isNotNull().isEqualTo(1_000_000_000L);
       assertThat(actualResponseBody.vote()).isEqualTo(9);
       assertThat(actualResponseBody.opinion()).isNotNull().isEqualTo("Lorem ipsum dolor sit amet");
       assertThat(actualResponseBody.userId()).isNotNull().isEqualTo(100L);
-      assertThat(actualResponseBody.movieId()).isNotNull().isEqualTo("1000000");
+      assertThat(actualResponseBody.movie()).isNotNull();
+      assertThat(actualResponseBody.movie().id()).isNotNull().isEqualTo("1000000");
+      assertThat(actualResponseBody.movie().title()).isNotNull().isEqualTo("Lorem");
+      assertThat(actualResponseBody.movie().posterPath()).isNotNull().isEqualTo("/1000000");
+      assertThat(actualResponseBody.movie().releaseDate()).isNotNull().isEqualTo("2024-01-16");
     }
 
     @Test
@@ -571,8 +581,8 @@ class ReviewControllerIT {
       when(authenticatedUserComponentMock.getCurrentUser()).thenReturn(UserFaker.user());
       when(reviewRepositoryMock.findByIdAndUserId(any(), any())).thenReturn(ReviewFaker.reviewOptional());
       when(reviewRepositoryMock.save(any())).thenReturn(ReviewFaker.reviewUpdated());
-      when(reviewMapperMock.toReviewDetailsResponse(any(Review.class)))
-          .thenReturn(ReviewFaker.reviewDetailsResponseUpdated());
+      when(reviewMapperMock.toReviewResponse(any(Review.class)))
+          .thenReturn(ReviewFaker.reviewResponseUpdated());
 
       String requestBody = """
           {
@@ -591,8 +601,8 @@ class ReviewControllerIT {
       when(authenticatedUserComponentMock.getCurrentUser()).thenReturn(UserFaker.user());
       when(reviewRepositoryMock.findByIdAndUserId(any(), any())).thenReturn(ReviewFaker.reviewOptional());
       when(reviewRepositoryMock.save(any())).thenReturn(ReviewFaker.reviewUpdated());
-      when(reviewMapperMock.toReviewDetailsResponse(any(Review.class)))
-          .thenReturn(ReviewFaker.reviewDetailsResponseUpdated());
+      when(reviewMapperMock.toReviewResponse(any(Review.class)))
+          .thenReturn(ReviewFaker.reviewResponseUpdated());
 
       String requestBody = """
           {
@@ -604,7 +614,7 @@ class ReviewControllerIT {
       String actualContent = mockMvc.perform(put(UPDATE_BY_ID_URI, "2000000").contentType(CONTENT_TYPE).content(requestBody))
           .andReturn().getResponse().getContentAsString();
 
-      ReviewDetailsResponse actualResponseBody = mapper.readValue(actualContent, ReviewDetailsResponse.class);
+      ReviewResponse actualResponseBody = mapper.readValue(actualContent, ReviewResponse.class);
 
       assertThat(actualResponseBody).isNotNull();
       assertThat(actualResponseBody.id()).isNotNull().isEqualTo(2_000_000L);
@@ -621,8 +631,8 @@ class ReviewControllerIT {
       when(authenticatedUserComponentMock.getCurrentUser()).thenReturn(UserFaker.user());
       when(reviewRepositoryMock.findByIdAndUserId(any(), any())).thenReturn(ReviewFaker.reviewOptional());
       when(reviewRepositoryMock.save(any())).thenReturn(ReviewFaker.reviewUpdatedWithoutOpinion());
-      when(reviewMapperMock.toReviewDetailsResponse(any(Review.class)))
-          .thenReturn(ReviewFaker.reviewDetailsResponseUpdatedWithoutOpinion());
+      when(reviewMapperMock.toReviewResponse(any(Review.class)))
+          .thenReturn(ReviewFaker.reviewResponseUpdatedWithoutOpinion());
 
       String requestBody = """
           {
@@ -640,8 +650,8 @@ class ReviewControllerIT {
       when(authenticatedUserComponentMock.getCurrentUser()).thenReturn(UserFaker.user());
       when(reviewRepositoryMock.findByIdAndUserId(any(), any())).thenReturn(ReviewFaker.reviewOptional());
       when(reviewRepositoryMock.save(any())).thenReturn(ReviewFaker.reviewUpdatedWithoutOpinion());
-      when(reviewMapperMock.toReviewDetailsResponse(any(Review.class)))
-          .thenReturn(ReviewFaker.reviewDetailsResponseUpdatedWithoutOpinion());
+      when(reviewMapperMock.toReviewResponse(any(Review.class)))
+          .thenReturn(ReviewFaker.reviewResponseUpdatedWithoutOpinion());
 
       String requestBody = """
           {
@@ -652,7 +662,7 @@ class ReviewControllerIT {
       String actualContent = mockMvc.perform(put(UPDATE_BY_ID_URI, "2000000").contentType(CONTENT_TYPE).content(requestBody))
           .andReturn().getResponse().getContentAsString();
 
-      ReviewDetailsResponse actualResponseBody = mapper.readValue(actualContent, ReviewDetailsResponse.class);
+      ReviewResponse actualResponseBody = mapper.readValue(actualContent, ReviewResponse.class);
 
       assertThat(actualResponseBody).isNotNull();
       assertThat(actualResponseBody.id()).isNotNull().isEqualTo(2_000_000L);

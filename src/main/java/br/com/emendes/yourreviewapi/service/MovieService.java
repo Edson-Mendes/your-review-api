@@ -26,12 +26,21 @@ public interface MovieService {
       @PositiveOrZero(message = "{MovieService.findByName.page.PositiveOrZero.message}") int page);
 
   /**
-   * Busca filme por id.
+   * Busca informações detalhadas do Movie por id.
    *
    * @param movieId identificador do filme a ser buscado.
    * @return MovieDetailsResponse objeto contendo informações detalhadas do filme encontrado.
-   * @throws MovieNotFoundException caso o filme não seja encontrado para o dado {@code id}.
+   * @throws MovieNotFoundException caso o filme não seja encontrado para o dado {@code movieId}.
    */
-  MovieDetailsResponse findById(@NotBlank(message = "{MovieService.findById.movieId.NotBlank.message}") String movieId);
+  MovieDetailsResponse findDetailedById(@NotBlank(message = "{MovieService.findById.movieId.NotBlank.message}") String movieId);
+
+  /**
+   * Busca informações resumidas do Movie por id.
+   *
+   * @param movieId identificador do filme a ser buscado.
+   * @return MovieSummaryResponse objeto contendo informações resumidas do filme encontrado.
+   * @throws MovieNotFoundException caso o filme não seja encontrado para o dado {@code movieId}.
+   */
+  MovieSummaryResponse findSummarizedById(@NotBlank(message = "{MovieService.findById.movieId.NotBlank.message}") String movieId);
 
 }

@@ -2,9 +2,7 @@ package br.com.emendes.yourreviewapi.mapper.impl;
 
 import br.com.emendes.yourreviewapi.dto.request.ReviewRegisterRequest;
 import br.com.emendes.yourreviewapi.dto.request.ReviewUpdateRequest;
-import br.com.emendes.yourreviewapi.dto.response.ReviewDetailsResponse;
-import br.com.emendes.yourreviewapi.dto.response.ReviewSummaryResponse;
-import br.com.emendes.yourreviewapi.dto.response.UserSummaryResponse;
+import br.com.emendes.yourreviewapi.dto.response.*;
 import br.com.emendes.yourreviewapi.mapper.ReviewMapper;
 import br.com.emendes.yourreviewapi.model.entity.Review;
 import br.com.emendes.yourreviewapi.repository.projection.ReviewDetailsProjection;
@@ -29,10 +27,10 @@ public class ReviewMapperImpl implements ReviewMapper {
   }
 
   @Override
-  public ReviewDetailsResponse toReviewDetailsResponse(Review review) {
+  public ReviewResponse toReviewResponse(Review review) {
     Assert.notNull(review, "review must not be null");
 
-    return ReviewDetailsResponse.builder()
+    return ReviewResponse.builder()
         .id(review.getId())
         .movieId(review.getMovieVotes().getMovieId())
         .vote(review.getVote())
@@ -43,12 +41,15 @@ public class ReviewMapperImpl implements ReviewMapper {
   }
 
   @Override
-  public ReviewDetailsResponse toReviewDetailsResponse(ReviewDetailsProjection reviewDetailsProjection) {
+  public ReviewDetailsResponse toReviewDetailsResponse(
+      ReviewDetailsProjection reviewDetailsProjection,
+      MovieSummaryResponse movie) {
     Assert.notNull(reviewDetailsProjection, "reviewDetailsProjection must not be null");
+    Assert.notNull(movie, "movie must not be null");
 
     return ReviewDetailsResponse.builder()
         .id(reviewDetailsProjection.getId())
-        .movieId(reviewDetailsProjection.getMovieVotesMovieId())
+        .movie(movie)
         .vote(reviewDetailsProjection.getVote())
         .opinion(reviewDetailsProjection.getOpinion())
         .userId(reviewDetailsProjection.getUserId())
@@ -74,7 +75,6 @@ public class ReviewMapperImpl implements ReviewMapper {
         .user(userSummaryResponse)
         .build();
   }
-
 
   @Override
   public void merge(Review review, ReviewUpdateRequest reviewUpdateRequest) {

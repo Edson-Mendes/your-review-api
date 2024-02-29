@@ -3,6 +3,7 @@ package br.com.emendes.yourreviewapi.service.impl;
 import br.com.emendes.yourreviewapi.dto.request.ReviewRegisterRequest;
 import br.com.emendes.yourreviewapi.dto.request.ReviewUpdateRequest;
 import br.com.emendes.yourreviewapi.dto.response.ReviewDetailsResponse;
+import br.com.emendes.yourreviewapi.dto.response.ReviewResponse;
 import br.com.emendes.yourreviewapi.dto.response.ReviewSummaryResponse;
 import br.com.emendes.yourreviewapi.exception.ReviewAlreadyExistsException;
 import br.com.emendes.yourreviewapi.exception.ReviewNotFoundException;
@@ -11,6 +12,7 @@ import br.com.emendes.yourreviewapi.model.entity.MovieVotes;
 import br.com.emendes.yourreviewapi.model.entity.Review;
 import br.com.emendes.yourreviewapi.model.entity.User;
 import br.com.emendes.yourreviewapi.repository.ReviewRepository;
+import br.com.emendes.yourreviewapi.service.MovieService;
 import br.com.emendes.yourreviewapi.service.MovieVotesService;
 import br.com.emendes.yourreviewapi.service.ReviewService;
 import br.com.emendes.yourreviewapi.util.component.AuthenticatedUserComponent;
@@ -37,10 +39,11 @@ public class ReviewServiceImpl implements ReviewService {
   private final MovieVotesService movieVotesService;
   private final ReviewMapper reviewMapper;
   private final ReviewRepository reviewRepository;
+  private final MovieService movieService;
 
   @Transactional
   @Override
-  public ReviewDetailsResponse register(ReviewRegisterRequest reviewRegisterRequest) {
+  public ReviewResponse register(ReviewRegisterRequest reviewRegisterRequest) {
     log.info("Attempt to register a review for movie with id: {}", reviewRegisterRequest.movieId());
 
     User currentUser = authenticatedUserComponent.getCurrentUser();
@@ -66,7 +69,7 @@ public class ReviewServiceImpl implements ReviewService {
     review = reviewRepository.save(review);
 
     log.info("Review registered successfully with id: {}", review.getId());
-    return reviewMapper.toReviewDetailsResponse(review);
+    return reviewMapper.toReviewResponse(review);
   }
 
   @Override
@@ -83,12 +86,13 @@ public class ReviewServiceImpl implements ReviewService {
     log.info("Attempt to find review with id: {}", reviewId);
 
     return reviewRepository.findProjectedById(reviewId)
-        .map(reviewMapper::toReviewDetailsResponse)
+        .map(review -> reviewMapper.toReviewDetailsResponse(
+            review, movieService.findSummarizedById(review.getMovieVotesMovieId())))
         .orElseThrow(() -> getReviewNotFoundException(reviewId));
   }
 
   @Override
-  public ReviewDetailsResponse updateById(Long reviewId, ReviewUpdateRequest reviewUpdateRequest) {
+  public ReviewResponse updateById(Long reviewId, ReviewUpdateRequest reviewUpdateRequest) {
     log.info("Attempt to update review with id: {}", reviewId);
     User currentUser = authenticatedUserComponent.getCurrentUser();
 
@@ -102,7 +106,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     log.info("Review with id: {} updated successfully", reviewId);
 
-    return reviewMapper.toReviewDetailsResponse(review);
+    return reviewMapper.toReviewResponse(review);
   }
 
   @Transactional
