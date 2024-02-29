@@ -65,11 +65,14 @@ class ReviewRepositoryTest {
       assertThat(actualReviewSummaryProjectionList).isNotNull().isNotEmpty().hasSize(1);
 
       ReviewSummaryProjection actualReviewSummaryProjection = actualReviewSummaryProjectionList.get(0);
+
       assertThat(actualReviewSummaryProjection).isNotNull();
       assertThat(actualReviewSummaryProjection.getId()).isNotNull().isEqualTo(1L);
       assertThat(actualReviewSummaryProjection.getVote()).isEqualTo(9);
       assertThat(actualReviewSummaryProjection.getOpinion()).isNotNull().isEqualTo("lorem ipsum dolor sit amet");
       assertThat(actualReviewSummaryProjection.getUserId()).isNotNull().isEqualTo(1L);
+      assertThat(actualReviewSummaryProjection.getUserName()).isNotNull().isEqualTo("Lorem Ipsum");
+      assertThat(actualReviewSummaryProjection.getUserEmail()).isNotNull().isEqualTo("lorem@email.com");
       assertThat(actualReviewSummaryProjection.getMovieVotesMovieId()).isNotNull().isEqualTo("120");
     }
 

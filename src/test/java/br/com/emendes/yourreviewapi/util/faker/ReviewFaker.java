@@ -56,6 +56,7 @@ public class ReviewFaker {
         .createdAt(LocalDateTime.parse("2024-02-09T10:00:00"))
         .build();
   }
+
   /**
    * Retorna {@code Optional<Review>} contendo o objeto.
    */
@@ -205,7 +206,7 @@ public class ReviewFaker {
         .id(2_000_000L)
         .vote(9)
         .opinion("Lorem ipsum dolor sit amet")
-        .userId(100L)
+        .user(UserFaker.userSummaryResponse())
         .movieId("1000000")
         .build();
   }

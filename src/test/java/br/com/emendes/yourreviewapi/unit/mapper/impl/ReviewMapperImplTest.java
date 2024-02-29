@@ -60,6 +60,8 @@ class ReviewMapperImplTest {
         .vote(9)
         .opinion("Lorem ipsum dolor sit amet")
         .userId(100L)
+        .userName("John Doe")
+        .userEmail("john.doe@email.com")
         .movieVotesMovieId("1000000")
         .build();
 
@@ -69,7 +71,10 @@ class ReviewMapperImplTest {
     assertThat(actualReviewSummaryResponse.id()).isNotNull().isEqualTo(1_000_000_000L);
     assertThat(actualReviewSummaryResponse.vote()).isEqualTo(9);
     assertThat(actualReviewSummaryResponse.opinion()).isNotNull().isEqualTo("Lorem ipsum dolor sit amet");
-    assertThat(actualReviewSummaryResponse.userId()).isNotNull().isEqualTo(100L);
+    assertThat(actualReviewSummaryResponse.user()).isNotNull();
+    assertThat(actualReviewSummaryResponse.user().id()).isNotNull().isEqualTo(100L);
+    assertThat(actualReviewSummaryResponse.user().name()).isNotNull().isEqualTo("John Doe");
+    assertThat(actualReviewSummaryResponse.user().email()).isNotNull().isEqualTo("john.doe@email.com");
     assertThat(actualReviewSummaryResponse.movieId()).isNotNull().isEqualTo("1000000");
   }
 

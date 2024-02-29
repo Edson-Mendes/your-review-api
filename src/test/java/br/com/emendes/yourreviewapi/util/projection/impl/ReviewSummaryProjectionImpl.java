@@ -15,6 +15,8 @@ public class ReviewSummaryProjectionImpl implements ReviewSummaryProjection {
   private int vote;
   private String opinion;
   private Long userId;
+  private String userName;
+  private String userEmail;
   private String movieVotesMovieId;
 
   @Override
@@ -35,6 +37,16 @@ public class ReviewSummaryProjectionImpl implements ReviewSummaryProjection {
   @Override
   public Long getUserId() {
     return userId;
+  }
+
+  @Override
+  public String getUserName() {
+    return userName;
+  }
+
+  @Override
+  public String getUserEmail() {
+    return userEmail;
   }
 
   @Override
