@@ -1,6 +1,7 @@
 package br.com.emendes.yourreviewapi.util.faker;
 
 import br.com.emendes.yourreviewapi.dto.response.UserDetailsResponse;
+import br.com.emendes.yourreviewapi.dto.response.UserSummaryResponse;
 import br.com.emendes.yourreviewapi.model.Status;
 import br.com.emendes.yourreviewapi.model.entity.User;
 
@@ -54,4 +55,14 @@ public class UserFaker {
         .build();
   }
 
+  /**
+   * Retorna um objeto UserSummaryResponse com todos os campos.
+   */
+  public static UserSummaryResponse userSummaryResponse() {
+    return UserSummaryResponse.builder()
+        .id(100L)
+        .name("Lorem Ipsum")
+        .email("lorem@email.com")
+        .build();
+  }
 }

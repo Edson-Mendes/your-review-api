@@ -16,7 +16,7 @@ public record ReviewSummaryResponse(
     Long id,
     int vote,
     String opinion,
-    Long userId,
+    UserSummaryResponse user,
     String movieId
 ) {
 }

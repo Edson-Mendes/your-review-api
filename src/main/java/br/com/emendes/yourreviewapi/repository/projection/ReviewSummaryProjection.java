@@ -13,6 +13,10 @@ public interface ReviewSummaryProjection {
 
   Long getUserId();
 
+  String getUserName();
+
+  String getUserEmail();
+
   String getMovieVotesMovieId();
 
 }

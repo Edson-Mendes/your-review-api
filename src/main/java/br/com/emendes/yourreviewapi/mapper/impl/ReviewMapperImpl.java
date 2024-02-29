@@ -4,6 +4,7 @@ import br.com.emendes.yourreviewapi.dto.request.ReviewRegisterRequest;
 import br.com.emendes.yourreviewapi.dto.request.ReviewUpdateRequest;
 import br.com.emendes.yourreviewapi.dto.response.ReviewDetailsResponse;
 import br.com.emendes.yourreviewapi.dto.response.ReviewSummaryResponse;
+import br.com.emendes.yourreviewapi.dto.response.UserSummaryResponse;
 import br.com.emendes.yourreviewapi.mapper.ReviewMapper;
 import br.com.emendes.yourreviewapi.model.entity.Review;
 import br.com.emendes.yourreviewapi.repository.projection.ReviewDetailsProjection;
@@ -59,12 +60,18 @@ public class ReviewMapperImpl implements ReviewMapper {
   public ReviewSummaryResponse toReviewSummaryResponse(ReviewSummaryProjection reviewSummaryProjection) {
     Assert.notNull(reviewSummaryProjection, "reviewSummaryProjection must not be null");
 
+    UserSummaryResponse userSummaryResponse = UserSummaryResponse.builder()
+        .id(reviewSummaryProjection.getUserId())
+        .name(reviewSummaryProjection.getUserName())
+        .email(reviewSummaryProjection.getUserEmail())
+        .build();
+
     return ReviewSummaryResponse.builder()
         .id(reviewSummaryProjection.getId())
         .movieId(reviewSummaryProjection.getMovieVotesMovieId())
         .vote(reviewSummaryProjection.getVote())
         .opinion(reviewSummaryProjection.getOpinion())
-        .userId(reviewSummaryProjection.getUserId())
+        .user(userSummaryResponse)
         .build();
   }
 

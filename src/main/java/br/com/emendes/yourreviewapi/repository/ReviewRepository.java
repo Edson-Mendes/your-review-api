@@ -58,7 +58,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
    * <b>NÃO TRAZ</b> o User do relacionamento Review-User.
    *
    * @param reviewId identificador da Review.
-   * @param userId     user relacionado com a review de id reviewId.
+   * @param userId   user relacionado com a review de id reviewId.
    * @return {@code Optional<Review>}
    */
   @Query("""
