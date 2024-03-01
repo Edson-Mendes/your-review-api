@@ -1,6 +1,7 @@
 package br.com.emendes.yourreviewapi.util.faker;
 
 import br.com.emendes.yourreviewapi.dto.response.ReviewDetailsResponse;
+import br.com.emendes.yourreviewapi.dto.response.ReviewResponse;
 import br.com.emendes.yourreviewapi.dto.response.ReviewSummaryResponse;
 import br.com.emendes.yourreviewapi.model.entity.Review;
 import br.com.emendes.yourreviewapi.repository.projection.ReviewDetailsProjection;
@@ -102,10 +103,10 @@ public class ReviewFaker {
   }
 
   /**
-   * Retorna um objeto {@link ReviewDetailsResponse} com todos os campos.
+   * Retorna um objeto {@link ReviewResponse} com todos os campos.
    */
-  public static ReviewDetailsResponse reviewDetailsResponse() {
-    return ReviewDetailsResponse.builder()
+  public static ReviewResponse reviewResponse() {
+    return ReviewResponse.builder()
         .id(2_000_000L)
         .vote(9)
         .opinion("Lorem ipsum dolor sit amet")
@@ -116,10 +117,10 @@ public class ReviewFaker {
   }
 
   /**
-   * Retorna um objeto {@link ReviewDetailsResponse} sem o campo opinion.
+   * Retorna um objeto {@link ReviewResponse} sem o campo opinion.
    */
-  public static ReviewDetailsResponse reviewDetailsResponseWithoutOpinion() {
-    return ReviewDetailsResponse.builder()
+  public static ReviewResponse reviewResponseWithoutOpinion() {
+    return ReviewResponse.builder()
         .id(2_000_000L)
         .vote(9)
         .userId(100L)
@@ -129,10 +130,10 @@ public class ReviewFaker {
   }
 
   /**
-   * Retorna um objeto {@link ReviewDetailsResponse} com dados atualizados.
+   * Retorna um objeto {@link ReviewResponse} com dados atualizados.
    */
-  public static ReviewDetailsResponse reviewDetailsResponseUpdated() {
-    return ReviewDetailsResponse.builder()
+  public static ReviewResponse reviewResponseUpdated() {
+    return ReviewResponse.builder()
         .id(2_000_000L)
         .vote(8)
         .opinion("Lorem ipsum dolor sit amet updated")
@@ -143,14 +144,28 @@ public class ReviewFaker {
   }
 
   /**
-   * Retorna um objeto {@link ReviewDetailsResponse} com dados atualizados e sem opinion.
+   * Retorna um objeto {@link ReviewResponse} com dados atualizados e sem opinion.
    */
-  public static ReviewDetailsResponse reviewDetailsResponseUpdatedWithoutOpinion() {
-    return ReviewDetailsResponse.builder()
+  public static ReviewResponse reviewResponseUpdatedWithoutOpinion() {
+    return ReviewResponse.builder()
         .id(2_000_000L)
         .vote(8)
         .userId(100L)
         .movieId("1000000")
+        .createdAt(LocalDateTime.parse("2024-02-09T10:00:00"))
+        .build();
+  }
+
+  /**
+   * Retorna um objeto {@link ReviewDetailsResponse} com todos os campos.
+   */
+  public static ReviewDetailsResponse reviewDetailsResponse() {
+    return ReviewDetailsResponse.builder()
+        .id(1_000_000_000L)
+        .vote(9)
+        .opinion("Lorem ipsum dolor sit amet")
+        .userId(100L)
+        .movie(MovieFaker.movieSummaryResponse())
         .createdAt(LocalDateTime.parse("2024-02-09T10:00:00"))
         .build();
   }

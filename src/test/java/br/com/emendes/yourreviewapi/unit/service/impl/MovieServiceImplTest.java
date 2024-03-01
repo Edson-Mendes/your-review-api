@@ -3,6 +3,7 @@ package br.com.emendes.yourreviewapi.unit.service.impl;
 import br.com.emendes.yourreviewapi.client.MovieClient;
 import br.com.emendes.yourreviewapi.dto.response.MovieDetailsResponse;
 import br.com.emendes.yourreviewapi.dto.response.MovieSummaryResponse;
+import br.com.emendes.yourreviewapi.exception.MovieNotFoundException;
 import br.com.emendes.yourreviewapi.mapper.MovieMapper;
 import br.com.emendes.yourreviewapi.model.Movie;
 import br.com.emendes.yourreviewapi.service.impl.MovieServiceImpl;
@@ -51,18 +52,18 @@ class MovieServiceImplTest {
   }
 
   @Nested
-  @DisplayName("Tests for findById method")
-  class FindByIdMethod {
+  @DisplayName("Tests for findDetailedById method")
+  class FindDetailedByIdMethod {
 
     @Test
-    @DisplayName("findById must return MovieDetailsResponse when found successfully")
-    void findById_MustReturnMovieDetailsResponse_WhenFoundSuccessfully() {
+    @DisplayName("findDetailedById must return MovieDetailsResponse when found successfully")
+    void findDetailedById_MustReturnMovieDetailsResponse_WhenFoundSuccessfully() {
       when(movieClientMock.findById("1000000"))
           .thenReturn(MovieFaker.movie());
       when(movieMapperMock.toMovieDetailsResponse(any(Movie.class)))
           .thenReturn(MovieFaker.movieDetailsResponse());
 
-      MovieDetailsResponse actualMovieDetailsResponse = movieService.findById("1000000");
+      MovieDetailsResponse actualMovieDetailsResponse = movieService.findDetailedById("1000000");
 
       Assertions.assertThat(actualMovieDetailsResponse).isNotNull();
       Assertions.assertThat(actualMovieDetailsResponse.id()).isNotNull().isEqualTo("1000000");
@@ -72,6 +73,49 @@ class MovieServiceImplTest {
       Assertions.assertThat(actualMovieDetailsResponse.posterPath()).isNotNull().isEqualTo("/1000000");
       Assertions.assertThat(actualMovieDetailsResponse.releaseDate()).isNotNull().isEqualTo("2024-01-16");
       Assertions.assertThat(actualMovieDetailsResponse.originalLanguage()).isNotNull().isEqualTo("en");
+    }
+
+    @Test
+    @DisplayName("findDetailedById must throw MovieNotFoundException when not found Movie for given movieId")
+    void findDetailedById_MustThrowMovieNotFoundException_WhenNotFoundMovieForGivenMovieId() {
+      when(movieClientMock.findById("1000000")).thenThrow(new MovieNotFoundException("movie not found with id: 1000000"));
+
+      Assertions.assertThatExceptionOfType(MovieNotFoundException.class)
+          .isThrownBy(() -> movieService.findDetailedById("1000000"))
+          .withMessage("movie not found with id: 1000000");
+    }
+
+  }
+
+  @Nested
+  @DisplayName("Tests for findSummarizedById method")
+  class FindSummarizedByIdMethod {
+
+    @Test
+    @DisplayName("findSummarizedById must return MovieSummaryResponse when found successfully")
+    void findSummarizedById_MustReturnMovieSummaryResponse_WhenFoundSuccessfully() {
+      when(movieClientMock.findById("1000000"))
+          .thenReturn(MovieFaker.movie());
+      when(movieMapperMock.toMovieSummaryResponse(any(Movie.class)))
+          .thenReturn(MovieFaker.movieSummaryResponse());
+
+      MovieSummaryResponse actualMovieSummaryResponse = movieService.findSummarizedById("1000000");
+
+      Assertions.assertThat(actualMovieSummaryResponse).isNotNull();
+      Assertions.assertThat(actualMovieSummaryResponse.id()).isNotNull().isEqualTo("1000000");
+      Assertions.assertThat(actualMovieSummaryResponse.title()).isNotNull().isEqualTo("Lorem");
+      Assertions.assertThat(actualMovieSummaryResponse.posterPath()).isNotNull().isEqualTo("/1000000");
+      Assertions.assertThat(actualMovieSummaryResponse.releaseDate()).isNotNull().isEqualTo("2024-01-16");
+    }
+
+    @Test
+    @DisplayName("findSummarizedById must throw MovieNotFoundException when not found Movie for given movieId")
+    void findSummarizedById_MustThrowMovieNotFoundException_WhenNotFoundMovieForGivenMovieId() {
+      when(movieClientMock.findById("1000000")).thenThrow(new MovieNotFoundException("movie not found with id: 1000000"));
+
+      Assertions.assertThatExceptionOfType(MovieNotFoundException.class)
+          .isThrownBy(() -> movieService.findSummarizedById("1000000"))
+          .withMessage("movie not found with id: 1000000");
     }
 
   }

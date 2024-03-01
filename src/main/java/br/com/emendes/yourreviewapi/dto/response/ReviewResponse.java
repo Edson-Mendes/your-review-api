@@ -11,16 +11,16 @@ import java.time.LocalDateTime;
  * @param vote      valor do voto do filme avaliado.
  * @param opinion   opinião do usuário sobre o filme.
  * @param userId    identificador do usuário que fez esta Review.
- * @param movie     informações resumidas do Movie relacionado a review.
+ * @param movieId   idenficador do filme o qual a review se aplica.
  * @param createdAt data de criação da review.
  */
 @Builder
-public record ReviewDetailsResponse(
+public record ReviewResponse(
     Long id,
     int vote,
     String opinion,
     Long userId,
-    MovieSummaryResponse movie,
+    String movieId,
     LocalDateTime createdAt
 ) {
 }

@@ -3,6 +3,7 @@ package br.com.emendes.yourreviewapi.service;
 import br.com.emendes.yourreviewapi.dto.request.ReviewRegisterRequest;
 import br.com.emendes.yourreviewapi.dto.request.ReviewUpdateRequest;
 import br.com.emendes.yourreviewapi.dto.response.ReviewDetailsResponse;
+import br.com.emendes.yourreviewapi.dto.response.ReviewResponse;
 import br.com.emendes.yourreviewapi.dto.response.ReviewSummaryResponse;
 import br.com.emendes.yourreviewapi.exception.ReviewNotFoundException;
 import br.com.emendes.yourreviewapi.model.entity.Review;
@@ -25,7 +26,7 @@ public interface ReviewService {
    * @param reviewRegisterRequest objeto DTO contendo os dados para criação da Review.
    * @return ReviewDetailResponse contendo informações detalhadas da Review cadastrada.
    */
-  ReviewDetailsResponse register(@Valid ReviewRegisterRequest reviewRegisterRequest);
+  ReviewResponse register(@Valid ReviewRegisterRequest reviewRegisterRequest);
 
 
   /**
@@ -43,7 +44,7 @@ public interface ReviewService {
    * Buscar {@link Review} por id.
    *
    * @param reviewId identificador da review a ser buscada.
-   * @return Objeto {@link ReviewDetailsResponse} contendo informações da Review.
+   * @return Objeto {@link ReviewResponse} contendo informações da Review.
    * @throws ReviewNotFoundException caso não seja encontrada review para o dado reviewId.
    */
   ReviewDetailsResponse findById(@NotNull(message = "{ReviewService.findById.reviewId.NotNull.message}") Long reviewId);
@@ -53,10 +54,10 @@ public interface ReviewService {
    *
    * @param reviewId            identificador da review a ser atualizada.
    * @param reviewUpdateRequest objeto com os novos dados da Review.
-   * @return Objeto ReviewDetailsResponse com os dados atualizados.
+   * @return Objeto ReviewResponse com os dados atualizados.
    * @throws ReviewNotFoundException caso não seja encontrada review para o dado reviewId.
    */
-  ReviewDetailsResponse updateById(
+  ReviewResponse updateById(
       @NotNull(message = "{ReviewService.findById.reviewId.NotNull.message}") Long reviewId,
       @Valid ReviewUpdateRequest reviewUpdateRequest);
 
