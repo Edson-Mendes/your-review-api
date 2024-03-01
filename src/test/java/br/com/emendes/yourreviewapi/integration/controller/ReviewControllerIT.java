@@ -84,7 +84,7 @@ class ReviewControllerIT {
     void register_MustReturnStatus201_WhenRegisterReviewSuccessfully() throws Exception {
       when(authenticatedUserComponentMock.getCurrentUser()).thenReturn(UserFaker.user());
       when(reviewRepositoryMock.existsByUserIdAndMovieId(any(), any())).thenReturn(false);
-      when(movieVotesServiceMock.findByMovieId("1000000")).thenReturn(MovieVotesFaker.movieVotesOptional());
+      when(movieVotesServiceMock.findByMovieId("1234")).thenReturn(MovieVotesFaker.movieVotesOptional());
       when(reviewMapperMock.toReview(any())).thenReturn(ReviewFaker.nonRegisteredReview());
       when(reviewRepositoryMock.save(any())).thenReturn(ReviewFaker.review());
       when(reviewMapperMock.toReviewResponse(any(Review.class))).thenReturn(ReviewFaker.reviewResponse());
@@ -93,7 +93,7 @@ class ReviewControllerIT {
           {
             "vote": 9,
             "opinion": "Lorem ipsum dolor sit amet",
-            "movieId": "1000000"
+            "movieId": "1234"
           }
           """;
 
@@ -106,7 +106,7 @@ class ReviewControllerIT {
     void register_MustReturnReviewDetailsResponse_WhenRegisterReviewSuccessfully() throws Exception {
       when(authenticatedUserComponentMock.getCurrentUser()).thenReturn(UserFaker.user());
       when(reviewRepositoryMock.existsByUserIdAndMovieId(any(), any())).thenReturn(false);
-      when(movieVotesServiceMock.findByMovieId("1000000")).thenReturn(MovieVotesFaker.movieVotesOptional());
+      when(movieVotesServiceMock.findByMovieId("1234")).thenReturn(MovieVotesFaker.movieVotesOptional());
       when(reviewMapperMock.toReview(any())).thenReturn(ReviewFaker.nonRegisteredReview());
       when(reviewRepositoryMock.save(any())).thenReturn(ReviewFaker.review());
       when(reviewMapperMock.toReviewResponse(any(Review.class))).thenReturn(ReviewFaker.reviewResponse());
@@ -115,7 +115,7 @@ class ReviewControllerIT {
           {
             "vote": 9,
             "opinion": "Lorem ipsum dolor sit amet",
-            "movieId": "1000000"
+            "movieId": "1234"
           }
           """;
 
@@ -129,7 +129,7 @@ class ReviewControllerIT {
       assertThat(actualResponseBody.vote()).isEqualTo(9);
       assertThat(actualResponseBody.opinion()).isNotNull().isEqualTo("Lorem ipsum dolor sit amet");
       assertThat(actualResponseBody.userId()).isNotNull().isEqualTo(100L);
-      assertThat(actualResponseBody.movieId()).isNotNull().isEqualTo("1000000");
+      assertThat(actualResponseBody.movieId()).isNotNull().isEqualTo("1234");
       assertThat(actualResponseBody.createdAt()).isNotNull();
     }
 
@@ -138,8 +138,8 @@ class ReviewControllerIT {
     void register_MustReturnStatus201_WhenNoOneReviewedMovieWithGivenMovieId() throws Exception {
       when(authenticatedUserComponentMock.getCurrentUser()).thenReturn(UserFaker.user());
       when(reviewRepositoryMock.existsByUserIdAndMovieId(any(), any())).thenReturn(false);
-      when(movieVotesServiceMock.findByMovieId("1000000")).thenReturn(Optional.empty());
-      when(movieVotesServiceMock.generateNonVotedMovieVotes("1000000"))
+      when(movieVotesServiceMock.findByMovieId("1234")).thenReturn(Optional.empty());
+      when(movieVotesServiceMock.generateNonVotedMovieVotes("1234"))
           .thenReturn(MovieVotesFaker.nonRegisteredMovieVotes());
       when(reviewMapperMock.toReview(any())).thenReturn(ReviewFaker.nonRegisteredReview());
       when(reviewRepositoryMock.save(any())).thenReturn(ReviewFaker.review());
@@ -149,7 +149,7 @@ class ReviewControllerIT {
           {
             "vote": 9,
             "opinion": "Lorem ipsum dolor sit amet",
-            "movieId": "1000000"
+            "movieId": "1234"
           }
           """;
 
@@ -162,8 +162,8 @@ class ReviewControllerIT {
     void register_MustReturnReviewDetailsResponse_WhenNoOneReviewedMovieWithGivenMovieId() throws Exception {
       when(authenticatedUserComponentMock.getCurrentUser()).thenReturn(UserFaker.user());
       when(reviewRepositoryMock.existsByUserIdAndMovieId(any(), any())).thenReturn(false);
-      when(movieVotesServiceMock.findByMovieId("1000000")).thenReturn(Optional.empty());
-      when(movieVotesServiceMock.generateNonVotedMovieVotes("1000000"))
+      when(movieVotesServiceMock.findByMovieId("1234")).thenReturn(Optional.empty());
+      when(movieVotesServiceMock.generateNonVotedMovieVotes("1234"))
           .thenReturn(MovieVotesFaker.nonRegisteredMovieVotes());
       when(reviewMapperMock.toReview(any())).thenReturn(ReviewFaker.nonRegisteredReview());
       when(reviewRepositoryMock.save(any())).thenReturn(ReviewFaker.review());
@@ -173,7 +173,7 @@ class ReviewControllerIT {
           {
             "vote": 9,
             "opinion": "Lorem ipsum dolor sit amet",
-            "movieId": "1000000"
+            "movieId": "1234"
           }
           """;
 
@@ -187,7 +187,7 @@ class ReviewControllerIT {
       assertThat(actualResponseBody.vote()).isEqualTo(9);
       assertThat(actualResponseBody.opinion()).isNotNull().isEqualTo("Lorem ipsum dolor sit amet");
       assertThat(actualResponseBody.userId()).isNotNull().isEqualTo(100L);
-      assertThat(actualResponseBody.movieId()).isNotNull().isEqualTo("1000000");
+      assertThat(actualResponseBody.movieId()).isNotNull().isEqualTo("1234");
     }
 
     @Test
@@ -195,7 +195,7 @@ class ReviewControllerIT {
     void register_MustReturnStatus201_WhenRegisterReviewWithoutOpinionSuccessfully() throws Exception {
       when(authenticatedUserComponentMock.getCurrentUser()).thenReturn(UserFaker.user());
       when(reviewRepositoryMock.existsByUserIdAndMovieId(any(), any())).thenReturn(false);
-      when(movieVotesServiceMock.findByMovieId("1000000")).thenReturn(MovieVotesFaker.movieVotesOptional());
+      when(movieVotesServiceMock.findByMovieId("1234")).thenReturn(MovieVotesFaker.movieVotesOptional());
       when(reviewMapperMock.toReview(any())).thenReturn(ReviewFaker.nonRegisteredReviewWithoutOpinion());
       when(reviewRepositoryMock.save(any())).thenReturn(ReviewFaker.reviewWithoutOpinion());
       when(reviewMapperMock.toReviewResponse(any(Review.class)))
@@ -204,7 +204,7 @@ class ReviewControllerIT {
       String requestBody = """
           {
             "vote": 9,
-            "movieId": "1000000"
+            "movieId": "1234"
           }
           """;
 
@@ -217,7 +217,7 @@ class ReviewControllerIT {
     void register_MustReturnReviewDetailsResponse_WhenRegisterReviewWithoutOpinionSuccessfully() throws Exception {
       when(authenticatedUserComponentMock.getCurrentUser()).thenReturn(UserFaker.user());
       when(reviewRepositoryMock.existsByUserIdAndMovieId(any(), any())).thenReturn(false);
-      when(movieVotesServiceMock.findByMovieId("1000000")).thenReturn(MovieVotesFaker.movieVotesOptional());
+      when(movieVotesServiceMock.findByMovieId("1234")).thenReturn(MovieVotesFaker.movieVotesOptional());
       when(reviewMapperMock.toReview(any())).thenReturn(ReviewFaker.nonRegisteredReviewWithoutOpinion());
       when(reviewRepositoryMock.save(any())).thenReturn(ReviewFaker.reviewWithoutOpinion());
       when(reviewMapperMock.toReviewResponse(any(Review.class)))
@@ -226,7 +226,7 @@ class ReviewControllerIT {
       String requestBody = """
           {
             "vote": 9,
-            "movieId": "1000000"
+            "movieId": "1234"
           }
           """;
 
@@ -240,7 +240,7 @@ class ReviewControllerIT {
       assertThat(actualResponseBody.vote()).isEqualTo(9);
       assertThat(actualResponseBody.opinion()).isNull();
       assertThat(actualResponseBody.userId()).isNotNull().isEqualTo(100L);
-      assertThat(actualResponseBody.movieId()).isNotNull().isEqualTo("1000000");
+      assertThat(actualResponseBody.movieId()).isNotNull().isEqualTo("1234");
     }
 
     @Test
@@ -250,7 +250,7 @@ class ReviewControllerIT {
           {
             "vote": 12,
             "opinion": "",
-            "movieId": "1000000"
+            "movieId": "1234"
           }
           """;
 
@@ -265,7 +265,7 @@ class ReviewControllerIT {
           {
             "vote": 12,
             "opinion": "",
-            "movieId": "1000000"
+            "movieId": "1234"
           }
           """;
 
@@ -300,7 +300,7 @@ class ReviewControllerIT {
           {
             "vote": 9,
             "opinion": "Lorem ipsum dolor sit amet",
-            "movieId": "1000000"
+            "movieId": "1234"
           }
           """;
 
@@ -318,7 +318,7 @@ class ReviewControllerIT {
           {
             "vote": 9,
             "opinion": "Lorem ipsum dolor sit amet",
-            "movieId": "1000000"
+            "movieId": "1234"
           }
           """;
 
@@ -343,7 +343,7 @@ class ReviewControllerIT {
           {
             "vote": 9,
             "opinion": "Lorem ipsum dolor sit amet",
-            "movieId": "1000000"
+            "movieId": "1234"
           }
           """;
 
@@ -361,7 +361,7 @@ class ReviewControllerIT {
           {
             "vote": 9,
             "opinion": "Lorem ipsum dolor sit amet",
-            "movieId": "1000000"
+            "movieId": "1234"
           }
           """;
 
@@ -373,7 +373,7 @@ class ReviewControllerIT {
       assertThat(actualResponseBody).isNotNull();
       assertThat(actualResponseBody.getTitle()).isNotNull().isEqualTo("Bad request");
       assertThat(actualResponseBody.getDetail()).isNotNull()
-          .isEqualTo("User lorem@email.com has already reviewed the movie with id 1000000");
+          .isEqualTo("User john.doe@email.com has already reviewed the movie with id 1234");
       assertThat(actualResponseBody.getStatus()).isEqualTo(400);
     }
 
@@ -392,7 +392,7 @@ class ReviewControllerIT {
           .thenReturn(ReviewFaker.reviewSummaryProjectionPage());
       when(reviewMapperMock.toReviewSummaryResponse(any())).thenReturn(ReviewFaker.reviewSummaryResponse());
 
-      mockMvc.perform(get(FETCH_BY_MOVIE_ID_URI).param("movieId", "1000000").contentType(CONTENT_TYPE))
+      mockMvc.perform(get(FETCH_BY_MOVIE_ID_URI).param("movieId", "1234").contentType(CONTENT_TYPE))
           .andExpect(status().isOk());
     }
 
@@ -403,7 +403,7 @@ class ReviewControllerIT {
           .thenReturn(ReviewFaker.reviewSummaryProjectionPage());
       when(reviewMapperMock.toReviewSummaryResponse(any())).thenReturn(ReviewFaker.reviewSummaryResponse());
 
-      String actualContent = mockMvc.perform(get(FETCH_BY_MOVIE_ID_URI).param("movieId", "1000000").contentType(CONTENT_TYPE))
+      String actualContent = mockMvc.perform(get(FETCH_BY_MOVIE_ID_URI).param("movieId", "1234").contentType(CONTENT_TYPE))
           .andReturn().getResponse().getContentAsString();
 
       Page<ReviewSummaryResponse> actualResponseBody = mapper.readValue(actualContent,
@@ -420,7 +420,7 @@ class ReviewControllerIT {
           .thenReturn(ReviewFaker.emptyPage());
       when(reviewMapperMock.toReviewSummaryResponse(any())).thenReturn(ReviewFaker.reviewSummaryResponse());
 
-      mockMvc.perform(get(FETCH_BY_MOVIE_ID_URI).param("movieId", "1000000").contentType(CONTENT_TYPE))
+      mockMvc.perform(get(FETCH_BY_MOVIE_ID_URI).param("movieId", "1234").contentType(CONTENT_TYPE))
           .andExpect(status().isOk());
     }
 
@@ -431,7 +431,7 @@ class ReviewControllerIT {
           .thenReturn(ReviewFaker.emptyPage());
       when(reviewMapperMock.toReviewSummaryResponse(any())).thenReturn(ReviewFaker.reviewSummaryResponse());
 
-      String actualContent = mockMvc.perform(get(FETCH_BY_MOVIE_ID_URI).param("movieId", "1000000").contentType(CONTENT_TYPE))
+      String actualContent = mockMvc.perform(get(FETCH_BY_MOVIE_ID_URI).param("movieId", "1234").contentType(CONTENT_TYPE))
           .andReturn().getResponse().getContentAsString();
 
       Page<ReviewSummaryResponse> actualResponseBody = mapper.readValue(actualContent,
@@ -469,7 +469,7 @@ class ReviewControllerIT {
     @DisplayName("GET /api/v1/reviews?movieId={movieId} must return status 400 when request param page is negative")
     void fetchByMovieId_MustReturnStatus400_WhenRequestParamPageIsNegative() throws Exception {
       mockMvc.perform(get(FETCH_BY_MOVIE_ID_URI)
-              .param("movieId", "1000000")
+              .param("movieId", "1234")
               .param("page", "-1")
               .contentType(CONTENT_TYPE))
           .andExpect(status().isBadRequest());
@@ -479,7 +479,7 @@ class ReviewControllerIT {
     @DisplayName("GET /api/v1/reviews?movieId={movieId} must return ProblemDetail when request param page is negative")
     void fetchByMovieId_MustReturnProblemDetail_WhenRequestParamPageIsNegative() throws Exception {
       String actualContent = mockMvc.perform(get(FETCH_BY_MOVIE_ID_URI)
-              .param("movieId", "1000000")
+              .param("movieId", "1234")
               .param("page", "-1")
               .contentType(CONTENT_TYPE))
           .andReturn().getResponse().getContentAsString();
@@ -508,7 +508,7 @@ class ReviewControllerIT {
     void findById_MustReturnStatus200_WhenFetchSuccessfully() throws Exception {
       when(reviewRepositoryMock.findProjectedById(any()))
           .thenReturn(ReviewFaker.reviewDetailsProjectionOptional());
-      when(movieServiceMock.findSummarizedById("1000000")).thenReturn(MovieFaker.movieSummaryResponse());
+      when(movieServiceMock.findSummarizedById("1234")).thenReturn(MovieFaker.movieSummaryResponse());
       when(reviewMapperMock.toReviewDetailsResponse(any(), any()))
           .thenReturn(ReviewFaker.reviewDetailsResponse());
 
@@ -521,24 +521,24 @@ class ReviewControllerIT {
     void findById_MustReturnReviewDetailsResponse_WhenFetchSuccessfully() throws Exception {
       when(reviewRepositoryMock.findProjectedById(any()))
           .thenReturn(ReviewFaker.reviewDetailsProjectionOptional());
-      when(movieServiceMock.findSummarizedById("1000000")).thenReturn(MovieFaker.movieSummaryResponse());
+      when(movieServiceMock.findSummarizedById("1234")).thenReturn(MovieFaker.movieSummaryResponse());
       when(reviewMapperMock.toReviewDetailsResponse(any(), any()))
           .thenReturn(ReviewFaker.reviewDetailsResponse());
 
-      String actualContent = mockMvc.perform(get(FETCH_BY_MOVIE_ID_URI, "1000000000").contentType(CONTENT_TYPE))
+      String actualContent = mockMvc.perform(get(FETCH_BY_MOVIE_ID_URI, "2000000").contentType(CONTENT_TYPE))
           .andReturn().getResponse().getContentAsString();
 
       ReviewDetailsResponse actualResponseBody = mapper.readValue(actualContent, ReviewDetailsResponse.class);
 
       assertThat(actualResponseBody).isNotNull();
-      assertThat(actualResponseBody.id()).isNotNull().isEqualTo(1_000_000_000L);
+      assertThat(actualResponseBody.id()).isNotNull().isEqualTo(2_000_000L);
       assertThat(actualResponseBody.vote()).isEqualTo(9);
       assertThat(actualResponseBody.opinion()).isNotNull().isEqualTo("Lorem ipsum dolor sit amet");
       assertThat(actualResponseBody.userId()).isNotNull().isEqualTo(100L);
       assertThat(actualResponseBody.movie()).isNotNull();
-      assertThat(actualResponseBody.movie().id()).isNotNull().isEqualTo("1000000");
-      assertThat(actualResponseBody.movie().title()).isNotNull().isEqualTo("Lorem");
-      assertThat(actualResponseBody.movie().posterPath()).isNotNull().isEqualTo("/1000000");
+      assertThat(actualResponseBody.movie().id()).isNotNull().isEqualTo("1234");
+      assertThat(actualResponseBody.movie().title()).isNotNull().isEqualTo("XPTO");
+      assertThat(actualResponseBody.movie().posterPath()).isNotNull().isEqualTo("/1234");
       assertThat(actualResponseBody.movie().releaseDate()).isNotNull().isEqualTo("2024-01-16");
     }
 
@@ -621,7 +621,7 @@ class ReviewControllerIT {
       assertThat(actualResponseBody.vote()).isEqualTo(8);
       assertThat(actualResponseBody.opinion()).isNotNull().isEqualTo("Lorem ipsum dolor sit amet updated");
       assertThat(actualResponseBody.userId()).isNotNull().isEqualTo(100L);
-      assertThat(actualResponseBody.movieId()).isNotNull().isEqualTo("1000000");
+      assertThat(actualResponseBody.movieId()).isNotNull().isEqualTo("1234");
       assertThat(actualResponseBody.createdAt()).isNotNull();
     }
 
@@ -669,7 +669,7 @@ class ReviewControllerIT {
       assertThat(actualResponseBody.vote()).isEqualTo(8);
       assertThat(actualResponseBody.opinion()).isNull();
       assertThat(actualResponseBody.userId()).isNotNull().isEqualTo(100L);
-      assertThat(actualResponseBody.movieId()).isNotNull().isEqualTo("1000000");
+      assertThat(actualResponseBody.movieId()).isNotNull().isEqualTo("1234");
       assertThat(actualResponseBody.createdAt()).isNotNull();
     }
 

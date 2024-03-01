@@ -76,7 +76,7 @@ public class MovieControllerIT {
       when(movieClientMock.findByName(any(), anyInt())).thenReturn(MovieFaker.moviePage());
       when(movieMapperMock.toMovieSummaryResponse(any())).thenReturn(MovieFaker.movieSummaryResponse());
 
-      mockMvc.perform(get(FIND_BY_NAME_URI).param("name", "Lorem").contentType(CONTENT_TYPE))
+      mockMvc.perform(get(FIND_BY_NAME_URI).param("name", "XPTO").contentType(CONTENT_TYPE))
           .andExpect(status().isOk());
     }
 
@@ -87,13 +87,13 @@ public class MovieControllerIT {
       when(movieMapperMock.toMovieSummaryResponse(any())).thenReturn(MovieFaker.movieSummaryResponse());
 
       MovieSummaryResponse expectedMovieSummaryResponse = MovieSummaryResponse.builder()
-          .id("1000000")
-          .title("Lorem")
-          .posterPath("/1000000")
+          .id("1234")
+          .title("XPTO")
+          .posterPath("/1234")
           .releaseDate(LocalDate.parse("2024-01-16"))
           .build();
 
-      String actualContent = mockMvc.perform(get(FIND_BY_NAME_URI).param("name", "Lorem").contentType(CONTENT_TYPE))
+      String actualContent = mockMvc.perform(get(FIND_BY_NAME_URI).param("name", "XPTO").contentType(CONTENT_TYPE))
           .andReturn().getResponse().getContentAsString();
 
       Page<MovieSummaryResponse> actualResponseBody = mapper
@@ -110,7 +110,7 @@ public class MovieControllerIT {
     void findByName_MustReturnStatus200_WhenNotFoundMovieForGivenName() throws Exception {
       when(movieClientMock.findByName(any(), anyInt())).thenReturn(MovieFaker.emptyPage());
 
-      mockMvc.perform(get(FIND_BY_NAME_URI).param("name", "Lorem").contentType(CONTENT_TYPE))
+      mockMvc.perform(get(FIND_BY_NAME_URI).param("name", "XPTO").contentType(CONTENT_TYPE))
           .andExpect(status().isOk());
     }
 
@@ -119,7 +119,7 @@ public class MovieControllerIT {
     void findByName_MustReturnPageMovieSummaryResponse_WhenNotFoundMovieForGivenName() throws Exception {
       when(movieClientMock.findByName(any(), anyInt())).thenReturn(MovieFaker.emptyPage());
 
-      String actualContent = mockMvc.perform(get(FIND_BY_NAME_URI).param("name", "Lorem").contentType(CONTENT_TYPE))
+      String actualContent = mockMvc.perform(get(FIND_BY_NAME_URI).param("name", "XPTO").contentType(CONTENT_TYPE))
           .andReturn().getResponse().getContentAsString();
 
       Page<MovieSummaryResponse> actualResponseBody = mapper
@@ -158,7 +158,7 @@ public class MovieControllerIT {
     @DisplayName("GET /api/v1/auth/movies must return status 400 when request param page is negative")
     void findByName_MustReturnStatus400_WhenRequestParamPageIsNegative() throws Exception {
       mockMvc.perform(get(FIND_BY_NAME_URI)
-              .param("name", "Lorem")
+              .param("name", "XPTO")
               .param("page", "-1")
               .contentType(CONTENT_TYPE))
           .andExpect(status().isBadRequest());
@@ -168,7 +168,7 @@ public class MovieControllerIT {
     @DisplayName("GET /api/v1/auth/movies must return ProblemDetail when request param page is negative")
     void findByName_MustReturnProblemDetail_WhenRequestParamPageIsNegative() throws Exception {
       String actualContent = mockMvc.perform(get(FIND_BY_NAME_URI)
-              .param("name", "Lorem")
+              .param("name", "XPTO")
               .param("page", "-1")
               .contentType(CONTENT_TYPE))
           .andReturn().getResponse().getContentAsString();
@@ -188,20 +188,20 @@ public class MovieControllerIT {
     @Test
     @DisplayName("GET /api/v1/auth/movies must return status 500 when api_key is invalid")
     void findByName_MustReturnStatus400_WhenAPIKEYIsInvalid() throws Exception {
-      when(movieClientMock.findByName("Lorem", 0))
+      when(movieClientMock.findByName("XPTO", 0))
           .thenThrow(new InvalidTMDbApiKeyException("invalid TMDb API Key"));
 
-      mockMvc.perform(get(FIND_BY_NAME_URI).param("name", "Lorem").contentType(CONTENT_TYPE))
+      mockMvc.perform(get(FIND_BY_NAME_URI).param("name", "XPTO").contentType(CONTENT_TYPE))
           .andExpect(status().isInternalServerError());
     }
 
     @Test
     @DisplayName("GET /api/v1/auth/movies must return ProblemDetail when api_key is invalid")
     void findByName_MustReturnProblemDetail_WhenAPIKEYIsInvalid() throws Exception {
-      when(movieClientMock.findByName("Lorem", 0))
+      when(movieClientMock.findByName("XPTO", 0))
           .thenThrow(new InvalidTMDbApiKeyException("invalid TMDb API Key"));
 
-      String actualContent = mockMvc.perform(get(FIND_BY_NAME_URI).param("name", "Lorem").contentType(CONTENT_TYPE))
+      String actualContent = mockMvc.perform(get(FIND_BY_NAME_URI).param("name", "XPTO").contentType(CONTENT_TYPE))
           .andReturn().getResponse().getContentAsString();
 
       ProblemDetail actualResponseBody = mapper.readValue(actualContent, ProblemDetail.class);
@@ -223,28 +223,28 @@ public class MovieControllerIT {
     @Test
     @DisplayName("GET /api/v1/auth/movies/{id} must return status 200 when find by id successfully")
     void findById_MustReturnStatus200_WhenFindByIdSuccessfully() throws Exception {
-      when(movieClientMock.findById("1000000")).thenReturn(MovieFaker.movie());
+      when(movieClientMock.findById("1234")).thenReturn(MovieFaker.movie());
       when(movieMapperMock.toMovieDetailsResponse(any())).thenReturn(MovieFaker.movieDetailsResponse());
 
-      mockMvc.perform(get(FIND_BY_ID_URI, "1000000").contentType(CONTENT_TYPE))
+      mockMvc.perform(get(FIND_BY_ID_URI, "1234").contentType(CONTENT_TYPE))
           .andExpect(status().isOk());
     }
 
     @Test
     @DisplayName("GET /api/v1/auth/movies/{id} must return MovieDetailsResponse when find by id successfully")
     void findById_MustReturnMovieDetailsResponse_WhenFindByIdSuccessfully() throws Exception {
-      when(movieClientMock.findById("1000000")).thenReturn(MovieFaker.movie());
+      when(movieClientMock.findById("1234")).thenReturn(MovieFaker.movie());
       when(movieMapperMock.toMovieDetailsResponse(any())).thenReturn(MovieFaker.movieDetailsResponse());
 
-      String actualContent = mockMvc.perform(get(FIND_BY_ID_URI, "1000000").contentType(CONTENT_TYPE))
+      String actualContent = mockMvc.perform(get(FIND_BY_ID_URI, "1234").contentType(CONTENT_TYPE))
           .andReturn().getResponse().getContentAsString();
 
       MovieDetailsResponse actualResponseBody = mapper
           .readValue(actualContent, MovieDetailsResponse.class);
 
       assertThat(actualResponseBody).isNotNull();
-      assertThat(actualResponseBody.id()).isNotNull().isEqualTo("1000000");
-      assertThat(actualResponseBody.title()).isNotNull().isEqualTo("Lorem");
+      assertThat(actualResponseBody.id()).isNotNull().isEqualTo("1234");
+      assertThat(actualResponseBody.title()).isNotNull().isEqualTo("XPTO");
       assertThat(actualResponseBody.overview()).isNotNull().isEqualTo("Lorem ipsum dolor sit amet");
       assertThat(actualResponseBody.originalLanguage()).isNotNull().isEqualTo("en");
       assertThat(actualResponseBody.releaseDate()).isNotNull().isEqualTo("2024-01-16");
@@ -278,20 +278,20 @@ public class MovieControllerIT {
     @Test
     @DisplayName("GET /api/v1/auth/movies/{id} must return status 404 when not found Movie")
     void findById_MustReturnStatus400_WhenNotFoundMovie() throws Exception {
-      when(movieClientMock.findById("1000000"))
-          .thenThrow(new MovieNotFoundException("movie not found with id: 1000000"));
+      when(movieClientMock.findById("1234"))
+          .thenThrow(new MovieNotFoundException("movie not found with id: 1234"));
 
-      mockMvc.perform(get(FIND_BY_ID_URI, "1000000").contentType(CONTENT_TYPE))
+      mockMvc.perform(get(FIND_BY_ID_URI, "1234").contentType(CONTENT_TYPE))
           .andExpect(status().isNotFound());
     }
 
     @Test
     @DisplayName("GET /api/v1/auth/movies/{id} must return ProblemDetail when not found Movie")
     void findById_MustReturnProblemDetail_WhenNotFoundMovie() throws Exception {
-      when(movieClientMock.findById("1000000"))
-          .thenThrow(new MovieNotFoundException("movie not found with id: 1000000"));
+      when(movieClientMock.findById("1234"))
+          .thenThrow(new MovieNotFoundException("movie not found with id: 1234"));
 
-      String actualContent = mockMvc.perform(get(FIND_BY_ID_URI, "1000000").contentType(CONTENT_TYPE))
+      String actualContent = mockMvc.perform(get(FIND_BY_ID_URI, "1234").contentType(CONTENT_TYPE))
           .andReturn().getResponse().getContentAsString();
 
       ProblemDetail actualResponseBody = mapper.readValue(actualContent, ProblemDetail.class);
@@ -299,26 +299,26 @@ public class MovieControllerIT {
       assertThat(actualResponseBody).isNotNull();
       assertThat(actualResponseBody.getStatus()).isEqualTo(404);
       assertThat(actualResponseBody.getTitle()).isNotNull().isEqualTo("Movie not found");
-      assertThat(actualResponseBody.getDetail()).isNotNull().isEqualTo("movie not found with id: 1000000");
+      assertThat(actualResponseBody.getDetail()).isNotNull().isEqualTo("movie not found with id: 1234");
     }
 
     @Test
     @DisplayName("GET /api/v1/auth/movies/{id} must return status 500 when api_key is invalid")
     void findById_MustReturnStatus400_WhenAPIKEYIsInvalid() throws Exception {
-      when(movieClientMock.findById("1000000"))
+      when(movieClientMock.findById("1234"))
           .thenThrow(new InvalidTMDbApiKeyException("invalid TMDb API Key"));
 
-      mockMvc.perform(get(FIND_BY_ID_URI, "1000000").contentType(CONTENT_TYPE))
+      mockMvc.perform(get(FIND_BY_ID_URI, "1234").contentType(CONTENT_TYPE))
           .andExpect(status().isInternalServerError());
     }
 
     @Test
     @DisplayName("GET /api/v1/auth/movies/{id} must return ProblemDetail when api_key is invalid")
     void findById_MustReturnProblemDetail_WhenAPIKEYIsInvalid() throws Exception {
-      when(movieClientMock.findById("1000000"))
+      when(movieClientMock.findById("1234"))
           .thenThrow(new InvalidTMDbApiKeyException("invalid TMDb API Key"));
 
-      String actualContent = mockMvc.perform(get(FIND_BY_ID_URI, "1000000").contentType(CONTENT_TYPE))
+      String actualContent = mockMvc.perform(get(FIND_BY_ID_URI, "1234").contentType(CONTENT_TYPE))
           .andReturn().getResponse().getContentAsString();
 
       ProblemDetail actualResponseBody = mapper.readValue(actualContent, ProblemDetail.class);

@@ -13,6 +13,12 @@ import java.util.Set;
  */
 public class UserFaker {
 
+  public static final long USER_ID = 100L;
+  public static final String USER_NAME = "John Doe";
+  public static final String USER_EMAIL = "john.doe@email.com";
+  public static final String USER_PASSWORD = "1234567890";
+  public static final LocalDateTime USER_CREATED_AT = LocalDateTime.parse("2023-12-17T10:00:00");
+
   private UserFaker() {
   }
 
@@ -21,9 +27,9 @@ public class UserFaker {
    */
   public static User userToBeRegistered() {
     return User.builder()
-        .name("Lorem Ipsum")
-        .email("lorem@email.com")
-        .password("1234567890")
+        .name(USER_NAME)
+        .email(USER_EMAIL)
+        .password(USER_PASSWORD)
         .build();
   }
 
@@ -32,11 +38,11 @@ public class UserFaker {
    */
   public static User user() {
     return User.builder()
-        .id(100L)
-        .name("Lorem Ipsum")
-        .email("lorem@email.com")
-        .password("1234567890")
-        .createdAt(LocalDateTime.parse("2023-12-17T10:00:00"))
+        .id(USER_ID)
+        .name(USER_NAME)
+        .email(USER_EMAIL)
+        .password(USER_PASSWORD)
+        .createdAt(USER_CREATED_AT)
         .status(Status.ENABLED)
         .authorities(Set.of(AuthorityFaker.userAuthority()))
         .build();
@@ -47,10 +53,10 @@ public class UserFaker {
    */
   public static UserDetailsResponse userDetailsResponse() {
     return UserDetailsResponse.builder()
-        .id(100L)
-        .name("Lorem Ipsum")
-        .email("lorem@email.com")
-        .createdAt(LocalDateTime.parse("2023-12-17T10:00:00"))
+        .id(USER_ID)
+        .name(USER_NAME)
+        .email(USER_EMAIL)
+        .createdAt(USER_CREATED_AT)
         .status("ENABLED")
         .build();
   }
@@ -60,9 +66,9 @@ public class UserFaker {
    */
   public static UserSummaryResponse userSummaryResponse() {
     return UserSummaryResponse.builder()
-        .id(100L)
-        .name("Lorem Ipsum")
-        .email("lorem@email.com")
+        .id(USER_ID)
+        .name(USER_NAME)
+        .email(USER_EMAIL)
         .build();
   }
 }

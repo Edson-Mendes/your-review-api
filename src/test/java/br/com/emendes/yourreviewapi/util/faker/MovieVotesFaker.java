@@ -10,6 +10,9 @@ import java.util.Optional;
  */
 public class MovieVotesFaker {
 
+  public static final long MOVIE_VOTES_ID = 4_321L;
+  public static final LocalDateTime MOVIE_VOTES_CREATED_AT = LocalDateTime.parse("2024-02-09T12:00:00");
+
   private MovieVotesFaker() {
   }
 
@@ -18,11 +21,11 @@ public class MovieVotesFaker {
    */
   public static MovieVotes movieVotes() {
     return MovieVotes.builder()
-        .id(1_000L)
+        .id(MOVIE_VOTES_ID)
         .voteCount(40)
         .voteTotal(123)
-        .movieId("1000000")
-        .createdAt(LocalDateTime.parse("2024-02-09T12:00:00"))
+        .movieId(MovieFaker.MOVIE_ID)
+        .createdAt(MOVIE_VOTES_CREATED_AT)
         .build();
   }
 
@@ -40,8 +43,8 @@ public class MovieVotesFaker {
     return MovieVotes.builder()
         .voteCount(0)
         .voteTotal(0)
-        .movieId("1000000")
-        .createdAt(LocalDateTime.parse("2024-02-09T12:00:00"))
+        .movieId(MovieFaker.MOVIE_ID)
+        .createdAt(MOVIE_VOTES_CREATED_AT)
         .build();
   }
 }

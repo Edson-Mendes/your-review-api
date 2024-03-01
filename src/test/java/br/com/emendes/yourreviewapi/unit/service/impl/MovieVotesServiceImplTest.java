@@ -42,14 +42,14 @@ class MovieVotesServiceImplTest {
     @Test
     @DisplayName("findByMovieId must return Optional<MovieVotes> when found successfully")
     void findByMovieId_MustReturnOptionalWithMovieVotes_WhenFoundSuccessfully() {
-      when(movieVotesRepositoryMock.findByMovieId("1000000")).thenReturn(MovieVotesFaker.movieVotesOptional());
+      when(movieVotesRepositoryMock.findByMovieId("1234")).thenReturn(MovieVotesFaker.movieVotesOptional());
 
-      Optional<MovieVotes> actualMovieVotesOptional = movieVotesService.findByMovieId("1000000");
+      Optional<MovieVotes> actualMovieVotesOptional = movieVotesService.findByMovieId("1234");
 
       assertThat(actualMovieVotesOptional).isNotNull().isPresent();
-      MovieVotes actualMovieVotes = actualMovieVotesOptional.get();
+      MovieVotes actualMovieVotes = actualMovieVotesOptional.orElseThrow();
       assertThat(actualMovieVotes).isNotNull();
-      assertThat(actualMovieVotes.getMovieId()).isNotNull().isEqualTo("1000000");
+      assertThat(actualMovieVotes.getMovieId()).isNotNull().isEqualTo("1234");
     }
 
     @ParameterizedTest
@@ -71,13 +71,13 @@ class MovieVotesServiceImplTest {
     @Test
     @DisplayName("generateNonVotedMovieVotes must return MovieVotes when generate successfully")
     void generateNonVotedMovieVotes_MustReturnMovieVotes_WhenGenerateSuccessfully() {
-      when(movieClientMock.findById("1000000")).thenReturn(MovieFaker.movie());
+      when(movieClientMock.findById("1234")).thenReturn(MovieFaker.movie());
 
-      MovieVotes actualMovieVotes = movieVotesService.generateNonVotedMovieVotes("1000000");
+      MovieVotes actualMovieVotes = movieVotesService.generateNonVotedMovieVotes("1234");
 
       assertThat(actualMovieVotes).isNotNull();
       assertThat(actualMovieVotes.getId()).isNull();
-      assertThat(actualMovieVotes.getMovieId()).isNotNull().isEqualTo("1000000");
+      assertThat(actualMovieVotes.getMovieId()).isNotNull().isEqualTo("1234");
       assertThat(actualMovieVotes.getCreatedAt()).isNotNull();
       assertThat(actualMovieVotes.getVoteCount()).isZero();
       assertThat(actualMovieVotes.getVoteTotal()).isZero();
@@ -96,11 +96,11 @@ class MovieVotesServiceImplTest {
     @Test
     @DisplayName("generateNonVotedMovieVotes must throw MovieNotFoundException when not found Movie with given movieId")
     void generateNonVotedMovieVotes_MustThrowMovieNotFoundException_WhenNotFoundMovieWithGivenMovieId() {
-      when(movieClientMock.findById("1000000"))
+      when(movieClientMock.findById("1234"))
           .thenThrow(new MovieNotFoundException("movie not found with id: 1000000"));
 
       assertThatExceptionOfType(MovieNotFoundException.class)
-          .isThrownBy(() -> movieVotesService.generateNonVotedMovieVotes("1000000"))
+          .isThrownBy(() -> movieVotesService.generateNonVotedMovieVotes("1234"))
           .withMessage("movie not found with id: 1000000");
     }
 

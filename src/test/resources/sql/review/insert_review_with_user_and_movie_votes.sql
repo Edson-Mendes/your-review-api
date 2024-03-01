@@ -1,6 +1,6 @@
 -- insert user
 INSERT INTO tb_user(name, email, password, status, created_at) VALUES
-    ('Lorem Ipsum', 'lorem@email.com', '{bcrypt}$2a$10$65gCOyzktXSMmHdtuNsSHuqP6Ttp9VaNQD/0/yOdmkSIgRlp.7CkO', 'ENABLED', '2024-02-18T10:00:00');
+    ('John Doe', 'john.doe@email.com', '{bcrypt}$2a$10$65gCOyzktXSMmHdtuNsSHuqP6Ttp9VaNQD/0/yOdmkSIgRlp.7CkO', 'ENABLED', '2024-02-18T10:00:00');
 
 -- insert authority para o user acima
 INSERT INTO tb_user_authorities(user_id, authority_id) VALUES (1, 1);

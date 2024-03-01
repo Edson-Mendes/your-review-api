@@ -74,8 +74,8 @@ class UserControllerIT {
 
       String requestBody = """
           {
-            "name": "Lorem Ipsum",
-            "email": "lorem@email.com",
+            "name": "John Doe",
+            "email": "john.doe@email.com",
             "password": "1234567890",
             "confirmPassword": "1234567890"
           }
@@ -96,8 +96,8 @@ class UserControllerIT {
 
       String requestBody = """
           {
-            "name": "Lorem Ipsum",
-            "email": "lorem@email.com",
+            "name": "John Doe",
+            "email": "john.doe@email.com",
             "password": "1234567890",
             "confirmPassword": "1234567890"
           }
@@ -110,8 +110,8 @@ class UserControllerIT {
 
       assertThat(actualResponseBody).isNotNull();
       assertThat(actualResponseBody.id()).isNotNull().isEqualTo(100L);
-      assertThat(actualResponseBody.name()).isNotNull().isEqualTo("Lorem Ipsum");
-      assertThat(actualResponseBody.email()).isNotNull().isEqualTo("lorem@email.com");
+      assertThat(actualResponseBody.name()).isNotNull().isEqualTo("John Doe");
+      assertThat(actualResponseBody.email()).isNotNull().isEqualTo("john.doe@email.com");
       assertThat(actualResponseBody.createdAt()).isNotNull();
     }
 
@@ -121,7 +121,7 @@ class UserControllerIT {
       String requestBody = """
           {
             "name": "",
-            "email": "lorem@email.com",
+            "email": "john.doe@email.com",
             "password": "1234567890",
             "confirmPassword": "1234567890"
           }
@@ -137,7 +137,7 @@ class UserControllerIT {
       String requestBody = """
           {
             "name": "",
-            "email": "lorem@email.com",
+            "email": "john.doe@email.com",
             "password": "1234567890",
             "confirmPassword": "1234567890"
           }
@@ -169,8 +169,8 @@ class UserControllerIT {
     void register_MustReturnStatus400_WhenPasswordDoNotMatch() throws Exception {
       String requestBody = """
           {
-            "name": "Lorem Ipsum",
-            "email": "lorem@email.com",
+            "name": "John Doe",
+            "email": "john.doe@email.com",
             "password": "1234567890",
             "confirmPassword": "123456789_"
           }
@@ -185,8 +185,8 @@ class UserControllerIT {
     void register_MustReturnProblemDetail_WhenPasswordDoNotMatch() throws Exception {
       String requestBody = """
           {
-            "name": "Lorem Ipsum",
-            "email": "lorem@email.com",
+            "name": "John Doe",
+            "email": "john.doe@email.com",
             "password": "1234567890",
             "confirmPassword": "123456789_"
           }
@@ -215,8 +215,8 @@ class UserControllerIT {
 
       String requestBody = """
           {
-            "name": "Lorem Ipsum",
-            "email": "lorem@email.com",
+            "name": "John Doe",
+            "email": "john.doe@email.com",
             "password": "1234567890",
             "confirmPassword": "1234567890"
           }
@@ -237,8 +237,8 @@ class UserControllerIT {
 
       String requestBody = """
           {
-            "name": "Lorem Ipsum",
-            "email": "lorem@email.com",
+            "name": "John Doe",
+            "email": "john.doe@email.com",
             "password": "1234567890",
             "confirmPassword": "1234567890"
           }
@@ -251,7 +251,7 @@ class UserControllerIT {
 
       assertThat(actualResponseBody).isNotNull();
       assertThat(actualResponseBody.getTitle()).isNotNull().isEqualTo("Bad request");
-      assertThat(actualResponseBody.getDetail()).isNotNull().isEqualTo("Email {lorem@email.com} already in use");
+      assertThat(actualResponseBody.getDetail()).isNotNull().isEqualTo("Email {john.doe@email.com} already in use");
       assertThat(actualResponseBody.getStatus()).isEqualTo(400);
     }
 

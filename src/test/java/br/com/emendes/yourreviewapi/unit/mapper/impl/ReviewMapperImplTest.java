@@ -33,7 +33,7 @@ class ReviewMapperImplTest {
     ReviewRegisterRequest review = ReviewRegisterRequest.builder()
         .vote(9)
         .opinion("Lorem ipsum dolor sit amet")
-        .movieId("1000000")
+        .movieId("1234")
         .build();
 
     Review actualReview = reviewMapper.toReview(review);
@@ -59,26 +59,26 @@ class ReviewMapperImplTest {
   @DisplayName("toReviewSummaryResponse must return ReviewSummaryResponse when map ReviewSummaryProjection successfully")
   void toReviewSummaryResponse_MustReturnReviewSummaryResponse_WhenMapReviewSummaryProjectionSuccessfully() {
     ReviewSummaryProjection reviewSummaryProjection = ReviewSummaryProjectionImpl.builder()
-        .id(1_000_000_000L)
+        .id(2_000_000L)
         .vote(9)
         .opinion("Lorem ipsum dolor sit amet")
         .userId(100L)
         .userName("John Doe")
         .userEmail("john.doe@email.com")
-        .movieVotesMovieId("1000000")
+        .movieVotesMovieId("1234")
         .build();
 
     ReviewSummaryResponse actualReviewSummaryResponse = reviewMapper.toReviewSummaryResponse(reviewSummaryProjection);
 
     assertThat(actualReviewSummaryResponse).isNotNull();
-    assertThat(actualReviewSummaryResponse.id()).isNotNull().isEqualTo(1_000_000_000L);
+    assertThat(actualReviewSummaryResponse.id()).isNotNull().isEqualTo(2_000_000L);
     assertThat(actualReviewSummaryResponse.vote()).isEqualTo(9);
     assertThat(actualReviewSummaryResponse.opinion()).isNotNull().isEqualTo("Lorem ipsum dolor sit amet");
     assertThat(actualReviewSummaryResponse.user()).isNotNull();
     assertThat(actualReviewSummaryResponse.user().id()).isNotNull().isEqualTo(100L);
     assertThat(actualReviewSummaryResponse.user().name()).isNotNull().isEqualTo("John Doe");
     assertThat(actualReviewSummaryResponse.user().email()).isNotNull().isEqualTo("john.doe@email.com");
-    assertThat(actualReviewSummaryResponse.movieId()).isNotNull().isEqualTo("1000000");
+    assertThat(actualReviewSummaryResponse.movieId()).isNotNull().isEqualTo("1234");
   }
 
   @Test
@@ -93,7 +93,7 @@ class ReviewMapperImplTest {
   @DisplayName("toReviewResponse must return ReviewResponse when map Review successfully")
   void toReviewResponse_MustReturnReviewResponse_WhenMapSuccessfully() {
     Review review = Review.builder()
-        .id(1_000_000_000L)
+        .id(2_000_000L)
         .vote(9)
         .opinion("Lorem ipsum dolor sit amet")
         .createdAt(LocalDateTime.parse("2024-02-08T10:00:00"))
@@ -104,12 +104,12 @@ class ReviewMapperImplTest {
     ReviewResponse actualReviewResponse = reviewMapper.toReviewResponse(review);
 
     assertThat(actualReviewResponse).isNotNull();
-    assertThat(actualReviewResponse.id()).isNotNull().isEqualTo(1_000_000_000L);
+    assertThat(actualReviewResponse.id()).isNotNull().isEqualTo(2_000_000L);
     assertThat(actualReviewResponse.vote()).isEqualTo(9);
     assertThat(actualReviewResponse.opinion()).isNotNull().isEqualTo("Lorem ipsum dolor sit amet");
     assertThat(actualReviewResponse.createdAt()).isNotNull().isEqualTo("2024-02-08T10:00:00");
     assertThat(actualReviewResponse.userId()).isNotNull().isEqualTo(100L);
-    assertThat(actualReviewResponse.movieId()).isNotNull().isEqualTo("1000000");
+    assertThat(actualReviewResponse.movieId()).isNotNull().isEqualTo("1234");
   }
 
   @Test
@@ -124,27 +124,27 @@ class ReviewMapperImplTest {
   @DisplayName("toReviewDetailsResponse must return ReviewDetailsResponse when map ReviewDetailsProjection successfully")
   void toReviewDetailsResponse_MustReturnReviewDetailsResponse_WhenMapReviewDetailsProjectionSuccessfully() {
     ReviewDetailsProjection reviewDetailsProjection = ReviewDetailsProjectionImpl.builder()
-        .id(1_000_000_000L)
+        .id(2_000_000L)
         .vote(9)
         .opinion("Lorem ipsum dolor sit amet")
         .createdAt(LocalDateTime.parse("2024-02-08T10:00:00"))
         .userId(100L)
-        .movieVotesMovieId("1000000")
+        .movieVotesMovieId("1234")
         .build();
 
     ReviewDetailsResponse actualReviewDetailsResponse = reviewMapper
         .toReviewDetailsResponse(reviewDetailsProjection, MovieFaker.movieSummaryResponse());
 
     assertThat(actualReviewDetailsResponse).isNotNull();
-    assertThat(actualReviewDetailsResponse.id()).isNotNull().isEqualTo(1_000_000_000L);
+    assertThat(actualReviewDetailsResponse.id()).isNotNull().isEqualTo(2_000_000L);
     assertThat(actualReviewDetailsResponse.vote()).isEqualTo(9);
     assertThat(actualReviewDetailsResponse.opinion()).isNotNull().isEqualTo("Lorem ipsum dolor sit amet");
     assertThat(actualReviewDetailsResponse.createdAt()).isNotNull().isEqualTo("2024-02-08T10:00:00");
     assertThat(actualReviewDetailsResponse.userId()).isNotNull().isEqualTo(100L);
     assertThat(actualReviewDetailsResponse.movie()).isNotNull();
-    assertThat(actualReviewDetailsResponse.movie().id()).isNotNull().isEqualTo("1000000");
-    assertThat(actualReviewDetailsResponse.movie().title()).isNotNull().isEqualTo("Lorem");
-    assertThat(actualReviewDetailsResponse.movie().posterPath()).isNotNull().isEqualTo("/1000000");
+    assertThat(actualReviewDetailsResponse.movie().id()).isNotNull().isEqualTo("1234");
+    assertThat(actualReviewDetailsResponse.movie().title()).isNotNull().isEqualTo("XPTO");
+    assertThat(actualReviewDetailsResponse.movie().posterPath()).isNotNull().isEqualTo("/1234");
     assertThat(actualReviewDetailsResponse.movie().releaseDate()).isNotNull().isEqualTo("2024-01-16");
   }
 
@@ -162,12 +162,12 @@ class ReviewMapperImplTest {
   @DisplayName("toReviewDetailsResponse must throw IllegalArgumentException when movie parameter is null")
   void toReviewDetailsResponse_MustThrowIllegalArgumentException_WhenMovieParameterIsNull() {
     ReviewDetailsProjection reviewDetailsProjection = ReviewDetailsProjectionImpl.builder()
-        .id(1_000_000_000L)
+        .id(2_000_000L)
         .vote(9)
         .opinion("Lorem ipsum dolor sit amet")
         .createdAt(LocalDateTime.parse("2024-02-08T10:00:00"))
         .userId(100L)
-        .movieVotesMovieId("1000000")
+        .movieVotesMovieId("1234")
         .build();
 
     assertThatExceptionOfType(IllegalArgumentException.class)
