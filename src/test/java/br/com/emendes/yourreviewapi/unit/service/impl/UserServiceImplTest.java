@@ -55,8 +55,8 @@ class UserServiceImplTest {
       when(userMapperMock.toUserDetailsResponse(any())).thenReturn(UserFaker.userDetailsResponse());
 
       UserRegisterRequest userRegisterRequest = UserRegisterRequest.builder()
-          .name("Lorem Ipsum")
-          .email("lorem@email.com")
+          .name("John Doe")
+          .email("john.doe@email.com")
           .password("1234567890")
           .confirmPassword("1234567890")
           .build();
@@ -65,8 +65,8 @@ class UserServiceImplTest {
 
       assertThat(actualUserDetailsResponse).isNotNull();
       assertThat(actualUserDetailsResponse.id()).isNotNull();
-      assertThat(actualUserDetailsResponse.name()).isNotNull().isEqualTo("Lorem Ipsum");
-      assertThat(actualUserDetailsResponse.email()).isNotNull().isEqualTo("lorem@email.com");
+      assertThat(actualUserDetailsResponse.name()).isNotNull().isEqualTo("John Doe");
+      assertThat(actualUserDetailsResponse.email()).isNotNull().isEqualTo("john.doe@email.com");
       assertThat(actualUserDetailsResponse.status()).isNotNull().isEqualTo("ENABLED");
       assertThat(actualUserDetailsResponse.createdAt()).isNotNull();
     }
@@ -75,8 +75,8 @@ class UserServiceImplTest {
     @DisplayName("register must throw PasswordsDoesNotMatchException when passwords does not match")
     void register_MustThrowPasswordsDoesNotMatchException_WhenPasswordsDoesNotMatch() {
       UserRegisterRequest userRegisterRequest = UserRegisterRequest.builder()
-          .name("Lorem Ipsum")
-          .email("lorem@email.com")
+          .name("John Doe")
+          .email("john.doe@email.com")
           .password("1234567890")
           .confirmPassword("123456789_")
           .build();
@@ -96,15 +96,15 @@ class UserServiceImplTest {
           .willThrow(new DataIntegrityViolationException("Database constraint violation"));
 
       UserRegisterRequest userRegisterRequest = UserRegisterRequest.builder()
-          .name("Lorem Ipsum")
-          .email("lorem@email.com")
+          .name("John Doe")
+          .email("john.doe@email.com")
           .password("1234567890")
           .confirmPassword("1234567890")
           .build();
 
       assertThatExceptionOfType(EmailAlreadyInUseException.class)
           .isThrownBy(() -> userService.register(userRegisterRequest))
-          .withMessage("Email {lorem@email.com} already in use");
+          .withMessage("Email {john.doe@email.com} already in use");
     }
 
   }

@@ -22,6 +22,13 @@ import java.util.Optional;
  */
 public class ReviewFaker {
 
+  public static final String REVIEW_OPINION = "Lorem ipsum dolor sit amet";
+  public static final LocalDateTime REVIEW_CREATED_AT = LocalDateTime.parse("2024-02-09T10:00:00");
+  public static final int REVIEW_VOTE = 9;
+  public static final long REVIEW_ID = 2_000_000L;
+  public static final String REVIEW_OPINION_UPDATED = "Lorem ipsum dolor sit amet updated";
+  public static final int REVIEW_VOTE_UPDATED = 8;
+
   private ReviewFaker() {
   }
 
@@ -30,8 +37,8 @@ public class ReviewFaker {
    */
   public static Review nonRegisteredReview() {
     return Review.builder()
-        .vote(9)
-        .opinion("Lorem ipsum dolor sit amet")
+        .vote(REVIEW_VOTE)
+        .opinion(REVIEW_OPINION)
         .build();
   }
 
@@ -40,7 +47,7 @@ public class ReviewFaker {
    */
   public static Review nonRegisteredReviewWithoutOpinion() {
     return Review.builder()
-        .vote(9)
+        .vote(REVIEW_VOTE)
         .build();
   }
 
@@ -49,12 +56,12 @@ public class ReviewFaker {
    */
   public static Review review() {
     return Review.builder()
-        .id(2_000_000L)
-        .vote(9)
-        .opinion("Lorem ipsum dolor sit amet")
+        .id(REVIEW_ID)
+        .vote(REVIEW_VOTE)
+        .opinion(REVIEW_OPINION)
         .user(UserFaker.user())
         .movieVotes(MovieVotesFaker.movieVotes())
-        .createdAt(LocalDateTime.parse("2024-02-09T10:00:00"))
+        .createdAt(REVIEW_CREATED_AT)
         .build();
   }
 
@@ -67,12 +74,12 @@ public class ReviewFaker {
 
   public static Review reviewUpdated() {
     return Review.builder()
-        .id(2_000_000L)
-        .vote(8)
-        .opinion("Lorem ipsum dolor sit amet updated")
+        .id(REVIEW_ID)
+        .vote(REVIEW_VOTE_UPDATED)
+        .opinion(REVIEW_OPINION_UPDATED)
         .user(UserFaker.user())
         .movieVotes(MovieVotesFaker.movieVotes())
-        .createdAt(LocalDateTime.parse("2024-02-09T10:00:00"))
+        .createdAt(REVIEW_CREATED_AT)
         .build();
   }
 
@@ -81,11 +88,11 @@ public class ReviewFaker {
    */
   public static Review reviewWithoutOpinion() {
     return Review.builder()
-        .id(2_000_000L)
-        .vote(9)
+        .id(REVIEW_ID)
+        .vote(REVIEW_VOTE)
         .user(UserFaker.user())
         .movieVotes(MovieVotesFaker.movieVotes())
-        .createdAt(LocalDateTime.parse("2024-02-09T10:00:00"))
+        .createdAt(REVIEW_CREATED_AT)
         .build();
   }
 
@@ -94,11 +101,11 @@ public class ReviewFaker {
    */
   public static Review reviewUpdatedWithoutOpinion() {
     return Review.builder()
-        .id(2_000_000L)
-        .vote(8)
+        .id(REVIEW_ID)
+        .vote(REVIEW_VOTE_UPDATED)
         .user(UserFaker.user())
         .movieVotes(MovieVotesFaker.movieVotes())
-        .createdAt(LocalDateTime.parse("2024-02-09T10:00:00"))
+        .createdAt(REVIEW_CREATED_AT)
         .build();
   }
 
@@ -107,12 +114,12 @@ public class ReviewFaker {
    */
   public static ReviewResponse reviewResponse() {
     return ReviewResponse.builder()
-        .id(2_000_000L)
-        .vote(9)
-        .opinion("Lorem ipsum dolor sit amet")
-        .userId(100L)
-        .movieId("1000000")
-        .createdAt(LocalDateTime.parse("2024-02-09T10:00:00"))
+        .id(REVIEW_ID)
+        .vote(REVIEW_VOTE)
+        .opinion(REVIEW_OPINION)
+        .userId(UserFaker.USER_ID)
+        .movieId(MovieFaker.MOVIE_ID)
+        .createdAt(REVIEW_CREATED_AT)
         .build();
   }
 
@@ -121,11 +128,11 @@ public class ReviewFaker {
    */
   public static ReviewResponse reviewResponseWithoutOpinion() {
     return ReviewResponse.builder()
-        .id(2_000_000L)
-        .vote(9)
-        .userId(100L)
-        .movieId("1000000")
-        .createdAt(LocalDateTime.parse("2024-02-09T10:00:00"))
+        .id(REVIEW_ID)
+        .vote(REVIEW_VOTE)
+        .userId(UserFaker.USER_ID)
+        .movieId(MovieFaker.MOVIE_ID)
+        .createdAt(REVIEW_CREATED_AT)
         .build();
   }
 
@@ -134,12 +141,12 @@ public class ReviewFaker {
    */
   public static ReviewResponse reviewResponseUpdated() {
     return ReviewResponse.builder()
-        .id(2_000_000L)
-        .vote(8)
-        .opinion("Lorem ipsum dolor sit amet updated")
-        .userId(100L)
-        .movieId("1000000")
-        .createdAt(LocalDateTime.parse("2024-02-09T10:00:00"))
+        .id(REVIEW_ID)
+        .vote(REVIEW_VOTE_UPDATED)
+        .opinion(REVIEW_OPINION_UPDATED)
+        .userId(UserFaker.USER_ID)
+        .movieId(MovieFaker.MOVIE_ID)
+        .createdAt(REVIEW_CREATED_AT)
         .build();
   }
 
@@ -148,11 +155,11 @@ public class ReviewFaker {
    */
   public static ReviewResponse reviewResponseUpdatedWithoutOpinion() {
     return ReviewResponse.builder()
-        .id(2_000_000L)
-        .vote(8)
-        .userId(100L)
-        .movieId("1000000")
-        .createdAt(LocalDateTime.parse("2024-02-09T10:00:00"))
+        .id(REVIEW_ID)
+        .vote(REVIEW_VOTE_UPDATED)
+        .userId(UserFaker.USER_ID)
+        .movieId(MovieFaker.MOVIE_ID)
+        .createdAt(REVIEW_CREATED_AT)
         .build();
   }
 
@@ -161,12 +168,12 @@ public class ReviewFaker {
    */
   public static ReviewDetailsResponse reviewDetailsResponse() {
     return ReviewDetailsResponse.builder()
-        .id(1_000_000_000L)
-        .vote(9)
-        .opinion("Lorem ipsum dolor sit amet")
-        .userId(100L)
+        .id(REVIEW_ID)
+        .vote(REVIEW_VOTE)
+        .opinion(REVIEW_OPINION)
+        .userId(UserFaker.USER_ID)
         .movie(MovieFaker.movieSummaryResponse())
-        .createdAt(LocalDateTime.parse("2024-02-09T10:00:00"))
+        .createdAt(REVIEW_CREATED_AT)
         .build();
   }
 
@@ -184,11 +191,11 @@ public class ReviewFaker {
    */
   public static ReviewSummaryProjection reviewSummaryProjection() {
     return ReviewSummaryProjectionImpl.builder()
-        .id(1_000_000_000L)
-        .vote(9)
-        .opinion("Lorem ipsum dolor sit amet")
-        .userId(100L)
-        .movieVotesMovieId("1000000")
+        .id(REVIEW_ID)
+        .vote(REVIEW_VOTE)
+        .opinion(REVIEW_OPINION)
+        .userId(UserFaker.USER_ID)
+        .movieVotesMovieId(MovieFaker.MOVIE_ID)
         .build();
   }
 
@@ -204,12 +211,12 @@ public class ReviewFaker {
    */
   private static ReviewDetailsProjection reviewDetailsProjection() {
     return ReviewDetailsProjectionImpl.builder()
-        .id(1_000_000_000L)
-        .vote(9)
-        .opinion("Lorem ipsum dolor sit amet")
-        .userId(100L)
-        .movieVotesMovieId("1000000")
-        .createdAt(LocalDateTime.parse("2024-02-09T10:00:00"))
+        .id(REVIEW_ID)
+        .vote(REVIEW_VOTE)
+        .opinion(REVIEW_OPINION)
+        .userId(UserFaker.USER_ID)
+        .movieVotesMovieId(MovieFaker.MOVIE_ID)
+        .createdAt(REVIEW_CREATED_AT)
         .build();
   }
 
@@ -218,11 +225,11 @@ public class ReviewFaker {
    */
   public static ReviewSummaryResponse reviewSummaryResponse() {
     return ReviewSummaryResponse.builder()
-        .id(2_000_000L)
-        .vote(9)
-        .opinion("Lorem ipsum dolor sit amet")
+        .id(REVIEW_ID)
+        .vote(REVIEW_VOTE)
+        .opinion(REVIEW_OPINION)
         .user(UserFaker.userSummaryResponse())
-        .movieId("1000000")
+        .movieId(MovieFaker.MOVIE_ID)
         .build();
   }
 

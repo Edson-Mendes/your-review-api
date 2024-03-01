@@ -15,6 +15,13 @@ import java.util.List;
  */
 public class MovieFaker {
 
+  public static final String MOVIE_ID = "1234";
+  public static final String MOVIE_TITLE = "XPTO";
+  public static final String MOVIE_OVERVIEW = "Lorem ipsum dolor sit amet";
+  public static final String MOVIE_POSTER_PATH = "/1234";
+  public static final LocalDate MOVIE_RELEASE_DATE = LocalDate.parse("2024-01-16");
+  public static final String MOVIE_ORIGINAL_LANGUAGE = "en";
+
   private MovieFaker() {
   }
 
@@ -23,12 +30,12 @@ public class MovieFaker {
    */
   public static Movie movie() {
     return Movie.builder()
-        .id("1000000")
-        .title("Lorem")
-        .posterPath("/1000000")
-        .overview("Lorem ipsum dolor sit amet")
-        .releaseDate(LocalDate.parse("2024-01-16"))
-        .originalLanguage("en")
+        .id(MOVIE_ID)
+        .title(MOVIE_TITLE)
+        .posterPath(MOVIE_POSTER_PATH)
+        .overview(MOVIE_OVERVIEW)
+        .releaseDate(MOVIE_RELEASE_DATE)
+        .originalLanguage(MOVIE_ORIGINAL_LANGUAGE)
         .build();
   }
 
@@ -44,10 +51,10 @@ public class MovieFaker {
    */
   public static MovieSummaryResponse movieSummaryResponse() {
     return MovieSummaryResponse.builder()
-        .id("1000000")
-        .title("Lorem")
-        .posterPath("/1000000")
-        .releaseDate(LocalDate.parse("2024-01-16"))
+        .id(MOVIE_ID)
+        .title(MOVIE_TITLE)
+        .posterPath(MOVIE_POSTER_PATH)
+        .releaseDate(MOVIE_RELEASE_DATE)
         .build();
   }
 
@@ -56,12 +63,12 @@ public class MovieFaker {
    */
   public static MovieDetailsResponse movieDetailsResponse() {
     return MovieDetailsResponse.builder()
-        .id("1000000")
-        .title("Lorem")
-        .posterPath("/1000000")
-        .overview("Lorem ipsum dolor sit amet")
-        .releaseDate(LocalDate.parse("2024-01-16"))
-        .originalLanguage("en")
+        .id(MOVIE_ID)
+        .title(MOVIE_TITLE)
+        .posterPath(MOVIE_POSTER_PATH)
+        .overview(MOVIE_OVERVIEW)
+        .releaseDate(MOVIE_RELEASE_DATE)
+        .originalLanguage(MOVIE_ORIGINAL_LANGUAGE)
         .build();
   }
 

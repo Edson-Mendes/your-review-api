@@ -2,7 +2,7 @@ package br.com.emendes.yourreviewapi.util.faker;
 
 import br.com.emendes.yourreviewapi.dto.response.TMDbMovieResponse;
 
-import java.time.LocalDate;
+import static br.com.emendes.yourreviewapi.util.faker.MovieFaker.*;
 
 /**
  * Classe para manter objetos fake relacionados a TMDb response para uso em testes automatizados.
@@ -17,8 +17,7 @@ public final class TMDbFaker {
    */
   public static TMDbMovieResponse tMDbMovieResponse() {
     return new TMDbMovieResponse(
-        "1000000", "Lorem",
-        "Lorem ipsum dolor sit amet",
-        LocalDate.parse("2024-01-16"), "/1000000", "en");
+        MOVIE_ID, MOVIE_TITLE, MOVIE_OVERVIEW,
+        MOVIE_RELEASE_DATE, MOVIE_POSTER_PATH, MOVIE_ORIGINAL_LANGUAGE);
   }
 }
