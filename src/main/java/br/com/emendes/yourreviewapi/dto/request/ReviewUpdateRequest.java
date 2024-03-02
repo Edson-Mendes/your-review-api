@@ -4,6 +4,7 @@ import br.com.emendes.yourreviewapi.validation.annotation.CustomNotBlank;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
+import lombok.Builder;
 
 /**
  * Record DTO com os dados de atualização de review.
@@ -11,6 +12,7 @@ import jakarta.validation.constraints.Size;
  * @param vote    valor do voto da review do usuário.
  * @param opinion opinião sobre o filme sendo avaliado.
  */
+@Builder
 public record ReviewUpdateRequest(
     @Min(value = 1, message = "{ReviewUpdateRequest.vote.Min.message}")
     @Max(value = 10, message = "{ReviewUpdateRequest.vote.Max.message}")
