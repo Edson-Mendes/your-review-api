@@ -1,6 +1,7 @@
 package br.com.emendes.yourreviewapi.unit.mapper.impl;
 
 import br.com.emendes.yourreviewapi.dto.request.ReviewRegisterRequest;
+import br.com.emendes.yourreviewapi.dto.request.ReviewUpdateRequest;
 import br.com.emendes.yourreviewapi.dto.response.MovieSummaryResponse;
 import br.com.emendes.yourreviewapi.dto.response.ReviewDetailsResponse;
 import br.com.emendes.yourreviewapi.dto.response.ReviewResponse;
@@ -173,6 +174,92 @@ class ReviewMapperImplTest {
     assertThatExceptionOfType(IllegalArgumentException.class)
         .isThrownBy(() -> reviewMapper.toReviewDetailsResponse(reviewDetailsProjection, null))
         .withMessage("movie must not be null");
+  }
+
+  @Test
+  @DisplayName("merge must update review according to reviewUpdateRequest when merge successfully")
+  void merge_MustUpdateReviewAccordingToReviewUpdateRequest_WhenMergeSuccessfully() {
+    Review review = Review.builder()
+        .id(2_000_000L)
+        .vote(9)
+        .opinion("Lorem ipsum dolor sit amet")
+        .createdAt(LocalDateTime.parse("2024-02-08T10:00:00"))
+        .user(UserFaker.user())
+        .movieVotes(MovieVotesFaker.movieVotes())
+        .build();
+
+    ReviewUpdateRequest reviewUpdateRequest = ReviewUpdateRequest.builder()
+        .vote(8)
+        .opinion("Lorem ipsum dolor sit amet updated")
+        .build();
+
+    reviewMapper.merge(review, reviewUpdateRequest);
+
+    assertThat(review).isNotNull();
+    assertThat(review.getId()).isNotNull().isEqualTo(2_000_000L);
+    assertThat(review.getVote()).isEqualTo(8);
+    assertThat(review.getOpinion()).isNotNull().isEqualTo("Lorem ipsum dolor sit amet updated");
+    assertThat(review.getCreatedAt()).isNotNull().isEqualTo("2024-02-08T10:00:00");
+    assertThat(review.getUser()).isNotNull().isEqualTo(UserFaker.user());
+    assertThat(review.getMovieVotes()).isNotNull().isEqualTo(MovieVotesFaker.movieVotes());
+  }
+
+  @Test
+  @DisplayName("merge must update review opinion to null when reviewUpdateRequest opinion is null")
+  void merge_MustUpdateReviewOpinionToNull_WhenReviewUpdateRequestOpinionIsNull() {
+    Review review = Review.builder()
+        .id(2_000_000L)
+        .vote(9)
+        .opinion("Lorem ipsum dolor sit amet")
+        .createdAt(LocalDateTime.parse("2024-02-08T10:00:00"))
+        .user(UserFaker.user())
+        .movieVotes(MovieVotesFaker.movieVotes())
+        .build();
+
+    ReviewUpdateRequest reviewUpdateRequest = ReviewUpdateRequest.builder()
+        .vote(8)
+        .opinion(null)
+        .build();
+
+    reviewMapper.merge(review, reviewUpdateRequest);
+
+    assertThat(review).isNotNull();
+    assertThat(review.getId()).isNotNull().isEqualTo(2_000_000L);
+    assertThat(review.getVote()).isEqualTo(8);
+    assertThat(review.getOpinion()).isNull();
+    assertThat(review.getCreatedAt()).isNotNull().isEqualTo("2024-02-08T10:00:00");
+    assertThat(review.getUser()).isNotNull().isEqualTo(UserFaker.user());
+    assertThat(review.getMovieVotes()).isNotNull().isEqualTo(MovieVotesFaker.movieVotes());
+  }
+
+  @Test
+  @DisplayName("merge must throw IllegalArgumentException when review is null")
+  void merge_MustThrowIllegalArgumentException_WhenReviewIsNull() {
+    ReviewUpdateRequest reviewUpdateRequest = ReviewUpdateRequest.builder()
+        .vote(8)
+        .opinion("Lorem ipsum dolor sit amet updated")
+        .build();
+
+    assertThatExceptionOfType(IllegalArgumentException.class)
+        .isThrownBy(() -> reviewMapper.merge(null, reviewUpdateRequest))
+        .withMessage("review must not be null");
+  }
+
+  @Test
+  @DisplayName("merge must throw IllegalArgumentException when reviewUpdateRequest is null")
+  void merge_MustThrowIllegalArgumentException_WhenReviewUpdateRequestIsNull() {
+    Review review = Review.builder()
+        .id(2_000_000L)
+        .vote(9)
+        .opinion("Lorem ipsum dolor sit amet")
+        .createdAt(LocalDateTime.parse("2024-02-08T10:00:00"))
+        .user(UserFaker.user())
+        .movieVotes(MovieVotesFaker.movieVotes())
+        .build();
+
+    assertThatExceptionOfType(IllegalArgumentException.class)
+        .isThrownBy(() -> reviewMapper.merge(review, null))
+        .withMessage("reviewUpdateRequest must not be null");
   }
 
 }
