@@ -209,7 +209,7 @@ public class ReviewFaker {
   /**
    * Retorna {@link ReviewDetailsProjection} com todos os campos.
    */
-  private static ReviewDetailsProjection reviewDetailsProjection() {
+  public static ReviewDetailsProjection reviewDetailsProjection() {
     return ReviewDetailsProjectionImpl.builder()
         .id(REVIEW_ID)
         .vote(REVIEW_VOTE)
