@@ -2,8 +2,10 @@ package br.com.emendes.yourreviewapi.unit.service.impl;
 
 import br.com.emendes.yourreviewapi.dto.request.AuthenticationRequest;
 import br.com.emendes.yourreviewapi.dto.response.AuthenticationResponse;
+import br.com.emendes.yourreviewapi.exception.UserIsNotAuthenticatedException;
 import br.com.emendes.yourreviewapi.service.JWTService;
 import br.com.emendes.yourreviewapi.service.impl.AuthenticationServiceImpl;
+import br.com.emendes.yourreviewapi.util.component.AuthenticatedUserComponent;
 import br.com.emendes.yourreviewapi.util.faker.UserFaker;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -35,6 +37,9 @@ class AuthenticationServiceImplTest {
   private AuthenticationManager authenticationManagerMock;
   @Mock
   private JWTService jwtServiceMock;
+
+  @Mock
+  private AuthenticatedUserComponent authenticatedUserComponentMock;
 
   @Nested
   @DisplayName("authenticate method")
@@ -105,6 +110,36 @@ class AuthenticationServiceImplTest {
       assertThatExceptionOfType(DisabledException.class)
           .isThrownBy(() -> authenticationService.authenticate(authenticationRequest))
           .withMessage("User is disabled");
+    }
+
+  }
+
+  @Nested
+  @DisplayName("refreshToken method")
+  class RefreshTokenMethod {
+
+    @Test
+    @DisplayName("refreshToken must return AuthenticationResponse when refresh token successfully")
+    void refreshToken_MustReturnAuthenticationResponse_WhenRefreshTokenSuccessfully() {
+      when(authenticatedUserComponentMock.getCurrentUser()).thenReturn(UserFaker.user());
+      when(jwtServiceMock.generateToken(any(), anyLong())).thenReturn("refreshed.token");
+
+      AuthenticationResponse actualAuthenticationResponse = authenticationService.refreshToken();
+
+      assertThat(actualAuthenticationResponse).isNotNull();
+      assertThat(actualAuthenticationResponse.type()).isNotNull().isEqualTo("Bearer");
+      assertThat(actualAuthenticationResponse.token()).isNotNull().isEqualTo("refreshed.token");
+    }
+
+    @Test
+    @DisplayName("refreshToken must throw UserIsNotAuthenticatedException when user is not authenticated")
+    void refreshToken_MustThrowUserIsNotAuthenticatedException_WhenUserIsNotAuthenticated() {
+      when(authenticatedUserComponentMock.getCurrentUser())
+          .thenThrow(new UserIsNotAuthenticatedException("User is not authenticate"));
+
+      assertThatExceptionOfType(UserIsNotAuthenticatedException.class)
+          .isThrownBy(() -> authenticationService.refreshToken())
+          .withMessage("User is not authenticate");
     }
 
   }

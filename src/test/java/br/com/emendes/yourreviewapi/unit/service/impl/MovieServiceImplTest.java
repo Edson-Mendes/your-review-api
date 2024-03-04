@@ -3,6 +3,7 @@ package br.com.emendes.yourreviewapi.unit.service.impl;
 import br.com.emendes.yourreviewapi.client.MovieClient;
 import br.com.emendes.yourreviewapi.dto.response.MovieDetailsResponse;
 import br.com.emendes.yourreviewapi.dto.response.MovieSummaryResponse;
+import br.com.emendes.yourreviewapi.exception.InvalidTMDbApiKeyException;
 import br.com.emendes.yourreviewapi.exception.MovieNotFoundException;
 import br.com.emendes.yourreviewapi.mapper.MovieMapper;
 import br.com.emendes.yourreviewapi.model.Movie;
@@ -18,6 +19,8 @@ import org.mockito.Mock;
 import org.springframework.data.domain.Page;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -46,7 +49,17 @@ class MovieServiceImplTest {
 
       Page<MovieSummaryResponse> actualMovieSummaryResponsePage = movieService.findByName("XPTO", 1);
 
-      Assertions.assertThat(actualMovieSummaryResponsePage).isNotNull().hasSize(1);
+      assertThat(actualMovieSummaryResponsePage).isNotNull().hasSize(1);
+    }
+
+    @Test
+    @DisplayName("findByName must throw InvalidTMDbApiKeyException when api_key is invalid")
+    void findByName_MustThrowInvalidTMDbApiKeyException_WhenAPI_KEYIsInvalid() {
+      when(movieClientMock.findByName("XPTO", 1))
+          .thenThrow(new InvalidTMDbApiKeyException("invalid TMDb API Key"));
+
+      assertThatExceptionOfType(InvalidTMDbApiKeyException.class)
+          .isThrownBy(() -> movieService.findByName("XPTO", 1));
     }
 
   }
@@ -65,14 +78,25 @@ class MovieServiceImplTest {
 
       MovieDetailsResponse actualMovieDetailsResponse = movieService.findDetailedById("1234");
 
-      Assertions.assertThat(actualMovieDetailsResponse).isNotNull();
-      Assertions.assertThat(actualMovieDetailsResponse.id()).isNotNull().isEqualTo("1234");
-      Assertions.assertThat(actualMovieDetailsResponse.title()).isNotNull().isEqualTo("XPTO");
-      Assertions.assertThat(actualMovieDetailsResponse.overview()).isNotNull()
+      assertThat(actualMovieDetailsResponse).isNotNull();
+      assertThat(actualMovieDetailsResponse.id()).isNotNull().isEqualTo("1234");
+      assertThat(actualMovieDetailsResponse.title()).isNotNull().isEqualTo("XPTO");
+      assertThat(actualMovieDetailsResponse.overview()).isNotNull()
           .isEqualTo("Lorem ipsum dolor sit amet");
-      Assertions.assertThat(actualMovieDetailsResponse.posterPath()).isNotNull().isEqualTo("/1234");
-      Assertions.assertThat(actualMovieDetailsResponse.releaseDate()).isNotNull().isEqualTo("2024-01-16");
-      Assertions.assertThat(actualMovieDetailsResponse.originalLanguage()).isNotNull().isEqualTo("en");
+      assertThat(actualMovieDetailsResponse.posterPath()).isNotNull().isEqualTo("/1234");
+      assertThat(actualMovieDetailsResponse.releaseDate()).isNotNull().isEqualTo("2024-01-16");
+      assertThat(actualMovieDetailsResponse.originalLanguage()).isNotNull().isEqualTo("en");
+    }
+
+    @Test
+    @DisplayName("findDetailedById must throw InvalidTMDbApiKeyException when api_key is invalid")
+    void findDetailedById_MustThrowInvalidTMDbApiKeyException_WhenAPI_KEYIsInvalid() {
+      when(movieClientMock.findById("1234"))
+          .thenThrow(new InvalidTMDbApiKeyException("invalid TMDb API Key"));
+
+      Assertions.assertThatExceptionOfType(InvalidTMDbApiKeyException.class)
+          .isThrownBy(() -> movieService.findDetailedById("1234"))
+          .withMessage("invalid TMDb API Key");
     }
 
     @Test
@@ -101,11 +125,11 @@ class MovieServiceImplTest {
 
       MovieSummaryResponse actualMovieSummaryResponse = movieService.findSummarizedById("1234");
 
-      Assertions.assertThat(actualMovieSummaryResponse).isNotNull();
-      Assertions.assertThat(actualMovieSummaryResponse.id()).isNotNull().isEqualTo("1234");
-      Assertions.assertThat(actualMovieSummaryResponse.title()).isNotNull().isEqualTo("XPTO");
-      Assertions.assertThat(actualMovieSummaryResponse.posterPath()).isNotNull().isEqualTo("/1234");
-      Assertions.assertThat(actualMovieSummaryResponse.releaseDate()).isNotNull().isEqualTo("2024-01-16");
+      assertThat(actualMovieSummaryResponse).isNotNull();
+      assertThat(actualMovieSummaryResponse.id()).isNotNull().isEqualTo("1234");
+      assertThat(actualMovieSummaryResponse.title()).isNotNull().isEqualTo("XPTO");
+      assertThat(actualMovieSummaryResponse.posterPath()).isNotNull().isEqualTo("/1234");
+      assertThat(actualMovieSummaryResponse.releaseDate()).isNotNull().isEqualTo("2024-01-16");
     }
 
     @Test
@@ -116,6 +140,17 @@ class MovieServiceImplTest {
       Assertions.assertThatExceptionOfType(MovieNotFoundException.class)
           .isThrownBy(() -> movieService.findSummarizedById("1234"))
           .withMessage("movie not found with id: 1234");
+    }
+
+    @Test
+    @DisplayName("findSummarizedById must throw InvalidTMDbApiKeyException when api_key is invalid")
+    void findSummarizedById_MustThrowInvalidTMDbApiKeyException_WhenAPI_KEYIsInvalid() {
+      when(movieClientMock.findById("1234"))
+          .thenThrow(new InvalidTMDbApiKeyException("invalid TMDb API Key"));
+
+      Assertions.assertThatExceptionOfType(InvalidTMDbApiKeyException.class)
+          .isThrownBy(() -> movieService.findSummarizedById("1234"))
+          .withMessage("invalid TMDb API Key");
     }
 
   }
