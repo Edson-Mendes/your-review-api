@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import java.security.Key;
 import java.util.Date;
@@ -27,6 +28,9 @@ public class JWTServiceImpl implements JWTService {
 
   @Override
   public String generateToken(UserDetails userDetails, long timeExpiration) {
+    Assert.notNull(userDetails, "userDetails must not be null");
+    Assert.notNull(userDetails.getUsername(), "userDetails.username must not be null");
+
     long currentTimeMillis = System.currentTimeMillis();
     Date now = new Date(currentTimeMillis);
     Date expiration = new Date(currentTimeMillis + timeExpiration);
