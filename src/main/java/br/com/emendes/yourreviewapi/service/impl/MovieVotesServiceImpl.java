@@ -1,9 +1,9 @@
 package br.com.emendes.yourreviewapi.service.impl;
 
-import br.com.emendes.yourreviewapi.client.MovieClient;
 import br.com.emendes.yourreviewapi.exception.MovieNotFoundException;
 import br.com.emendes.yourreviewapi.model.entity.MovieVotes;
 import br.com.emendes.yourreviewapi.repository.MovieVotesRepository;
+import br.com.emendes.yourreviewapi.service.MovieService;
 import br.com.emendes.yourreviewapi.service.MovieVotesService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +21,7 @@ import java.util.Optional;
 public class MovieVotesServiceImpl implements MovieVotesService {
 
   private final MovieVotesRepository movieVotesRepository;
-  private final MovieClient movieClient;
+  private final MovieService movieService;
 
   @Override
   public Optional<MovieVotes> findByMovieId(String movieId) {
@@ -36,18 +36,17 @@ public class MovieVotesServiceImpl implements MovieVotesService {
     log.info("Attempt to generate non voted MovieVotes with movieId: {}", movieId);
     checkMovieId(movieId);
 
-    try {
-      movieClient.findById(movieId);
-
+    if (movieService.existsMovieById(movieId)) {
       return MovieVotes.builder()
           .movieId(movieId)
           .voteCount(0)
           .voteTotal(0)
           .createdAt(LocalDateTime.now())
           .build();
-    } catch (MovieNotFoundException exception) {
-      throw new MovieNotFoundException(exception.getMessage(), 400);
     }
+
+    log.info("could not generate non voted MovieVotes because there is no Movie with id {}", movieId);
+    throw new MovieNotFoundException("movie not found with id: %s".formatted(movieId), 400);
   }
 
   /**

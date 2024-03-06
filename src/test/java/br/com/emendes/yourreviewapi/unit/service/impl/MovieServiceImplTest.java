@@ -155,4 +155,31 @@ class MovieServiceImplTest {
 
   }
 
+  @Nested
+  @DisplayName("Tests for existsMovieById method")
+  class ExistsMovieByIdMethod {
+
+    @Test
+    @DisplayName("existsMovieById must return true when exists Movie with given movieId")
+    void existsMovieById_MustReturnTrue_WhenExistsMovieWithGivenMovieId() {
+      when(movieClientMock.findById("1234")).thenReturn(MovieFaker.movie());
+
+      boolean actualExists = movieService.existsMovieById("1234");
+
+      assertThat(actualExists).isTrue();
+    }
+
+    @Test
+    @DisplayName("existsMovieById must return false when there is no Movie with given movieId")
+    void existsMovieById_MustReturnTrue_WhenThereIsNoMovieWithGivenMovieId() {
+      when(movieClientMock.findById("1234"))
+          .thenThrow(new MovieNotFoundException("Movie not found for id: 1234"));
+
+      boolean actualExists = movieService.existsMovieById("1234");
+
+      assertThat(actualExists).isFalse();
+    }
+
+  }
+
 }

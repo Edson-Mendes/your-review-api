@@ -1,11 +1,10 @@
 package br.com.emendes.yourreviewapi.unit.service.impl;
 
-import br.com.emendes.yourreviewapi.client.MovieClient;
 import br.com.emendes.yourreviewapi.exception.MovieNotFoundException;
 import br.com.emendes.yourreviewapi.model.entity.MovieVotes;
 import br.com.emendes.yourreviewapi.repository.MovieVotesRepository;
+import br.com.emendes.yourreviewapi.service.MovieService;
 import br.com.emendes.yourreviewapi.service.impl.MovieVotesServiceImpl;
-import br.com.emendes.yourreviewapi.util.faker.MovieFaker;
 import br.com.emendes.yourreviewapi.util.faker.MovieVotesFaker;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -33,7 +32,7 @@ class MovieVotesServiceImplTest {
   @Mock
   private MovieVotesRepository movieVotesRepositoryMock;
   @Mock
-  private MovieClient movieClientMock;
+  private MovieService movieServiceMock;
 
   @Nested
   @DisplayName("FindByMovieId Method")
@@ -71,7 +70,7 @@ class MovieVotesServiceImplTest {
     @Test
     @DisplayName("generateNonVotedMovieVotes must return MovieVotes when generate successfully")
     void generateNonVotedMovieVotes_MustReturnMovieVotes_WhenGenerateSuccessfully() {
-      when(movieClientMock.findById("1234")).thenReturn(MovieFaker.movie());
+      when(movieServiceMock.existsMovieById("1234")).thenReturn(true);
 
       MovieVotes actualMovieVotes = movieVotesService.generateNonVotedMovieVotes("1234");
 
@@ -94,14 +93,13 @@ class MovieVotesServiceImplTest {
     }
 
     @Test
-    @DisplayName("generateNonVotedMovieVotes must throw MovieNotFoundException when not found Movie with given movieId")
-    void generateNonVotedMovieVotes_MustThrowMovieNotFoundException_WhenNotFoundMovieWithGivenMovieId() {
-      when(movieClientMock.findById("1234"))
-          .thenThrow(new MovieNotFoundException("movie not found with id: 1000000"));
+    @DisplayName("generateNonVotedMovieVotes must throw MovieNotFoundException when there is no Movie with given movieId")
+    void generateNonVotedMovieVotes_MustThrowMovieNotFoundException_WhenThereIsNoMovieWithGivenMovieId() {
+      when(movieServiceMock.existsMovieById("1234")).thenReturn(false);
 
       assertThatExceptionOfType(MovieNotFoundException.class)
           .isThrownBy(() -> movieVotesService.generateNonVotedMovieVotes("1234"))
-          .withMessage("movie not found with id: 1000000");
+          .withMessage("movie not found with id: 1234");
     }
 
   }
