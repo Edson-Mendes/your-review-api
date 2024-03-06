@@ -37,6 +37,7 @@ pesquisar pelos filmes mais bem avaliados (ou pior avaliados).
 <a href="https://site.mockito.org/" target="_blank"><img src="https://img.shields.io/badge/Mockito-C5D9C8.svg?&style=for-the-badge" target="_blank"></a>
 <a href="https://www.postman.com/" target="_blank"><img src="https://img.shields.io/badge/postman-ff6c37.svg?&style=for-the-badge&logo=postman&logoColor=white" target="_blank"></a>
 <a href="https://en.wikipedia.org/wiki/Unit_testing" target="_blank"><img src="https://img.shields.io/badge/Unit%20Tests-5a61d6.svg?&style=for-the-badge&logo=unittest&logoColor=white" target="_blank"></a>
+<a href="https://en.wikipedia.org/wiki/Integration_testing" target="_blank"><img src="https://img.shields.io/badge/Integration%20Tests-5a61d6.svg?&style=for-the-badge&logo=unittest&logoColor=white" target="_blank"></a>
 
 <a href="https://developer.themoviedb.org/docs/getting-started" target="_blank"><img src="https://img.shields.io/badge/TMDb%20API-01B4E4.svg?&style=for-the-badge&logo=themoviedatabase&logoColor=white" target="_blank"></a>
 
@@ -51,8 +52,8 @@ pesquisar pelos filmes mais bem avaliados (ou pior avaliados).
   Segue abaixo um exemplo do corpo da requisição.
     ```json
     {
-      "name": "Lorem Ipsum",
-      "email": "lorem@email.com",
+      "name": "John Doe",
+      "email": "john.doe@email.com",
       "password": "1234567890",
       "confirmPassword": "1234567890"
     }
@@ -64,8 +65,8 @@ pesquisar pelos filmes mais bem avaliados (ou pior avaliados).
     ```json
     {
       "id": 150,
-      "name": "Lorem Ipsum",
-      "email": "lorem@email.com",
+      "name": "John Doe",
+      "email": "john.doe@email.com",
       "status": "ENABLED",
       "createdAt": "2023-12-10T10:00:00"
     }
@@ -79,7 +80,7 @@ e **password** em um JSON no corpo da requisição.<br>
   Segue abaixo um exemplo do corpo da requisição.
     ```json
     {
-      "username": "lorem@email.com",
+      "username": "john.doe@email.com",
       "password": "1234567890"
     }
     ```
@@ -90,7 +91,21 @@ o tipo do token, no caso desse sistema é o tipo Bearer.
   Segue abaixo um exemplo do corpo da resposta.
     ```json
     {
-      "token": "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJZb3VyIFJldmlldyBBUEkiLCJzdWIiOiJsb3JlbUBlbWFpbC5jb20iLCJpYXQiOjE3MDMyNjM1NTgsImV4cCI6MTcwMzI2NTM1OH0.zGt6_Essq4jBPMzSIzniWJ-l0IONB1RyqvOrmRfBr9M",
+      "token": "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJZb3VyIFJldmlldyBBUEkiLCJzdWIiOiJqb2huLmRvZUBlbWFpbC5jb20iLCJpYXQiOjE3MDk3NDUwMzcsImV4cCI6MTcwOTgzMTQzN30.UdB0UBvF6prrluYVWJ3eSN_-W2fe8-5ks1fNrR_xKt8",
+      "type": "Bearer"
+    }
+    ```
+
+- `Refresh token - GET /api/v1/auth/refresh`: Refresh o JWT de autenticação, como o token tem duração limitada o usuário pode solicitar um novo token através desse endpoint sem precisar enviar as credenciais novamente.
+
+  - É necessário estar autenticado.
+
+  Em caso de sucesso a resposta tem status 200 com um JSON no corpo da resposta.
+  
+  Segue abaixo um exemplo do corpo da resposta.
+    ```json
+    {
+      "token": "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJZb3VyIFJldmlldyBBUEkiLCJzdWIiOiJqb2huLmRvZUBlbWFpbC5jb20iLCJpYXQiOjE3MDk3NDUwNjMsImV4cCI6MTcwOTgzMTQ2M30.0NnAvB6f_tVkkAeqhIDgg216wjRetZyEE8d57AYXiFA",
       "type": "Bearer"
     }
     ```
@@ -98,12 +113,12 @@ o tipo do token, no caso desse sistema é o tipo Bearer.
 ### API de gerenciamento de filme
 
 - `Buscar filme por nome - GET /api/v1/movies?name={movieName}&page={pageNumber}`: Buscar filme por nome informando 
-o nome do filme como query string. A busca é páginada, caso o cliente queira outra página da pesquisa deve passar a 
-query param **page**, o valor padrão de page é 1. O tamanho da página solicitada (page size) é 20.  
+o nome do filme como query string. A busca é paginada de forma zero-based (começa em 0), caso o cliente queira outra página da pesquisa deve passar a 
+query param **page**, o valor padrão de page é 0. O tamanho da página solicitada (page size) é 20.
 
   Em caso de sucesso a resposta tem status 200 com um JSON no corpo da resposta.
 
-  Segue abaixo um exemplo do corpo da resposta para a requisição **GET /api/v1/movies?name=lord&page=1**
+  Segue abaixo um exemplo do corpo da resposta para a requisição **GET /api/v1/movies?name=lord&page=0**
     ```json
     {
       "content": [
@@ -120,10 +135,10 @@ query param **page**, o valor padrão de page é 1. O tamanho da página solicit
           "posterPath": "/4T7QFBSeV4pFRx6TYtxNHmlu4aD.jpg"
         },
         {
-          "id": "120",
-          "title": "The Lord of the Rings: The Fellowship of the Ring",
-          "releaseDate": "2001-12-18",
-          "posterPath": "/6oom5QYQ2yQTMJIbnvbkBL9cHo6.jpg"
+          "id": "122",
+          "title": "The Lord of the Rings: The Return of the King",
+          "releaseDate": "2003-12-01",
+          "posterPath": "/rCzpDGLbOoPwLjy3OAm5NUPOTrC.jpg"
         },
         {
           "id": "39102",
@@ -132,16 +147,10 @@ query param **page**, o valor padrão de page é 1. O tamanho da página solicit
           "posterPath": "/1lmwZTsqwTtvd3m60pyQfhGM2Ut.jpg"
         },
         {
-          "id": "122",
-          "title": "The Lord of the Rings: The Return of the King",
-          "releaseDate": "2003-12-01",
-          "posterPath": "/rCzpDGLbOoPwLjy3OAm5NUPOTrC.jpg"
-        },
-        {
-          "id": "853387",
-          "title": "Lord of Misrule",
-          "releaseDate": "2023-10-26",
-          "posterPath": "/eCNJuGsCNdf2yf4F3UcDg1WZTbo.jpg"
+          "id": "120",
+          "title": "The Lord of the Rings: The Fellowship of the Ring",
+          "releaseDate": "2001-12-18",
+          "posterPath": "/6oom5QYQ2yQTMJIbnvbkBL9cHo6.jpg"
         },
         {
           "id": "121",
@@ -162,6 +171,12 @@ query param **page**, o valor padrão de page é 1. O tamanho da página solicit
           "posterPath": "/dFItkg67I2W83tCvs5ktuJZyXHw.jpg"
         },
         {
+          "id": "853387",
+          "title": "Lord of Misrule",
+          "releaseDate": "2023-10-26",
+          "posterPath": "/eCNJuGsCNdf2yf4F3UcDg1WZTbo.jpg"
+        },
+        {
           "id": "369552",
           "title": "L.O.R.D: Legend of Ravaging Dynasties",
           "releaseDate": "2016-09-29",
@@ -174,16 +189,16 @@ query param **page**, o valor padrão de page é 1. O tamanho da página solicit
           "posterPath": "/3MGQD4yXokufNlW1AyRXdiy7ytP.jpg"
         },
         {
-          "id": "840098",
-          "title": "Lord of the Ants",
-          "releaseDate": "2022-09-08",
-          "posterPath": "/uPf3jwm4hRRXFyaGYGYPZhpDJd3.jpg"
-        },
-        {
           "id": "512731",
           "title": "The White Storm 2: Drug Lords",
           "releaseDate": "2019-07-04",
           "posterPath": "/ja9oIIP33Pgm9295Gn67zBz8Vjy.jpg"
+        },
+        {
+          "id": "840098",
+          "title": "Lord of the Ants",
+          "releaseDate": "2022-09-08",
+          "posterPath": "/uPf3jwm4hRRXFyaGYGYPZhpDJd3.jpg"
         },
         {
           "id": "570269",
@@ -192,16 +207,16 @@ query param **page**, o valor padrão de page é 1. O tamanho da página solicit
           "posterPath": "/vh4f6N3VdgzmYnRK3VctwBZWdv9.jpg"
         },
         {
-          "id": "1126444",
-          "title": "We're Broke, My Lord!",
-          "releaseDate": "2023-06-23",
-          "posterPath": "/obKzhXbt5zuKkj76LdgtFc82m5V.jpg"
-        },
-        {
           "id": "630044",
           "title": "L.O.R.D: Legend of Ravaging Dynasties 2",
           "releaseDate": "2020-12-02",
           "posterPath": "/43MlbzxB5OohgvPHmPIvRi4MCVn.jpg"
+        },
+        {
+          "id": "9520",
+          "title": "The Thief Lord",
+          "releaseDate": "2006-01-04",
+          "posterPath": "/mLTON0o7tEk37UQMcnIWpngq1ZK.jpg"
         },
         {
           "id": "920429",
@@ -222,35 +237,35 @@ query param **page**, o valor padrão de page é 1. O tamanho da página solicit
           "posterPath": "/c0UfnzFW7Vk7qX2rYij2G5ahB1z.jpg"
         },
         {
-          "id": "9960",
-          "title": "Lord of the Flies",
-          "releaseDate": "1963-08-13",
-          "posterPath": "/jDHK2VHoD8eJenfWvofIaSCn73x.jpg"
+          "id": "888917",
+          "title": "Lords of Scam",
+          "releaseDate": "2021-11-03",
+          "posterPath": "/tPcrO8DJAP0lPeoTiQHRsNBD2EC.jpg"
         }
       ],
       "pageable": {
-        "pageNumber": 1,
+        "pageNumber": 0,
         "pageSize": 20,
         "sort": {
-            "sorted": false,
-            "empty": true,
-            "unsorted": true
+          "sorted": false,
+          "empty": true,
+          "unsorted": true
         },
-        "offset": 20,
-        "paged": true,
-        "unpaged": false
+          "offset": 0,
+          "paged": true,
+          "unpaged": false
       },
       "last": false,
-      "totalPages": 33,
-      "totalElements": 655,
+      "totalPages": 34,
+      "totalElements": 664,
       "size": 20,
-      "number": 1,
+      "number": 0,
       "sort": {
         "sorted": false,
         "empty": true,
         "unsorted": true
       },
-      "first": false,
+      "first": true,
       "numberOfElements": 20,
       "empty": false
     }
@@ -283,21 +298,22 @@ e **movieId** em um JSON no corpo da requisição.
   Segue abaixo um exemplo do corpo da requisição.
     ```json
     {
-      "vote": "9",
+      "vote": 9,
       "opinion": "o filme capta a profundidade da mitologia de Tolkien, mantendo a essência da história original enquanto faz algumas adaptações necessárias para a transição para o meio cinematográfico. A direção de Peter Jackson foi fundamental para consolidar a grandiosidade da obra.",
       "movieId": "120"
     }
     ```
 
   Em caso de sucesso a resposta tem status 201 com um JSON no corpo da resposta contendo **id**, **vote**, **opinion**,
-  **userId** e **movieId** da avaliação cadastrada.
+  **userId**, **movieId** e **createdAt** da avaliação cadastrada.
     ```json
     {
       "id": 5,
       "vote": 9,
       "opinion": "o filme capta a profundidade da mitologia de Tolkien, mantendo a essência da história original enquanto faz algumas adaptações necessárias para a transição para o meio cinematográfico. A direção de Peter Jackson foi fundamental para consolidar a grandiosidade da obra.",
-      "userId": 1,
-      "movieId": "120"
+      "userId": 150,
+      "movieId": "120",
+      "createdAt": "2024-03-06T14:03:04.873359142"
     }
     ```
   
@@ -318,14 +334,22 @@ O tamanho da página solicitada (page size) é 20.
           "id": 3,
           "vote": 8,
           "opinion": "É um épico cinematográfico que reúne uma variedade impressionante de super-heróis da Marvel em uma batalha contra o poderoso vilão Thanos.",
-          "userId": 2,
+          "user": {
+            "id": 150,
+            "name": "John Doe",
+            "email": "john.doe@email.com"
+          },
           "movieId": "299536"
         },
         {
           "id": 4,
           "vote": 9,
           "opinion": "O filme é repleto de ação espetacular, efeitos visuais impressionantes e uma trama intricada que tece várias narrativas.",
-          "userId": 1,
+          "user": {
+            "id": 151,
+            "name": "Jane Doe",
+            "email": "jane.doe@email.com"
+          },
           "movieId": "299536"
         }
       ],
@@ -357,6 +381,60 @@ O tamanho da página solicitada (page size) é 20.
     }
     ```
 
+- `Buscar avaliação por ID - GET /api/v1/reviews/{reviewID}`: Buscar review por reviewID, onde *reviewID* é o identificador da avaliação.
+
+  - É necessário estar autenticado.
+
+  Em caso de sucesso a resposta tem status 200 com um JSON no corpo da resposta contendo informações detalhadas sobre 
+a avaliação **id**, **vote**, **opinion**, **userId**, **movie** (com **id**, **title**, **releaseDate** e **posterPath**) e **createdAt**.
+
+  Segue abaixo um exemplo com corpo da resposta para a requisição *GET /api/v1/reviews/3*.
+  ```json
+  {
+    "id": 3,
+    "vote": 8,
+    "opinion": "É um épico cinematográfico que reúne uma variedade impressionante de super-heróis da Marvel em uma batalha contra o poderoso vilão Thanos.",
+    "userId": 150,
+    "movie": {
+      "id": "299536",
+      "title": "Avengers: Infinity War",
+      "releaseDate": "2018-04-25",
+      "posterPath": "/7WsyChQLEftFiDOVTGkv3hFpyyt.jpg"
+    },
+    "createdAt": "2024-03-06T14:23:27.583647"
+  }
+  ```
+
+- `Atualizar avaliação por reviewID - PUT /api/v1/reviews/{reviewID}`: Atualizar review por *reviewID*, onde *reviewID* é o identificador da avaliação e enviando as informações **vote** e **opinion** (opcional) em um JSON no corpo da requisição.
+
+  - É necessário estar autenticado.
+
+  Segue abaixo um exemplo do corpo da requisição.
+    ```json
+    {
+      "vote": 7,
+      "opinion": "o filme capta a profundidade da mitologia de Tolkien, mantendo a essência da história original enquanto faz algumas adaptações necessárias para a transição para o meio cinematográfico. A direção de Peter Jackson foi fundamental para consolidar a grandiosidade da obra."
+    }
+    ```
+
+  Em caso de sucesso a resposta tem status 200 com um JSON no corpo da resposta contendo **id**, **vote**, **opinion**,
+  **userId**, **movieId** e **createdAt** da avaliação cadastrada.
+    ```json
+    {
+      "id": 5,
+      "vote": 7,
+      "opinion": "o filme capta a profundidade da mitologia de Tolkien, mantendo a essência da história original enquanto faz algumas adaptações necessárias para a transição para o meio cinematográfico. A direção de Peter Jackson foi fundamental para consolidar a grandiosidade da obra.",
+      "userId": 150,
+      "movieId": "120",
+      "createdAt": "2024-03-06T14:03:04.873359142"
+    }
+    ```
+
+- `Deletar avaliação por reviewID - DELETE /api/v1/reviews/{reviewID}`: Deletar review por *reviewID*, onde *reviewID* é o identificador da avaliação.
+
+  - É necessário estar autenticado.
+
+  Em caso de sucesso a resposta tem status 204.
 
 ## Diagramas
 
@@ -370,14 +448,14 @@ O tamanho da página solicitada (page size) é 20.
         USER {
             bigserial id PK
             varchar(150) name
-            varchar(320) email
+            varchar(320) email UK
             varchar(255) password
             varchar(50) status
             timestamp created_at
         }
         AUTHORITY {
             serial id PK
-            varchar(100) name
+            varchar(100) name UK
         }
         USER_AUTHORITIES {
             bigint user_id FK
@@ -385,7 +463,7 @@ O tamanho da página solicitada (page size) é 20.
         }
         MOVIE_VOTES {
             bigserial id PK
-            varchar(100) movie_id
+            varchar(100) movie_id UK
             bigint vote_total
             bigint vote_count
         }
