@@ -3,6 +3,7 @@ package br.com.emendes.yourreviewapi.service.impl;
 import br.com.emendes.yourreviewapi.client.MovieClient;
 import br.com.emendes.yourreviewapi.dto.response.MovieDetailsResponse;
 import br.com.emendes.yourreviewapi.dto.response.MovieSummaryResponse;
+import br.com.emendes.yourreviewapi.exception.MovieNotFoundException;
 import br.com.emendes.yourreviewapi.mapper.MovieMapper;
 import br.com.emendes.yourreviewapi.service.MovieService;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +41,18 @@ public class MovieServiceImpl implements MovieService {
     log.info("Searching for movie with id: {}", movieId);
 
     return movieMapper.toMovieSummaryResponse(movieClient.findById(movieId));
+  }
+
+  @Override
+  public boolean existsMovieById(String movieId) {
+    log.info("checking if there is a movie for id: {}", movieId);
+
+    try {
+      movieClient.findById(movieId);
+      return true;
+    } catch (MovieNotFoundException exception) {
+      return false;
+    }
   }
 
 }
