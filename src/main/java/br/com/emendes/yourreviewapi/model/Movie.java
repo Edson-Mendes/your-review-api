@@ -11,7 +11,8 @@ import java.time.LocalDate;
  * @param title            título original do filme (no idioma original).
  * @param overview         sinopse do filme.
  * @param releaseDate      data de lançamento do filme.
- * @param posterPath       URI da imagem do poster do filme.
+ * @param posterPath       path da imagem do poster do filme.
+ * @param backdropPath     path da imagem de pano de fundo do filme.
  * @param originalLanguage linguagem original do filme.
  */
 @Builder
@@ -21,6 +22,7 @@ public record Movie(
     String overview,
     LocalDate releaseDate,
     String posterPath,
+    String backdropPath,
     String originalLanguage
 ) {
 }

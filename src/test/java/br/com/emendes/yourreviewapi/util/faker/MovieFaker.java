@@ -19,6 +19,7 @@ public class MovieFaker {
   public static final String MOVIE_TITLE = "XPTO";
   public static final String MOVIE_OVERVIEW = "Lorem ipsum dolor sit amet";
   public static final String MOVIE_POSTER_PATH = "/1234";
+  public static final String MOVIE_BACKDROP_PATH = "/01234";
   public static final LocalDate MOVIE_RELEASE_DATE = LocalDate.parse("2024-01-16");
   public static final String MOVIE_ORIGINAL_LANGUAGE = "en";
 
@@ -32,8 +33,9 @@ public class MovieFaker {
     return Movie.builder()
         .id(MOVIE_ID)
         .title(MOVIE_TITLE)
-        .posterPath(MOVIE_POSTER_PATH)
         .overview(MOVIE_OVERVIEW)
+        .posterPath(MOVIE_POSTER_PATH)
+        .backdropPath(MOVIE_BACKDROP_PATH)
         .releaseDate(MOVIE_RELEASE_DATE)
         .originalLanguage(MOVIE_ORIGINAL_LANGUAGE)
         .build();
@@ -65,8 +67,9 @@ public class MovieFaker {
     return MovieDetailsResponse.builder()
         .id(MOVIE_ID)
         .title(MOVIE_TITLE)
-        .posterPath(MOVIE_POSTER_PATH)
         .overview(MOVIE_OVERVIEW)
+        .posterPath(MOVIE_POSTER_PATH)
+        .backdropPath(MOVIE_BACKDROP_PATH)
         .releaseDate(MOVIE_RELEASE_DATE)
         .originalLanguage(MOVIE_ORIGINAL_LANGUAGE)
         .build();
