@@ -84,6 +84,7 @@ class MovieServiceImplTest {
       assertThat(actualMovieDetailsResponse.overview()).isNotNull()
           .isEqualTo("Lorem ipsum dolor sit amet");
       assertThat(actualMovieDetailsResponse.posterPath()).isNotNull().isEqualTo("/1234");
+      assertThat(actualMovieDetailsResponse.backdropPath()).isNotNull().isEqualTo("/01234");
       assertThat(actualMovieDetailsResponse.releaseDate()).isNotNull().isEqualTo("2024-01-16");
       assertThat(actualMovieDetailsResponse.originalLanguage()).isNotNull().isEqualTo("en");
     }

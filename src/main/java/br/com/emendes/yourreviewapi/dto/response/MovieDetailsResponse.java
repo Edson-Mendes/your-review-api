@@ -12,7 +12,8 @@ import java.time.LocalDate;
  * @param overview         sinopse do filme.
  * @param releaseDate      data de lançamento do filme.
  * @param originalLanguage idioma original do filme.
- * @param posterPath       url da imagem do poster do filme.
+ * @param posterPath       path da imagem do poster do filme.
+ * @param backdropPath     path da imagem de pano de fundo do filme.
  */
 @Builder
 public record MovieDetailsResponse(
@@ -21,6 +22,7 @@ public record MovieDetailsResponse(
     String overview,
     LocalDate releaseDate,
     String originalLanguage,
-    String posterPath
+    String posterPath,
+    String backdropPath
 ) {
 }

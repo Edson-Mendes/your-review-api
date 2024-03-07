@@ -16,8 +16,14 @@ public final class TMDbFaker {
    * Retorna uma instância de TMDbMovieResponse com todos os campos.
    */
   public static TMDbMovieResponse tMDbMovieResponse() {
-    return new TMDbMovieResponse(
-        MOVIE_ID, MOVIE_TITLE, MOVIE_OVERVIEW,
-        MOVIE_RELEASE_DATE, MOVIE_POSTER_PATH, MOVIE_ORIGINAL_LANGUAGE);
+    return TMDbMovieResponse.builder()
+        .id(MOVIE_ID)
+        .title(MOVIE_TITLE)
+        .overview(MOVIE_OVERVIEW)
+        .releaseDate(MOVIE_RELEASE_DATE)
+        .posterPath(MOVIE_POSTER_PATH)
+        .backdropPath(MOVIE_BACKDROP_PATH)
+        .originalLanguage(MOVIE_ORIGINAL_LANGUAGE)
+        .build();
   }
 }

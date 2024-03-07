@@ -37,6 +37,7 @@ public class MovieMapperImpl implements MovieMapper {
         .releaseDate(movie.releaseDate())
         .originalLanguage(movie.originalLanguage())
         .posterPath(movie.posterPath())
+        .backdropPath(movie.backdropPath())
         .build();
   }
 
@@ -51,6 +52,7 @@ public class MovieMapperImpl implements MovieMapper {
         .originalLanguage(tmdbMovieResponse.originalLanguage())
         .releaseDate(tmdbMovieResponse.releaseDate())
         .posterPath(tmdbMovieResponse.posterPath())
+        .backdropPath(tmdbMovieResponse.backdropPath())
         .build();
   }
 

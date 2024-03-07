@@ -248,6 +248,8 @@ public class MovieControllerIT {
       assertThat(actualResponseBody.overview()).isNotNull().isEqualTo("Lorem ipsum dolor sit amet");
       assertThat(actualResponseBody.originalLanguage()).isNotNull().isEqualTo("en");
       assertThat(actualResponseBody.releaseDate()).isNotNull().isEqualTo("2024-01-16");
+      assertThat(actualResponseBody.posterPath()).isNotNull().isEqualTo("/1234");
+      assertThat(actualResponseBody.backdropPath()).isNotNull().isEqualTo("/01234");
     }
 
     @Test
