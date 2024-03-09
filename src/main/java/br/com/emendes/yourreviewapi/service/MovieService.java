@@ -43,11 +43,4 @@ public interface MovieService {
    */
   MovieSummaryResponse findSummarizedById(@NotBlank(message = "{MovieService.findById.movieId.NotBlank.message}") String movieId);
 
-  /**
-   * Verifica se existe Movie para o dado {@code movieId}
-   *
-   * @param movieId identificador do filme a ser verificado.
-   * @return {@code true} caso exista Movie com o dado {@code movieId}, false caso contrário.
-   */
-  boolean existsMovieById(@NotBlank(message = "{MovieService.findById.movieId.NotBlank.message}") String movieId);
 }

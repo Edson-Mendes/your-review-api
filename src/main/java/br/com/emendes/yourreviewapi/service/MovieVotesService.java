@@ -1,5 +1,6 @@
 package br.com.emendes.yourreviewapi.service;
 
+import br.com.emendes.yourreviewapi.dto.MovieVotesAverage;
 import br.com.emendes.yourreviewapi.exception.MovieNotFoundException;
 import br.com.emendes.yourreviewapi.model.Movie;
 import br.com.emendes.yourreviewapi.model.entity.MovieVotes;
@@ -28,5 +29,14 @@ public interface MovieVotesService {
    * @throws MovieNotFoundException caso não exista um Movie para o dado {@code movieId}.
    */
   MovieVotes generateNonVotedMovieVotes(String movieId);
+
+  /**
+   * Busca {@link MovieVotesAverage} por movieId.
+   *
+   * @param movieId identificador do Movie ao qual o MovieVotes está associado.
+   * @return {@code Optinal<MovieVotesAverage>} contendo MovieVotesAverage caso seja encontrado,
+   * ou {@link Optional#empty()} caso contrário.
+   */
+  Optional<MovieVotesAverage> findAverageByMovieId(String movieId);
 
 }

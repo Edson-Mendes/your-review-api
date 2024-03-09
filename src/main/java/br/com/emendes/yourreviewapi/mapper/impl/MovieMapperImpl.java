@@ -1,5 +1,6 @@
 package br.com.emendes.yourreviewapi.mapper.impl;
 
+import br.com.emendes.yourreviewapi.dto.MovieVotesAverage;
 import br.com.emendes.yourreviewapi.dto.response.MovieDetailsResponse;
 import br.com.emendes.yourreviewapi.dto.response.MovieSummaryResponse;
 import br.com.emendes.yourreviewapi.dto.response.TMDbMovieResponse;
@@ -27,18 +28,25 @@ public class MovieMapperImpl implements MovieMapper {
   }
 
   @Override
-  public MovieDetailsResponse toMovieDetailsResponse(Movie movie) {
+  public MovieDetailsResponse toMovieDetailsResponse(Movie movie, MovieVotesAverage movieVotesAverage) {
     Assert.notNull(movie, "movie must not be null");
 
-    return MovieDetailsResponse.builder()
+    MovieDetailsResponse.MovieDetailsResponseBuilder movieDetailsResponseBuilder = MovieDetailsResponse.builder()
         .id(movie.id())
         .title(movie.title())
         .overview(movie.overview())
         .releaseDate(movie.releaseDate())
         .originalLanguage(movie.originalLanguage())
         .posterPath(movie.posterPath())
-        .backdropPath(movie.backdropPath())
-        .build();
+        .backdropPath(movie.backdropPath());
+
+    if (movieVotesAverage != null) {
+      movieDetailsResponseBuilder
+          .reviewTotal(movieVotesAverage.reviewTotal())
+          .reviewAverage(movieVotesAverage.reviewAverage());
+    }
+
+    return movieDetailsResponseBuilder.build();
   }
 
   @Override
