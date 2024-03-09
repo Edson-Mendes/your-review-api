@@ -3,9 +3,9 @@ package br.com.emendes.yourreviewapi.service.impl;
 import br.com.emendes.yourreviewapi.client.MovieClient;
 import br.com.emendes.yourreviewapi.dto.response.MovieDetailsResponse;
 import br.com.emendes.yourreviewapi.dto.response.MovieSummaryResponse;
-import br.com.emendes.yourreviewapi.exception.MovieNotFoundException;
 import br.com.emendes.yourreviewapi.mapper.MovieMapper;
 import br.com.emendes.yourreviewapi.service.MovieService;
+import br.com.emendes.yourreviewapi.service.MovieVotesService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -21,6 +21,7 @@ public class MovieServiceImpl implements MovieService {
 
   private final MovieClient movieClient;
   private final MovieMapper movieMapper;
+  private final MovieVotesService movieVotesService;
 
   @Override
   public Page<MovieSummaryResponse> findByName(String name, int page) {
@@ -33,7 +34,9 @@ public class MovieServiceImpl implements MovieService {
   public MovieDetailsResponse findDetailedById(String movieId) {
     log.info("Searching for movie with id: {}", movieId);
 
-    return movieMapper.toMovieDetailsResponse(movieClient.findById(movieId));
+    return movieMapper.toMovieDetailsResponse(
+        movieClient.findById(movieId),
+        movieVotesService.findAverageByMovieId(movieId).orElse(null));
   }
 
   @Override
@@ -41,18 +44,6 @@ public class MovieServiceImpl implements MovieService {
     log.info("Searching for movie with id: {}", movieId);
 
     return movieMapper.toMovieSummaryResponse(movieClient.findById(movieId));
-  }
-
-  @Override
-  public boolean existsMovieById(String movieId) {
-    log.info("checking if there is a movie for id: {}", movieId);
-
-    try {
-      movieClient.findById(movieId);
-      return true;
-    } catch (MovieNotFoundException exception) {
-      return false;
-    }
   }
 
 }

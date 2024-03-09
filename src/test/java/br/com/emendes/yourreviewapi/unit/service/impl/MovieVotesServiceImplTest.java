@@ -1,10 +1,12 @@
 package br.com.emendes.yourreviewapi.unit.service.impl;
 
+import br.com.emendes.yourreviewapi.client.MovieClient;
+import br.com.emendes.yourreviewapi.dto.MovieVotesAverage;
 import br.com.emendes.yourreviewapi.exception.MovieNotFoundException;
 import br.com.emendes.yourreviewapi.model.entity.MovieVotes;
 import br.com.emendes.yourreviewapi.repository.MovieVotesRepository;
-import br.com.emendes.yourreviewapi.service.MovieService;
 import br.com.emendes.yourreviewapi.service.impl.MovieVotesServiceImpl;
+import br.com.emendes.yourreviewapi.util.faker.MovieFaker;
 import br.com.emendes.yourreviewapi.util.faker.MovieVotesFaker;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -32,7 +34,7 @@ class MovieVotesServiceImplTest {
   @Mock
   private MovieVotesRepository movieVotesRepositoryMock;
   @Mock
-  private MovieService movieServiceMock;
+  private MovieClient movieClientMock;
 
   @Nested
   @DisplayName("FindByMovieId Method")
@@ -49,6 +51,16 @@ class MovieVotesServiceImplTest {
       MovieVotes actualMovieVotes = actualMovieVotesOptional.orElseThrow();
       assertThat(actualMovieVotes).isNotNull();
       assertThat(actualMovieVotes.getMovieId()).isNotNull().isEqualTo("1234");
+    }
+
+    @Test
+    @DisplayName("findByMovieId must return empty Optional when not found MovieVotes")
+    void findByMovieId_MustReturnEmptyOptional_WhenNotFoundMovieVotes() {
+      when(movieVotesRepositoryMock.findByMovieId("1234")).thenReturn(Optional.empty());
+
+      Optional<MovieVotes> actualMovieVotesOptional = movieVotesService.findByMovieId("1234");
+
+      assertThat(actualMovieVotesOptional).isNotNull().isNotPresent();
     }
 
     @ParameterizedTest
@@ -70,7 +82,7 @@ class MovieVotesServiceImplTest {
     @Test
     @DisplayName("generateNonVotedMovieVotes must return MovieVotes when generate successfully")
     void generateNonVotedMovieVotes_MustReturnMovieVotes_WhenGenerateSuccessfully() {
-      when(movieServiceMock.existsMovieById("1234")).thenReturn(true);
+      when(movieClientMock.findById("1234")).thenReturn(MovieFaker.movie());
 
       MovieVotes actualMovieVotes = movieVotesService.generateNonVotedMovieVotes("1234");
 
@@ -95,11 +107,53 @@ class MovieVotesServiceImplTest {
     @Test
     @DisplayName("generateNonVotedMovieVotes must throw MovieNotFoundException when there is no Movie with given movieId")
     void generateNonVotedMovieVotes_MustThrowMovieNotFoundException_WhenThereIsNoMovieWithGivenMovieId() {
-      when(movieServiceMock.existsMovieById("1234")).thenReturn(false);
+      when(movieClientMock.findById("1234")).thenThrow(new MovieNotFoundException("movie not found with id: 1234"));
 
       assertThatExceptionOfType(MovieNotFoundException.class)
           .isThrownBy(() -> movieVotesService.generateNonVotedMovieVotes("1234"))
           .withMessage("movie not found with id: 1234");
+    }
+
+  }
+
+  @Nested
+  @DisplayName("FindAverageByMovieId Method")
+  class FindAverageByMovieIdMethod {
+
+    @Test
+    @DisplayName("findAverageByMovieId must return Optional<MovieVotesAverage> when found successfully")
+    void findAverageByMovieId_MustReturnOptionalWithMovieVotesAverage_WhenFoundSuccessfully() {
+      when(movieVotesRepositoryMock.findByMovieId("1234")).thenReturn(MovieVotesFaker.movieVotesOptional());
+
+      Optional<MovieVotesAverage> actualMovieVotesOptional = movieVotesService.findAverageByMovieId("1234");
+
+      assertThat(actualMovieVotesOptional).isNotNull().isPresent();
+      MovieVotesAverage actualMovieVotesAverage = actualMovieVotesOptional.orElseThrow();
+      assertThat(actualMovieVotesAverage).isNotNull();
+      assertThat(actualMovieVotesAverage.id()).isNotNull().isEqualTo(4_321L);
+      assertThat(actualMovieVotesAverage.movieId()).isNotNull().isEqualTo("1234");
+      assertThat(actualMovieVotesAverage.reviewTotal()).isEqualTo(40);
+      assertThat(actualMovieVotesAverage.reviewAverage()).isNotNull().isEqualTo("3.07");
+    }
+
+    @Test
+    @DisplayName("findAverageByMovieId must return empty Optional when not found MovieVotes")
+    void findAverageByMovieId_MustReturnEmptyOptional_WhenNotFoundMovieVotes() {
+      when(movieVotesRepositoryMock.findByMovieId("1234")).thenReturn(Optional.empty());
+
+      Optional<MovieVotesAverage> actualMovieVotesOptional = movieVotesService.findAverageByMovieId("1234");
+
+      assertThat(actualMovieVotesOptional).isNotNull().isNotPresent();
+    }
+
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {"   ", "\t", "\n"})
+    @DisplayName("findAverageByMovieId must throw IllegalArgumentException when movieId is invalid")
+    void findAverageByMovieId_MustThrowIllegalArgumentException_WhenMovieIdIsInvalid(String invalidMovieId) {
+      assertThatExceptionOfType(IllegalArgumentException.class)
+          .isThrownBy(() -> movieVotesService.findAverageByMovieId(invalidMovieId))
+          .withMessage("movieId must not be null, empty or blank");
     }
 
   }

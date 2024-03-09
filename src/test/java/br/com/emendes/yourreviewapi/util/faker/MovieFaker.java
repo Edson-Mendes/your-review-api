@@ -72,6 +72,8 @@ public class MovieFaker {
         .backdropPath(MOVIE_BACKDROP_PATH)
         .releaseDate(MOVIE_RELEASE_DATE)
         .originalLanguage(MOVIE_ORIGINAL_LANGUAGE)
+        .reviewTotal(MovieVotesFaker.MOVIE_VOTES_REVIEW_TOTAL)
+        .reviewAverage(MovieVotesFaker.REVIEW_AVERAGE)
         .build();
   }
 
@@ -82,4 +84,20 @@ public class MovieFaker {
     return new PageImpl<>(List.of(), PageRequest.of(0, 20), 0);
   }
 
+  /**
+   * Retorna MovieDetailsResponse com os mesmos dados de movie()
+   * mas sem {@link MovieDetailsResponse#reviewTotal() reviewTotal} e
+   * {@link MovieDetailsResponse#reviewAverage() reviewAverage}.
+   */
+  public static MovieDetailsResponse movieDetailsResponseWithoutPunctuation() {
+    return MovieDetailsResponse.builder()
+        .id(MOVIE_ID)
+        .title(MOVIE_TITLE)
+        .overview(MOVIE_OVERVIEW)
+        .posterPath(MOVIE_POSTER_PATH)
+        .backdropPath(MOVIE_BACKDROP_PATH)
+        .releaseDate(MOVIE_RELEASE_DATE)
+        .originalLanguage(MOVIE_ORIGINAL_LANGUAGE)
+        .build();
+  }
 }

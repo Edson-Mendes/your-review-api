@@ -1,5 +1,6 @@
 package br.com.emendes.yourreviewapi.unit.mapper.impl;
 
+import br.com.emendes.yourreviewapi.dto.MovieVotesAverage;
 import br.com.emendes.yourreviewapi.dto.response.MovieDetailsResponse;
 import br.com.emendes.yourreviewapi.dto.response.MovieSummaryResponse;
 import br.com.emendes.yourreviewapi.dto.response.TMDbMovieResponse;
@@ -8,6 +9,7 @@ import br.com.emendes.yourreviewapi.model.Movie;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -61,7 +63,14 @@ class MovieMapperImplTest {
         .originalLanguage("en")
         .build();
 
-    MovieDetailsResponse actualMovieDetailsResponse = movieMapper.toMovieDetailsResponse(movie);
+    MovieVotesAverage movieVotesAverage = MovieVotesAverage.builder()
+        .id(4_321L)
+        .reviewTotal(40)
+        .reviewAverage(new BigDecimal("3.07"))
+        .movieId("1234")
+        .build();
+
+    MovieDetailsResponse actualMovieDetailsResponse = movieMapper.toMovieDetailsResponse(movie, movieVotesAverage);
 
     assertThat(actualMovieDetailsResponse).isNotNull();
     assertThat(actualMovieDetailsResponse.id()).isNotNull().isEqualTo("1234");
@@ -71,13 +80,49 @@ class MovieMapperImplTest {
     assertThat(actualMovieDetailsResponse.backdropPath()).isNotNull().isEqualTo("/01234");
     assertThat(actualMovieDetailsResponse.originalLanguage()).isNotNull().isEqualTo("en");
     assertThat(actualMovieDetailsResponse.overview()).isNotNull().isEqualTo("Lorem ipsum dolor sit amet");
+    assertThat(actualMovieDetailsResponse.reviewTotal()).isEqualTo(40);
+    assertThat(actualMovieDetailsResponse.reviewAverage()).isNotNull().isEqualTo("3.07");
+  }
+
+  @Test
+  @DisplayName("toMovieDetailsResponse must return MovieDetailsResponse without punctuation when movieVotesResponse is null")
+  void toMovieDetailsResponse_MustReturnMovieDetailsResponseWithoutPunctuation_WhenMovieVotesAverageIsNull() {
+    Movie movie = Movie.builder()
+        .id("1234")
+        .title("XPTO")
+        .posterPath("/1234")
+        .backdropPath("/01234")
+        .overview("Lorem ipsum dolor sit amet")
+        .releaseDate(LocalDate.parse("2024-01-16"))
+        .originalLanguage("en")
+        .build();
+
+    MovieDetailsResponse actualMovieDetailsResponse = movieMapper.toMovieDetailsResponse(movie, null);
+
+    assertThat(actualMovieDetailsResponse).isNotNull();
+    assertThat(actualMovieDetailsResponse.id()).isNotNull().isEqualTo("1234");
+    assertThat(actualMovieDetailsResponse.title()).isNotNull().isEqualTo("XPTO");
+    assertThat(actualMovieDetailsResponse.releaseDate()).isNotNull().isEqualTo("2024-01-16");
+    assertThat(actualMovieDetailsResponse.posterPath()).isNotNull().isEqualTo("/1234");
+    assertThat(actualMovieDetailsResponse.backdropPath()).isNotNull().isEqualTo("/01234");
+    assertThat(actualMovieDetailsResponse.originalLanguage()).isNotNull().isEqualTo("en");
+    assertThat(actualMovieDetailsResponse.overview()).isNotNull().isEqualTo("Lorem ipsum dolor sit amet");
+    assertThat(actualMovieDetailsResponse.reviewTotal()).isNull();
+    assertThat(actualMovieDetailsResponse.reviewAverage()).isNull();
   }
 
   @Test
   @DisplayName("toMovieDetailsResponse must throw IllegalArgumentException when movie parameter is null")
   void toMovieDetailsResponse_MustThrowIllegalArgumentException_WhenMovieParameterIsNull() {
+    MovieVotesAverage movieVotesAverage = MovieVotesAverage.builder()
+        .id(4_321L)
+        .reviewTotal(123)
+        .reviewAverage(new BigDecimal("3.07"))
+        .movieId("1234")
+        .build();
+
     assertThatExceptionOfType(IllegalArgumentException.class)
-        .isThrownBy(() -> movieMapper.toMovieDetailsResponse(null))
+        .isThrownBy(() -> movieMapper.toMovieDetailsResponse(null, movieVotesAverage))
         .withMessage("movie must not be null");
   }
 

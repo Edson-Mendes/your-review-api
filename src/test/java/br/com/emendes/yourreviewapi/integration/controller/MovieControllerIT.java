@@ -8,8 +8,10 @@ import br.com.emendes.yourreviewapi.exception.InvalidTMDbApiKeyException;
 import br.com.emendes.yourreviewapi.exception.MovieNotFoundException;
 import br.com.emendes.yourreviewapi.mapper.MovieMapper;
 import br.com.emendes.yourreviewapi.service.MovieService;
+import br.com.emendes.yourreviewapi.service.MovieVotesService;
 import br.com.emendes.yourreviewapi.util.PageableResponse;
 import br.com.emendes.yourreviewapi.util.faker.MovieFaker;
+import br.com.emendes.yourreviewapi.util.faker.MovieVotesFaker;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -30,10 +32,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -61,6 +63,8 @@ public class MovieControllerIT {
   private MovieClient movieClientMock;
   @MockBean
   private MovieMapper movieMapperMock;
+  @MockBean
+  private MovieVotesService movieVotesServiceMock;
 
   private final String CONTENT_TYPE = "application/json;charset=UTF-8";
 
@@ -224,7 +228,8 @@ public class MovieControllerIT {
     @DisplayName("GET /api/v1/auth/movies/{id} must return status 200 when find by id successfully")
     void findById_MustReturnStatus200_WhenFindByIdSuccessfully() throws Exception {
       when(movieClientMock.findById("1234")).thenReturn(MovieFaker.movie());
-      when(movieMapperMock.toMovieDetailsResponse(any())).thenReturn(MovieFaker.movieDetailsResponse());
+      when(movieMapperMock.toMovieDetailsResponse(any(), any())).thenReturn(MovieFaker.movieDetailsResponse());
+      when(movieVotesServiceMock.findAverageByMovieId("1234")).thenReturn(MovieVotesFaker.movieVotesAverageOptional());
 
       mockMvc.perform(get(FIND_BY_ID_URI, "1234").contentType(CONTENT_TYPE))
           .andExpect(status().isOk());
@@ -234,7 +239,8 @@ public class MovieControllerIT {
     @DisplayName("GET /api/v1/auth/movies/{id} must return MovieDetailsResponse when find by id successfully")
     void findById_MustReturnMovieDetailsResponse_WhenFindByIdSuccessfully() throws Exception {
       when(movieClientMock.findById("1234")).thenReturn(MovieFaker.movie());
-      when(movieMapperMock.toMovieDetailsResponse(any())).thenReturn(MovieFaker.movieDetailsResponse());
+      when(movieMapperMock.toMovieDetailsResponse(any(), any())).thenReturn(MovieFaker.movieDetailsResponse());
+      when(movieVotesServiceMock.findAverageByMovieId("1234")).thenReturn(MovieVotesFaker.movieVotesAverageOptional());
 
       String actualContent = mockMvc.perform(get(FIND_BY_ID_URI, "1234").contentType(CONTENT_TYPE))
           .andReturn().getResponse().getContentAsString();
@@ -250,6 +256,34 @@ public class MovieControllerIT {
       assertThat(actualResponseBody.releaseDate()).isNotNull().isEqualTo("2024-01-16");
       assertThat(actualResponseBody.posterPath()).isNotNull().isEqualTo("/1234");
       assertThat(actualResponseBody.backdropPath()).isNotNull().isEqualTo("/01234");
+      assertThat(actualResponseBody.reviewTotal()).isEqualTo(40);
+      assertThat(actualResponseBody.reviewAverage()).isNotNull().isEqualTo("3.07");
+    }
+
+    @Test
+    @DisplayName("GET /api/v1/auth/movies/{id} must return MovieDetailsResponse without punctuation when movie was not reviewed")
+    void findById_MustReturnMovieDetailsResponseWithoutPunctuation_WhenMovieWasNotReviewed() throws Exception {
+      when(movieClientMock.findById("1234")).thenReturn(MovieFaker.movie());
+      when(movieMapperMock.toMovieDetailsResponse(any(), eq(null)))
+          .thenReturn(MovieFaker.movieDetailsResponseWithoutPunctuation());
+      when(movieVotesServiceMock.findAverageByMovieId("1234")).thenReturn(Optional.empty());
+
+      String actualContent = mockMvc.perform(get(FIND_BY_ID_URI, "1234").contentType(CONTENT_TYPE))
+          .andReturn().getResponse().getContentAsString();
+
+      MovieDetailsResponse actualResponseBody = mapper
+          .readValue(actualContent, MovieDetailsResponse.class);
+
+      assertThat(actualResponseBody).isNotNull();
+      assertThat(actualResponseBody.id()).isNotNull().isEqualTo("1234");
+      assertThat(actualResponseBody.title()).isNotNull().isEqualTo("XPTO");
+      assertThat(actualResponseBody.overview()).isNotNull().isEqualTo("Lorem ipsum dolor sit amet");
+      assertThat(actualResponseBody.originalLanguage()).isNotNull().isEqualTo("en");
+      assertThat(actualResponseBody.releaseDate()).isNotNull().isEqualTo("2024-01-16");
+      assertThat(actualResponseBody.posterPath()).isNotNull().isEqualTo("/1234");
+      assertThat(actualResponseBody.backdropPath()).isNotNull().isEqualTo("/01234");
+      assertThat(actualResponseBody.reviewTotal()).isNull();
+      assertThat(actualResponseBody.reviewAverage()).isNull();
     }
 
     @Test

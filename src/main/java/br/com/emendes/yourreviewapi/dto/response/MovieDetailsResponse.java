@@ -1,7 +1,9 @@
 package br.com.emendes.yourreviewapi.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 /**
@@ -14,6 +16,8 @@ import java.time.LocalDate;
  * @param originalLanguage idioma original do filme.
  * @param posterPath       path da imagem do poster do filme.
  * @param backdropPath     path da imagem de pano de fundo do filme.
+ * @param reviewTotal      total de avaliações que o Movie recebeu no sistema.
+ * @param reviewAverage    valor médio das avaliações que Movie recebeu.
  */
 @Builder
 public record MovieDetailsResponse(
@@ -23,6 +27,10 @@ public record MovieDetailsResponse(
     LocalDate releaseDate,
     String originalLanguage,
     String posterPath,
-    String backdropPath
+    String backdropPath,
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    Long reviewTotal,
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    BigDecimal reviewAverage
 ) {
 }

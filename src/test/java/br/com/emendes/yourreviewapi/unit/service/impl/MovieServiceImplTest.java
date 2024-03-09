@@ -7,8 +7,10 @@ import br.com.emendes.yourreviewapi.exception.InvalidTMDbApiKeyException;
 import br.com.emendes.yourreviewapi.exception.MovieNotFoundException;
 import br.com.emendes.yourreviewapi.mapper.MovieMapper;
 import br.com.emendes.yourreviewapi.model.Movie;
+import br.com.emendes.yourreviewapi.service.MovieVotesService;
 import br.com.emendes.yourreviewapi.service.impl.MovieServiceImpl;
 import br.com.emendes.yourreviewapi.util.faker.MovieFaker;
+import br.com.emendes.yourreviewapi.util.faker.MovieVotesFaker;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -19,9 +21,12 @@ import org.mockito.Mock;
 import org.springframework.data.domain.Page;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
@@ -34,6 +39,8 @@ class MovieServiceImplTest {
   private MovieClient movieClientMock;
   @Mock
   private MovieMapper movieMapperMock;
+  @Mock
+  private MovieVotesService movieVotesServiceMock;
 
   @Nested
   @DisplayName("Tests for findByName method")
@@ -73,7 +80,9 @@ class MovieServiceImplTest {
     void findDetailedById_MustReturnMovieDetailsResponse_WhenFoundSuccessfully() {
       when(movieClientMock.findById("1234"))
           .thenReturn(MovieFaker.movie());
-      when(movieMapperMock.toMovieDetailsResponse(any(Movie.class)))
+      when(movieVotesServiceMock.findAverageByMovieId("1234"))
+          .thenReturn(MovieVotesFaker.movieVotesAverageOptional());
+      when(movieMapperMock.toMovieDetailsResponse(any(Movie.class), any()))
           .thenReturn(MovieFaker.movieDetailsResponse());
 
       MovieDetailsResponse actualMovieDetailsResponse = movieService.findDetailedById("1234");
@@ -87,6 +96,33 @@ class MovieServiceImplTest {
       assertThat(actualMovieDetailsResponse.backdropPath()).isNotNull().isEqualTo("/01234");
       assertThat(actualMovieDetailsResponse.releaseDate()).isNotNull().isEqualTo("2024-01-16");
       assertThat(actualMovieDetailsResponse.originalLanguage()).isNotNull().isEqualTo("en");
+      assertThat(actualMovieDetailsResponse.reviewTotal()).isNotNull().isEqualTo(40);
+      assertThat(actualMovieDetailsResponse.reviewAverage()).isNotNull().isEqualTo("3.07");
+    }
+
+    @Test
+    @DisplayName("findDetailedById must return MovieDetailsResponse without punctuation when movie was not reviewed")
+    void findDetailedById_MustReturnMovieDetailsResponseWithoutPunctuation_WhenMovieWasNotReviewed() {
+      when(movieClientMock.findById("1234"))
+          .thenReturn(MovieFaker.movie());
+      when(movieVotesServiceMock.findAverageByMovieId("1234"))
+          .thenReturn(Optional.empty());
+      when(movieMapperMock.toMovieDetailsResponse(any(Movie.class), eq(null)))
+          .thenReturn(MovieFaker.movieDetailsResponseWithoutPunctuation());
+
+      MovieDetailsResponse actualMovieDetailsResponse = movieService.findDetailedById("1234");
+
+      assertThat(actualMovieDetailsResponse).isNotNull();
+      assertThat(actualMovieDetailsResponse.id()).isNotNull().isEqualTo("1234");
+      assertThat(actualMovieDetailsResponse.title()).isNotNull().isEqualTo("XPTO");
+      assertThat(actualMovieDetailsResponse.overview()).isNotNull()
+          .isEqualTo("Lorem ipsum dolor sit amet");
+      assertThat(actualMovieDetailsResponse.posterPath()).isNotNull().isEqualTo("/1234");
+      assertThat(actualMovieDetailsResponse.backdropPath()).isNotNull().isEqualTo("/01234");
+      assertThat(actualMovieDetailsResponse.releaseDate()).isNotNull().isEqualTo("2024-01-16");
+      assertThat(actualMovieDetailsResponse.originalLanguage()).isNotNull().isEqualTo("en");
+      assertThat(actualMovieDetailsResponse.reviewTotal()).isNull();
+      assertThat(actualMovieDetailsResponse.reviewAverage()).isNull();
     }
 
     @Test
@@ -152,33 +188,6 @@ class MovieServiceImplTest {
       Assertions.assertThatExceptionOfType(InvalidTMDbApiKeyException.class)
           .isThrownBy(() -> movieService.findSummarizedById("1234"))
           .withMessage("invalid TMDb API Key");
-    }
-
-  }
-
-  @Nested
-  @DisplayName("Tests for existsMovieById method")
-  class ExistsMovieByIdMethod {
-
-    @Test
-    @DisplayName("existsMovieById must return true when exists Movie with given movieId")
-    void existsMovieById_MustReturnTrue_WhenExistsMovieWithGivenMovieId() {
-      when(movieClientMock.findById("1234")).thenReturn(MovieFaker.movie());
-
-      boolean actualExists = movieService.existsMovieById("1234");
-
-      assertThat(actualExists).isTrue();
-    }
-
-    @Test
-    @DisplayName("existsMovieById must return false when there is no Movie with given movieId")
-    void existsMovieById_MustReturnTrue_WhenThereIsNoMovieWithGivenMovieId() {
-      when(movieClientMock.findById("1234"))
-          .thenThrow(new MovieNotFoundException("Movie not found for id: 1234"));
-
-      boolean actualExists = movieService.existsMovieById("1234");
-
-      assertThat(actualExists).isFalse();
     }
 
   }
