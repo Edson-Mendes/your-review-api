@@ -146,6 +146,17 @@ class MovieVotesServiceImplTest {
       assertThat(actualMovieVotesOptional).isNotNull().isNotPresent();
     }
 
+    @Test
+    @DisplayName("findAverageByMovieId must return empty Optional when MovieVotes founded has zero voteCount")
+    void findAverageByMovieId_MustReturnEmptyOptional_WhenMovieVotesFoundedHasZeroVoteCount() {
+      when(movieVotesRepositoryMock.findByMovieId("1234"))
+          .thenReturn(MovieVotesFaker.movieVotesWithZeroVotesOptional());
+
+      Optional<MovieVotesAverage> actualMovieVotesOptional = movieVotesService.findAverageByMovieId("1234");
+
+      assertThat(actualMovieVotesOptional).isNotNull().isNotPresent();
+    }
+
     @ParameterizedTest
     @NullAndEmptySource
     @ValueSource(strings = {"   ", "\t", "\n"})

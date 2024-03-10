@@ -34,10 +34,30 @@ public class MovieVotesFaker {
   }
 
   /**
+   * Retorna {@link MovieVotes} com voteCount e voteTotal iguais a zero.
+   */
+  public static MovieVotes movieVotesWithZeroVotes() {
+    return MovieVotes.builder()
+        .id(MOVIE_VOTES_ID)
+        .voteCount(0)
+        .voteTotal(0)
+        .movieId(MovieFaker.MOVIE_ID)
+        .createdAt(MOVIE_VOTES_CREATED_AT)
+        .build();
+  }
+
+  /**
    * Retorna {@code Optional<MovieVotes>} com todos os campos.
    */
   public static Optional<MovieVotes> movieVotesOptional() {
     return Optional.of(movieVotes());
+  }
+
+  /**
+   * Retorna {@code Optional<MovieVotes>} com voteCount e voteTotal iguais a zero.
+   */
+  public static Optional<MovieVotes> movieVotesWithZeroVotesOptional() {
+    return Optional.of(movieVotesWithZeroVotes());
   }
 
   /**
