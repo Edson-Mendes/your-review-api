@@ -56,18 +56,28 @@ public class MovieVotesServiceImpl implements MovieVotesService {
 
   @Override
   public Optional<MovieVotesAverage> findAverageByMovieId(String movieId) {
-    return findByMovieId(movieId).map(movieVotes -> {
-      BigDecimal total = BigDecimal.valueOf(movieVotes.getVoteTotal());
-      BigDecimal count = BigDecimal.valueOf(movieVotes.getVoteCount());
-      BigDecimal reviewAverage = total.divide(count, 2, RoundingMode.HALF_DOWN);
+    return findByMovieId(movieId)
+        .filter(movieVotes -> movieVotes.getVoteCount() != 0)
+        .map(this::toMovieVotesAverage);
+  }
 
-      return MovieVotesAverage.builder()
-          .id(movieVotes.getId())
-          .reviewTotal(movieVotes.getVoteCount())
-          .reviewAverage(reviewAverage)
-          .movieId(movieVotes.getMovieId())
-          .build();
-    });
+  /**
+   * Mapeia um objeto {@link MovieVotes} para {@link MovieVotesAverage}.
+   *
+   * @param movieVotes objeto MovieVotes a ser mapeado.
+   * @return {@link MovieVotesAverage} com os dados de {@code movieVotes}.
+   */
+  private MovieVotesAverage toMovieVotesAverage(MovieVotes movieVotes) {
+    BigDecimal total = BigDecimal.valueOf(movieVotes.getVoteTotal());
+    BigDecimal count = BigDecimal.valueOf(movieVotes.getVoteCount());
+    BigDecimal reviewAverage = total.divide(count, 2, RoundingMode.HALF_DOWN);
+
+    return MovieVotesAverage.builder()
+        .id(movieVotes.getId())
+        .reviewTotal(movieVotes.getVoteCount())
+        .reviewAverage(reviewAverage)
+        .movieId(movieVotes.getMovieId())
+        .build();
   }
 
   /**
