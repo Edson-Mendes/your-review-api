@@ -25,6 +25,10 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
+  public static final String BAD_REQUEST_TITLE = "Bad request";
+  public static final String INTERNAL_SERVER_ERROR_TITLE = "Internal server error";
+  public static final String PROBLEM_DETAIL_URI = "https://github.com/Edson-Mendes/your-review-api";
+
   @ExceptionHandler(ConstraintViolationException.class)
   public ResponseEntity<ProblemDetail> handleConstraintViolation(ConstraintViolationException exception) {
     String messages = exception.getConstraintViolations()
@@ -41,126 +45,117 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         })
         .collect(Collectors.joining(";"));
 
-    ProblemDetail body = ProblemDetail.forStatus(400);
-
-    body.setTitle("Bad request");
-    body.setDetail("Some fields are invalids");
-    body.setType(URI.create("https://github.com/Edson-Mendes/your-review-api"));
+    ProblemDetail body = createProblemDetail(BAD_REQUEST_TITLE, "Some fields are invalids", 400);
     body.setProperty("fields", fields);
     body.setProperty("messages", messages);
 
-    return ResponseEntity.badRequest().body(body);
+    return createResponseEntity(body);
   }
 
   @ExceptionHandler(PasswordsDoesNotMatchException.class)
   public ResponseEntity<ProblemDetail> handlePasswordsDoesNotMatch(PasswordsDoesNotMatchException exception) {
-    ProblemDetail body = ProblemDetail.forStatus(400);
-    body.setTitle("Bad request");
-    body.setDetail(exception.getMessage());
-    body.setType(URI.create("https://github.com/Edson-Mendes/your-review-api"));
-
-    return ResponseEntity.badRequest().body(body);
+    return createResponseEntity(createProblemDetail(BAD_REQUEST_TITLE, exception.getMessage(), 400));
   }
 
   @ExceptionHandler(EmailAlreadyInUseException.class)
   public ResponseEntity<ProblemDetail> handleEmailAlreadyInUse(EmailAlreadyInUseException exception) {
-    ProblemDetail body = ProblemDetail.forStatus(400);
-    body.setTitle("Bad request");
-    body.setDetail(exception.getMessage());
-    body.setType(URI.create("https://github.com/Edson-Mendes/your-review-api"));
-
-    return ResponseEntity.badRequest().body(body);
+    return createResponseEntity(createProblemDetail(BAD_REQUEST_TITLE, exception.getMessage(), 400));
   }
 
   @ExceptionHandler(LockedException.class)
-  public ResponseEntity<ProblemDetail> handleBadCredentials(LockedException exception) {
-    ProblemDetail body = ProblemDetail.forStatus(400);
-    body.setTitle("Bad request");
-    body.setDetail(exception.getMessage() + ", check your email for activate your account");
-    body.setType(URI.create("https://github.com/Edson-Mendes/your-review-api"));
-
-    return ResponseEntity.badRequest().body(body);
+  public ResponseEntity<ProblemDetail> handleLocked(LockedException exception) {
+    return createResponseEntity(createProblemDetail(
+        BAD_REQUEST_TITLE,
+        exception.getMessage() + ", check your email for activate your account",
+        400));
   }
 
   @ExceptionHandler(BadCredentialsException.class)
   public ResponseEntity<ProblemDetail> handleBadCredentials(BadCredentialsException exception) {
-    ProblemDetail body = ProblemDetail.forStatus(400);
-    body.setTitle(exception.getMessage());
-    body.setDetail("wrong email or password");
-    body.setType(URI.create("https://github.com/Edson-Mendes/your-review-api"));
-
-    return ResponseEntity.badRequest().body(body);
+    return createResponseEntity(createProblemDetail(
+        exception.getMessage(),
+        "wrong email or password",
+        400));
   }
 
   @ExceptionHandler(DisabledException.class)
-  public ResponseEntity<ProblemDetail> handleBadCredentials(DisabledException exception) {
-    ProblemDetail body = ProblemDetail.forStatus(400);
-    body.setTitle(exception.getMessage());
-    body.setDetail("wrong email or password");
-    body.setType(URI.create("https://github.com/Edson-Mendes/your-review-api"));
-
-    return ResponseEntity.badRequest().body(body);
+  public ResponseEntity<ProblemDetail> handleDisabled(DisabledException exception) {
+    return createResponseEntity(createProblemDetail(
+        exception.getMessage(),
+        "this account has been disabled",
+        400));
   }
 
   @ExceptionHandler(MovieNotFoundException.class)
   public ResponseEntity<ProblemDetail> handleMovieNotFound(MovieNotFoundException exception) {
-    ProblemDetail body = ProblemDetail.forStatus(exception.getStatusCode());
-    body.setTitle("Movie not found");
-    body.setDetail(exception.getMessage());
-    body.setType(URI.create("https://github.com/Edson-Mendes/your-review-api"));
-
-    return ResponseEntity.status(exception.getStatusCode()).body(body);
+    return createResponseEntity(createProblemDetail(
+        "Movie not found",
+        exception.getMessage(),
+        exception.getStatusCode()));
   }
 
   @ExceptionHandler(ReviewNotFoundException.class)
   public ResponseEntity<ProblemDetail> handleReviewNotFound(ReviewNotFoundException exception) {
-    ProblemDetail body = ProblemDetail.forStatus(404);
-    body.setTitle("Review not found");
-    body.setDetail(exception.getMessage());
-    body.setType(URI.create("https://github.com/Edson-Mendes/your-review-api"));
-
-    return ResponseEntity.status(404).body(body);
+    return createResponseEntity(createProblemDetail("Review not found", exception.getMessage(), 404));
   }
 
   @ExceptionHandler(ReviewAlreadyExistsException.class)
   public ResponseEntity<ProblemDetail> handleReviewAlreadyExists(ReviewAlreadyExistsException exception) {
-    ProblemDetail body = ProblemDetail.forStatus(400);
-    body.setTitle("Bad request");
-    body.setDetail(exception.getMessage());
-    body.setType(URI.create("https://github.com/Edson-Mendes/your-review-api"));
-
-    return ResponseEntity.badRequest().body(body);
+    return createResponseEntity(createProblemDetail(BAD_REQUEST_TITLE, exception.getMessage(), 400));
   }
 
   @ExceptionHandler(RuntimeException.class)
   public ResponseEntity<ProblemDetail> handleRuntime(RuntimeException exception) {
-    ProblemDetail body = ProblemDetail.forStatus(500);
-    body.setTitle("Internal server error");
-    body.setDetail(exception.getMessage());
-    body.setType(URI.create("https://github.com/Edson-Mendes/your-review-api"));
+    log.error(INTERNAL_SERVER_ERROR_TITLE, exception);
 
-    return ResponseEntity.internalServerError().body(body);
+    return createResponseEntity(createProblemDetail(INTERNAL_SERVER_ERROR_TITLE, exception.getMessage(), 500));
   }
 
   @ExceptionHandler(WebClientResponseException.class)
   public ResponseEntity<ProblemDetail> handleWebClientResponse(WebClientResponseException exception) {
-    ProblemDetail body = ProblemDetail.forStatus(500);
-    body.setTitle("Internal server error");
     String detailsMessageTemplate = "The request %s %s responded with status %d";
-
     String httpMethod = "*";
     String uri = "**";
     HttpRequest request = exception.getRequest();
+
     if (request != null) {
       httpMethod = request.getMethod().name();
       uri = request.getURI().getHost() + request.getURI().getPath();
     }
 
-    body.setDetail(detailsMessageTemplate.formatted(httpMethod, uri, exception.getStatusCode().value()));
+    return createResponseEntity(createProblemDetail(
+        INTERNAL_SERVER_ERROR_TITLE,
+        detailsMessageTemplate.formatted(httpMethod, uri, exception.getStatusCode().value()),
+        500));
+  }
 
-    body.setType(URI.create("https://github.com/Edson-Mendes/your-review-api"));
+  /**
+   * Gera uma instância de {@link ProblemDetail} a partir dos parâmetros {@code title}, {@code detail} e
+   * {@code statusCode}, o campo type é padrão {@code https://github.com/Edson-Mendes/your-review-api}.
+   *
+   * @param title      campo {@code title} do corpo da resposta.
+   * @param detail     campo {@code title} do corpo da resposta.
+   * @param statusCode campo {@code status} do corpo da resposta.
+   * @return objeto ProblemDetail
+   */
+  private ProblemDetail createProblemDetail(String title, String detail, int statusCode) {
+    ProblemDetail problemDetail = ProblemDetail.forStatus(statusCode);
+    problemDetail.setTitle(title);
+    problemDetail.setDetail(detail);
+    problemDetail.setType(URI.create(PROBLEM_DETAIL_URI));
 
-    return ResponseEntity.internalServerError().body(body);
+    return problemDetail;
+  }
+
+  /**
+   * Cria uma instância de {@link ResponseEntity} a partir de um objeto {@link ProblemDetail} que representa o
+   * body da resposta, o status da resposta corresponde ao campo status do ProblemDetail.
+   *
+   * @param body objeto que será o corpo da resposta.
+   * @return {@code ResponseEntity<ProblemDetail>}
+   */
+  private ResponseEntity<ProblemDetail> createResponseEntity(ProblemDetail body) {
+    return ResponseEntity.status(body.getStatus()).body(body);
   }
 
 }
