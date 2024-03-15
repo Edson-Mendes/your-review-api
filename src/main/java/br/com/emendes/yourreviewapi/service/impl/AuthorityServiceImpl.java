@@ -24,7 +24,6 @@ public class AuthorityServiceImpl implements AuthorityService {
     log.info("searching for authority with name: {}", name);
     Assert.notNull(name, "name must not be null");
 
-    // TODO: Armazenar o retorno da busca em cache.
     return authorityRepository.findByName(name)
         .orElseThrow(() -> new AuthorityNotFoundException("Authority not found for name: %s".formatted(name)));
   }

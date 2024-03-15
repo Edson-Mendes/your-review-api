@@ -36,6 +36,7 @@ public class SecurityConfig {
         authorize -> authorize
             .requestMatchers(HttpMethod.GET, GET_WHITELIST).permitAll()
             .requestMatchers(HttpMethod.GET, SWAGGER_WHITELIST).permitAll()
+            .requestMatchers(HttpMethod.GET, "/api/v1/users").hasAuthority("ADMIN")
             .requestMatchers(HttpMethod.POST, POST_WHITELIST).permitAll()
             .anyRequest().authenticated()
     );

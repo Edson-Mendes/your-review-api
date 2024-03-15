@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -89,6 +90,44 @@ class UserSecurityIT {
               .content(requestBody)
               .contentType(CONTENT_TYPE))
           .andExpect(status().isCreated());
+    }
+
+  }
+
+  @Nested
+  @DisplayName("Integration tests for security in fetch endpoint")
+  class FetchEndpoint {
+
+    private final String FETCH_URI = "/api/v1/users";
+
+    @Test
+    @DisplayName("fetch must return status 200 when user is ADMIN")
+    void fetch_MustReturnStatus200_WhenUserIsAdmin() throws Exception {
+      when(jwtServiceMock.isTokenValid(any())).thenReturn(true);
+      when(jwtServiceMock.extractSubject("thisIsA.mock.AdminJWT")).thenReturn("john.doe@email.com");
+      when(userDetailsServiceMock.loadUserByUsername("john.doe@email.com")).thenReturn(UserFaker.userAdmin());
+      when(userServiceMock.fetch(any())).thenReturn(UserFaker.userSummaryResponsePage());
+
+      mockMvc.perform(get(FETCH_URI).header("authorization", "Bearer thisIsA.mock.AdminJWT"))
+          .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("fetch must return status 401 when user is not authenticated")
+    void fetch_MustReturnStatus401_WhenUserIsNotAuthenticated() throws Exception {
+      mockMvc.perform(get(FETCH_URI))
+          .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("fetch must return status 403 when user is not ADMIN")
+    void fetch_MustReturnStatus403_WhenUserIsNotAdmin() throws Exception {
+      when(jwtServiceMock.isTokenValid(any())).thenReturn(true);
+      when(jwtServiceMock.extractSubject("thisIsA.mock.UserJWT")).thenReturn("john.doe@email.com");
+      when(userDetailsServiceMock.loadUserByUsername("john.doe@email.com")).thenReturn(UserFaker.user());
+
+      mockMvc.perform(get(FETCH_URI).header("authorization", "Bearer thisIsA.mock.UserJWT"))
+          .andExpect(status().isForbidden());
     }
 
   }

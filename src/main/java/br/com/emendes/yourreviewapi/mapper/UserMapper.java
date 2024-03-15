@@ -2,7 +2,9 @@ package br.com.emendes.yourreviewapi.mapper;
 
 import br.com.emendes.yourreviewapi.dto.request.UserRegisterRequest;
 import br.com.emendes.yourreviewapi.dto.response.UserDetailsResponse;
+import br.com.emendes.yourreviewapi.dto.response.UserSummaryResponse;
 import br.com.emendes.yourreviewapi.model.entity.User;
+import br.com.emendes.yourreviewapi.repository.projection.UserSummaryProjection;
 
 /**
  * Interface com as abstrações para mapeamento do recurso User.
@@ -26,5 +28,14 @@ public interface UserMapper {
    * @throws IllegalArgumentException caso user seja null.
    */
   UserDetailsResponse toUserDetailsResponse(User user);
+
+  /**
+   * Mapeia um objeto {@link UserSummaryProjection} em {@link UserSummaryResponse}.
+   *
+   * @param userSummaryProjection Objeto a ser mapeado.
+   * @return UserSummaryResponse com as informações de UserSummaryProjection.
+   * @throws IllegalArgumentException caso userSummaryProjection seja null.
+   */
+  UserSummaryResponse toUserSummaryResponse(UserSummaryProjection userSummaryProjection);
 
 }
