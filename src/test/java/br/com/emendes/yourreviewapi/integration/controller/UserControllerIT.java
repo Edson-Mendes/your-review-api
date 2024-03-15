@@ -2,12 +2,15 @@ package br.com.emendes.yourreviewapi.integration.controller;
 
 import br.com.emendes.yourreviewapi.controller.UserController;
 import br.com.emendes.yourreviewapi.dto.response.UserDetailsResponse;
+import br.com.emendes.yourreviewapi.dto.response.UserSummaryResponse;
 import br.com.emendes.yourreviewapi.mapper.UserMapper;
 import br.com.emendes.yourreviewapi.repository.UserRepository;
 import br.com.emendes.yourreviewapi.service.AuthorityService;
 import br.com.emendes.yourreviewapi.service.UserService;
+import br.com.emendes.yourreviewapi.util.PageableResponse;
 import br.com.emendes.yourreviewapi.util.faker.AuthorityFaker;
 import br.com.emendes.yourreviewapi.util.faker.UserFaker;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -20,14 +23,20 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ProblemDetail;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -253,6 +262,72 @@ class UserControllerIT {
       assertThat(actualResponseBody.getTitle()).isNotNull().isEqualTo("Bad request");
       assertThat(actualResponseBody.getDetail()).isNotNull().isEqualTo("Email {john.doe@email.com} already in use");
       assertThat(actualResponseBody.getStatus()).isEqualTo(400);
+    }
+
+  }
+
+  @Nested
+  @DisplayName("Tests for fetch endpoint")
+  class FetchEndpoint {
+
+    private static final String FETCH_URI = "/api/v1/users";
+
+    @Test
+    @DisplayName("GET /api/v1/users must return status 200 when fetch successfully")
+    void fetch_MustReturnStatus200_WhenFetchSuccessfully() throws Exception {
+      when(userRepositoryMock.findProjectedBy(any())).thenReturn(UserFaker.userSummaryProjectionPage());
+      when(userMapperMock.toUserSummaryResponse(any())).thenReturn(UserFaker.userSummaryResponse());
+
+      mockMvc.perform(get(FETCH_URI))
+          .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("GET /api/v1/users must return Page<UserSummaryResponse> when fetch successfully")
+    void fetch_MustReturnPageUserSummaryResponse_WhenFetchSuccessfully() throws Exception {
+      when(userRepositoryMock.findProjectedBy(any())).thenReturn(UserFaker.userSummaryProjectionPage());
+      when(userMapperMock.toUserSummaryResponse(any())).thenReturn(UserFaker.userSummaryResponse());
+
+      String actualContent = mockMvc.perform(get(FETCH_URI))
+          .andReturn().getResponse().getContentAsString();
+
+      Page<UserSummaryResponse> actualResponseBody = mapper
+          .readValue(actualContent, new TypeReference<PageableResponse<UserSummaryResponse>>() {
+          });
+
+      assertThat(actualResponseBody).isNotNull().hasSize(1);
+      assertThat(actualResponseBody.getTotalElements()).isEqualTo(1);
+      assertThat(actualResponseBody.getNumber()).isZero();
+      assertThat(actualResponseBody.getSize()).isEqualTo(20);
+    }
+
+    @Test
+    @DisplayName("GET /api/v1/users must return status 200 when fetch an page without users")
+    void fetch_MustReturnStatus200_WhenFetchAnPageWithoutUsers() throws Exception {
+      when(userRepositoryMock.findProjectedBy(any()))
+          .thenReturn(new PageImpl<>(List.of(), PageRequest.of(1, 20), 1));
+
+      mockMvc.perform(get(FETCH_URI).param("page", "1"))
+          .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("GET /api/v1/users must return empty Page when fetch an page without users")
+    void fetch_MustReturnEmptyPage_WhenFetchAnPageWithoutUsers() throws Exception {
+      when(userRepositoryMock.findProjectedBy(any()))
+          .thenReturn(new PageImpl<>(List.of(), PageRequest.of(1, 20), 1));
+
+      String actualContent = mockMvc.perform(get(FETCH_URI).param("page", "1"))
+          .andReturn().getResponse().getContentAsString();
+
+      Page<UserSummaryResponse> actualResponseBody = mapper
+          .readValue(actualContent, new TypeReference<PageableResponse<UserSummaryResponse>>() {
+          });
+
+      assertThat(actualResponseBody).isNotNull().isEmpty();
+      assertThat(actualResponseBody.getTotalElements()).isEqualTo(1);
+      assertThat(actualResponseBody.getNumber()).isOne();
+      assertThat(actualResponseBody.getSize()).isEqualTo(20);
     }
 
   }

@@ -2,6 +2,7 @@ package br.com.emendes.yourreviewapi.unit.service.impl;
 
 import br.com.emendes.yourreviewapi.dto.request.UserRegisterRequest;
 import br.com.emendes.yourreviewapi.dto.response.UserDetailsResponse;
+import br.com.emendes.yourreviewapi.dto.response.UserSummaryResponse;
 import br.com.emendes.yourreviewapi.exception.EmailAlreadyInUseException;
 import br.com.emendes.yourreviewapi.exception.PasswordsDoesNotMatchException;
 import br.com.emendes.yourreviewapi.mapper.UserMapper;
@@ -17,8 +18,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -105,6 +111,43 @@ class UserServiceImplTest {
       assertThatExceptionOfType(EmailAlreadyInUseException.class)
           .isThrownBy(() -> userService.register(userRegisterRequest))
           .withMessage("Email {john.doe@email.com} already in use");
+    }
+
+  }
+
+  @Nested
+  @DisplayName("fetch method")
+  class FetchMethod {
+
+    private static final PageRequest DEFAULT_PAGEABLE = PageRequest.of(0, 20);
+
+    @Test
+    @DisplayName("fetch must return Page<UserSummaryResponse> when fetch successfully")
+    void fetch_MustReturnPageUserSummaryResponse_WhenFetchSuccessfully() {
+      when(userRepositoryMock.findProjectedBy(any())).thenReturn(UserFaker.userSummaryProjectionPage());
+      when(userMapperMock.toUserSummaryResponse(any())).thenReturn(UserFaker.userSummaryResponse());
+
+      Page<UserSummaryResponse> actualUserSummaryResponsePage = userService.fetch(DEFAULT_PAGEABLE);
+
+      assertThat(actualUserSummaryResponsePage).isNotNull().hasSize(1);
+      assertThat(actualUserSummaryResponsePage.getTotalElements()).isEqualTo(1);
+      assertThat(actualUserSummaryResponsePage.getNumber()).isZero();
+      assertThat(actualUserSummaryResponsePage.getSize()).isEqualTo(20);
+    }
+
+    @Test
+    @DisplayName("fetch must return empty Page when fetch an page without users")
+    void fetch_MustReturnEmptyPage_WhenFetchAnPageWithoutUsers() {
+      when(userRepositoryMock.findProjectedBy(any()))
+          .thenReturn(new PageImpl<>(List.of(), PageRequest.of(1, 20), 1));
+
+      Page<UserSummaryResponse> actualUserSummaryResponsePage = userService
+          .fetch(PageRequest.of(1, 20));
+
+      assertThat(actualUserSummaryResponsePage).isNotNull().isEmpty();
+      assertThat(actualUserSummaryResponsePage.getTotalElements()).isEqualTo(1);
+      assertThat(actualUserSummaryResponsePage.getNumber()).isOne();
+      assertThat(actualUserSummaryResponsePage.getSize()).isEqualTo(20);
     }
 
   }

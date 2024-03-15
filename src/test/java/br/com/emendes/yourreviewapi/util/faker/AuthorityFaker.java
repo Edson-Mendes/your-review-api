@@ -17,4 +17,10 @@ public class AuthorityFaker {
     return new Authority(1, "USER");
   }
 
+  /**
+   * Retorna uma Authority de name ADMIN.
+   */
+  public static Authority adminAuthority() {
+    return new Authority(2, "ADMIN");
+  }
 }

@@ -2,6 +2,7 @@ package br.com.emendes.yourreviewapi.service.impl;
 
 import br.com.emendes.yourreviewapi.dto.request.UserRegisterRequest;
 import br.com.emendes.yourreviewapi.dto.response.UserDetailsResponse;
+import br.com.emendes.yourreviewapi.dto.response.UserSummaryResponse;
 import br.com.emendes.yourreviewapi.exception.EmailAlreadyInUseException;
 import br.com.emendes.yourreviewapi.exception.PasswordsDoesNotMatchException;
 import br.com.emendes.yourreviewapi.mapper.UserMapper;
@@ -13,6 +14,8 @@ import br.com.emendes.yourreviewapi.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -62,6 +65,13 @@ public class UserServiceImpl implements UserService {
       log.info("fail to persist user. {}", message);
       throw new EmailAlreadyInUseException(message);
     }
+  }
+
+  @Override
+  public Page<UserSummaryResponse> fetch(Pageable pageable) {
+    log.info("attempt to fetch page: {} with size: {} of users", pageable.getPageNumber(), pageable.getPageSize());
+
+    return userRepository.findProjectedBy(pageable).map(userMapper::toUserSummaryResponse);
   }
 
 }

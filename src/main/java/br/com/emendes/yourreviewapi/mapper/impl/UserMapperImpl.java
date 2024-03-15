@@ -2,14 +2,13 @@ package br.com.emendes.yourreviewapi.mapper.impl;
 
 import br.com.emendes.yourreviewapi.dto.request.UserRegisterRequest;
 import br.com.emendes.yourreviewapi.dto.response.UserDetailsResponse;
+import br.com.emendes.yourreviewapi.dto.response.UserSummaryResponse;
 import br.com.emendes.yourreviewapi.mapper.UserMapper;
 import br.com.emendes.yourreviewapi.model.entity.User;
+import br.com.emendes.yourreviewapi.repository.projection.UserSummaryProjection;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
-/**
- * Implementação de {@link UserMapper}.
- */
 @Component
 public class UserMapperImpl implements UserMapper {
 
@@ -34,6 +33,17 @@ public class UserMapperImpl implements UserMapper {
         .email(user.getEmail())
         .status(user.getStatus().name())
         .createdAt(user.getCreatedAt())
+        .build();
+  }
+
+  @Override
+  public UserSummaryResponse toUserSummaryResponse(UserSummaryProjection userSummaryProjection) {
+    Assert.notNull(userSummaryProjection, "userSummaryProjection must not be null");
+
+    return UserSummaryResponse.builder()
+        .id(userSummaryProjection.id())
+        .name(userSummaryProjection.name())
+        .email(userSummaryProjection.email())
         .build();
   }
 
