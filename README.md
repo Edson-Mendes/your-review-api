@@ -41,6 +41,9 @@ pesquisar pelos filmes mais bem avaliados (ou pior avaliados).
 
 <a href="https://developer.themoviedb.org/docs/getting-started" target="_blank"><img src="https://img.shields.io/badge/TMDb%20API-01B4E4.svg?&style=for-the-badge&logo=themoviedatabase&logoColor=white" target="_blank"></a>
 
+<a href="https://swagger.io/" target="_blank"><img src="https://img.shields.io/badge/Swagger-85EA2D.svg?&style=for-the-badge&logo=swagger&logoColor=black" target="_blank"></a>
+<a href="https://springdoc.org/" target="_blank"><img src="https://img.shields.io/badge/Spring%20Doc-85EA2D.svg?&style=for-the-badge" target="_blank"></a>
+
 ## Funcionalidades
 
 ### API de gerenciamento de usuário
@@ -69,6 +72,72 @@ pesquisar pelos filmes mais bem avaliados (ou pior avaliados).
       "email": "john.doe@email.com",
       "status": "ENABLED",
       "createdAt": "2023-12-10T10:00:00"
+    }
+    ```
+    
+- `Buscar Usuários - GET /api/v1/users`: Buscar usuários cadastrados no sistema, a busca é paginada de forma zero-based (começa em 0).
+  - Caso o cliente queira outra página da pesquisa deve passar a query param **page**, o valor padrão de page é 0.
+  - Caso o cliente queira outra quantidade de recursos por página deve passar a query param **size**, o valor padrão de **size** é 20.
+  - É necessário estar autenticado e ser *ADMIN*.
+    
+  Em caso de sucesso a resposta tem status 200 com um JSON no corpo da resposta.
+
+  Segue abaixo um exemplo do corpo da resposta para a requisição **GET /api/v1/users?page=0&size=10**
+
+    ```json
+    {
+      "content": [
+        {
+          "id": 1,
+          "name": "Maria",
+          "email": "maria@email.com"
+        },
+        {
+          "id": 2,
+          "name": "Jane Doe",
+          "email": "jane.doe@email.com"
+        },
+        {
+          "id": 3,
+          "name": "Fulana de Tal",
+          "email": "fulana@email.com"
+        },
+        {
+          "id": 4,
+          "name": "Fulano de Tal",
+          "email": "fulano@email.com"
+        },
+        {
+          "id": 150,
+          "name": "John Doe",
+          "email": "john.doe@email.com"
+        }
+      ],
+      "pageable": {
+        "pageNumber": 0,
+        "pageSize": 10,
+        "sort": {
+          "sorted": false,
+          "empty": true,
+          "unsorted": true
+        },
+        "offset": 0,
+        "paged": true,
+        "unpaged": false
+      },
+      "totalPages": 1,
+      "totalElements": 5,
+      "last": true,
+      "size": 10,
+      "number": 0,
+      "sort": {
+        "sorted": false,
+        "empty": true,
+        "unsorted": true
+      },
+      "numberOfElements": 5,
+      "first": true,
+      "empty": false
     }
     ```
 
@@ -113,8 +182,9 @@ o tipo do token, no caso desse sistema é o tipo Bearer.
 ### API de gerenciamento de filme
 
 - `Buscar filme por nome - GET /api/v1/movies?name={movieName}&page={pageNumber}`: Buscar filme por nome informando 
-o nome do filme como query string. A busca é paginada de forma zero-based (começa em 0), caso o cliente queira outra página da pesquisa deve passar a 
-query param **page**, o valor padrão de page é 0. O tamanho da página solicitada (page size) é 20.
+o nome do filme como query string. A busca é paginada de forma zero-based (começa em 0).
+  - Caso o cliente queira outra página da pesquisa deve passar a query param **page**, o valor padrão de page é 0.
+  - O tamanho da página (page size) solicitada é fixo em 20.
 
   Em caso de sucesso a resposta tem status 200 com um JSON no corpo da resposta.
 
@@ -318,10 +388,9 @@ e **movieId** em um JSON no corpo da requisição.
     ```
   
 - `Buscar avaliações por ID do filme - GET /api/v1/reviews?movieId={movieId}&page={pageNumber}`: Buscar avaliações por 
-id do filme informando o id do filme como query string. A busca é paginada de forma zero-based (começa em 0), 
-caso o cliente queira outra página da pesquisa deve passar a query param **page**, o valor padrão de page é 0. 
-O tamanho da página solicitada (page size) é 20.
-
+id do filme informando o id do filme como query string (**movieId**). A busca é paginada de forma zero-based (começa em 0).
+  - Caso o cliente queira outra página da pesquisa deve passar a query param **page**, o valor padrão de page é 0. 
+  - O tamanho da página (page size) solicitada é fixo em 20.
   - É necessário estar autenticado.
 
   Em caso de sucesso a resposta tem status 200 com um JSON no corpo da resposta.
