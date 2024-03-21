@@ -1,0 +1,6 @@
+# Actuator properties
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "caches, health, metrics"

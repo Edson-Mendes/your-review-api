@@ -20,6 +20,7 @@ pesquisar pelos filmes mais bem avaliados (ou pior avaliados).
 <a href="https://spring.io/projects/spring-boot" target="_blank"><img src="https://img.shields.io/badge/Springboot-6db33f.svg?&style=for-the-badge&logo=springboot&logoColor=white" target="_blank"></a>
 <a href="https://spring.io/projects/spring-data-jpa" target="_blank"><img src="https://img.shields.io/badge/Spring%20Data%20JPA-6db33f.svg?&style=for-the-badge&logo=spring&logoColor=white" target="_blank"></a>
 <a href="https://spring.io/projects/spring-security" target="_blank"><img src="https://img.shields.io/badge/Spring%20Security-6db33f.svg?&style=for-the-badge&logo=springsecurity&logoColor=white" target="_blank"></a>
+<a href="https://docs.spring.io/spring-boot/docs/current/actuator-api/htmlsingle/" target="_blank"><img src="https://img.shields.io/badge/SpringBoot%20Actuator-6db33f.svg?&style=for-the-badge&logo=springboot&logoColor=white" target="_blank"></a>
 
 <a href="https://maven.apache.org/" target="_blank"><img src="https://img.shields.io/badge/Apache%20Maven-b8062e.svg?&style=for-the-badge&logo=apachemaven&logoColor=white" target="_blank"></a>
 
