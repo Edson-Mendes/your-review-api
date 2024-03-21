@@ -24,8 +24,10 @@ public class SecurityConfig {
 
   private static final String[] GET_WHITELIST = {"/api/v1/movies", "/api/v1/movies/*"};
   private static final String[] POST_WHITELIST = {"/api/v1/auth/signin", "/api/v1/users"};
-  private static final String[] SWAGGER_WHITELIST = {
-      "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/favicon.ico"};
+  private static final String[] SWAGGER_WHITELIST = {"/swagger-ui.html", "/swagger-ui/**",
+      "/v3/api-docs/**", "/favicon.ico"};
+
+  private static final String[] ADMIN_ENDPOINTS = {"/api/v1/users", "/actuator/**"};
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -36,7 +38,7 @@ public class SecurityConfig {
         authorize -> authorize
             .requestMatchers(HttpMethod.GET, GET_WHITELIST).permitAll()
             .requestMatchers(HttpMethod.GET, SWAGGER_WHITELIST).permitAll()
-            .requestMatchers(HttpMethod.GET, "/api/v1/users").hasAuthority("ADMIN")
+            .requestMatchers(HttpMethod.GET, ADMIN_ENDPOINTS).hasAuthority("ADMIN")
             .requestMatchers(HttpMethod.POST, POST_WHITELIST).permitAll()
             .anyRequest().authenticated()
     );
