@@ -32,7 +32,7 @@ import static org.assertj.core.api.Assertions.assertThat;
     @Sql(scripts = {CREATE_DATABASE_TABLES_SQL_PATH}),
     @Sql(scripts = {DROP_DATABASE_TABLES_SQL_PATH}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 })
-class ReviewRepositoryTest {
+class ReviewRepositoryIT {
 
   @Autowired
   private ReviewRepository reviewRepository;
