@@ -11,7 +11,7 @@
 
     <groupId>br.com.emendes</groupId>
     <artifactId>your-review-api</artifactId>
-    <version>0.0.1</version>
+    <version>1.0.0</version>
     <name>your-review-api</name>
     <description>Application where users can rate movies and series.</description>
 
