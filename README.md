@@ -45,6 +45,8 @@ pesquisar pelos filmes mais bem avaliados (ou pior avaliados).
 <a href="https://swagger.io/" target="_blank"><img src="https://img.shields.io/badge/Swagger-85EA2D.svg?&style=for-the-badge&logo=swagger&logoColor=black" target="_blank"></a>
 <a href="https://springdoc.org/" target="_blank"><img src="https://img.shields.io/badge/Spring%20Doc-85EA2D.svg?&style=for-the-badge" target="_blank"></a>
 
+<a href="https://www.jenkins.io/" target="_blank"><img src="https://img.shields.io/badge/jenkins-%232C5263.svg?style=for-the-badge&logo=jenkins&logoColor=white" target="_blank"></a>
+
 ## Funcionalidades
 
 ### API de gerenciamento de usuário
@@ -550,3 +552,88 @@ a avaliação **id**, **vote**, **opinion**, **userId**, **movie** (com **id**, 
         REVIEW }|--|| MOVIE_VOTES : belongs
         USER ||--o{ REVIEW : makes
 ```
+
+
+## Como executar a aplicação?
+
+### Via docker compose
+Subir três containers, um container [Postgres](https://hub.docker.com/_/postgres) para banco de dados,
+um container [Redis](https://hub.docker.com/_/redis) para cache, 
+e um container [Your Review API](https://hub.docker.com/r/edsonmendes/your-review-api) que é nossa aplicação.
+A seguir terão os requisitos necessários e o passo a passo para subir os containers. 
+
+#### Requisitos
+- Docker instalado em sua máquina.
+- Docker compose instalado em sua máquina.
+- Key para acesso a API do TMDb, pode ser gerado seguindo os passos 
+da [documentação do TMDb API](https://developer.themoviedb.org/docs/getting-started)
+
+#### Docker compose file
+Crie um arquivo **docker-compose.yml** e copie o seguinte:
+```yaml
+version: '3.1'
+
+x-app-variables: &app-variables
+  DB_URL: jdbc:postgresql://yr-db:5432/your-review-db
+  DB_USER: user
+  DB_PASSWORD: 1234
+  SPRING_PROFILES_ACTIVE: prod, redis, actuator
+  AUTHENTICATION_TOKEN_EXPIRATION: 86400000
+  JWT_SECRET: '11112222333344445555666677778888'
+  TMDB_API_KEY: <SUA_TMDB_API_KEY>
+  SPRING_DATA_REDIS_URL: redis://yr-cache:6379
+  APP_PORT: 8080
+
+x-postgres-variables: &postgres-variables
+  POSTGRES_DB: your-review-db
+  POSTGRES_USER: user
+  POSTGRES_PASSWORD: 1234
+
+services:
+  app:
+    image: edsonmendes/your-review-api:latest
+    container_name: yr-api
+    depends_on:
+      - db
+      - cache
+    ports:
+      - "8080:8080"
+    environment:
+      <<: *app-variables
+
+  db:
+    image: postgres
+    container_name: yr-db
+    ports:
+      - "5432:5432"
+    environment:
+      <<: *postgres-variables
+    volumes:
+      - yr-app-db-volume:/var/lib/postgresql/data
+
+  cache:
+    image: redis
+    container_name: yr-cache
+    ports:
+      - "6379:6379"
+    volumes:
+      - yr-app-cache-volume:/data
+
+volumes:
+  yr-app-db-volume:
+  yr-app-cache-volume:
+```
+
+**ATENÇÃO:** No campo **TMDB_API_KEY: <SUA_TMDB_API_KEY>** substitua **<SUA_TMDB_API_KEY>** pela key gerada em 
+[TMDb API](https://developer.themoviedb.org/docs/getting-started)
+
+#### Subindo os containers
+
+Agora, navegue até a pasta do *docker-compose.yml* criado e execute o comando:
+
+```bash
+docker compose up
+```
+
+e acesse <http://localhost:8080/swagger-ui.html>, pronto você está na página do Swagger da API, onde 
+terá uma visão de todos os endpoints da API e poderá enviar requisições para a mesma.
