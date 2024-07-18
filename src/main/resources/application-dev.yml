@@ -22,6 +22,8 @@ spring:
   # Flyway properties
   flyway:
     table: flyway_schema_history_your_review
+    baseline-on-migrate: true
+    baseline-version: "00"
 
 # Logging properties
 logging:

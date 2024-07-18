@@ -3,8 +3,9 @@
 ![Badge Em Desenvolvimento](https://img.shields.io/static/v1?label=Status&message=Em%20Desenvolvimento&color=yellow&style=for-the-badge)
 ![Badge Java](https://img.shields.io/static/v1?label=Java&message=17&color=437291&style=for-the-badge&logo=openjdk&logoColor=437291)
 ![Badge Spring](https://img.shields.io/static/v1?label=SpringBoot&message=v3.2.0&color=brightgreen&style=for-the-badge&logo=SpringBoot)
-![Badge Postgresql](https://img.shields.io/static/v1?label=PostgreSQL&message=v15.3&color=blue&style=for-the-badge&logo=PostgreSQL)
+![Badge Postgresql](https://img.shields.io/static/v1?label=PostgreSQL&message=v15.7&color=blue&style=for-the-badge&logo=PostgreSQL)
 ![Badge Redis](https://img.shields.io/static/v1?label=Redis&message=v7.2.3&color=DC382D&style=for-the-badge&logo=redis)
+![Badge Heroku](https://img.shields.io/static/v1?label=Heroku&message=Deploy&color=4f3074&style=for-the-badge&logo=Heroku)
 
 ## Resumo do projeto
 
@@ -46,6 +47,8 @@ pesquisar pelos filmes mais bem avaliados (ou pior avaliados).
 <a href="https://springdoc.org/" target="_blank"><img src="https://img.shields.io/badge/Spring%20Doc-85EA2D.svg?&style=for-the-badge" target="_blank"></a>
 
 <a href="https://www.jenkins.io/" target="_blank"><img src="https://img.shields.io/badge/jenkins-%232C5263.svg?style=for-the-badge&logo=jenkins&logoColor=white" target="_blank"></a>
+
+<a href="https://www.heroku.com/home" target="_blank"><img src="https://img.shields.io/badge/Heroku-430098.svg?&style=for-the-badge&logo=heroku&logoColor=white" target="_blank"></a>
 
 ## Funcionalidades
 
@@ -553,7 +556,6 @@ a avaliação **id**, **vote**, **opinion**, **userId**, **movie** (com **id**, 
         USER ||--o{ REVIEW : makes
 ```
 
-
 ## Como executar a aplicação?
 
 ### Via docker compose
@@ -637,3 +639,10 @@ docker compose up
 
 e acesse <http://localhost:8080/swagger-ui.html>, pronto você está na página do Swagger da API, onde 
 terá uma visão de todos os endpoints da API e poderá enviar requisições para a mesma.
+
+## Deploy
+O deploy da aplicação foi feito no [Heroku](https://www.heroku.com/), você pode testar/brincar/usar [aqui](https://your-review-api-67fe1768f601.herokuapp.com/swagger-ui.html).<br>
+Caso encontre alguma falha/bug me avise, se possível :grin:.
+
+OBS: O plano que eu uso do Heroku **adormece** a aplicação depois de certo tempo inativo,
+então pode ser que a primeira requisição demore um pouco (até uns 60 segundos), apenas seja paciente :wink:.

@@ -27,7 +27,7 @@ public class OpenAPIBeans {
     return new OpenAPI()
         .info(new Info().title("Your Review API")
             .description("System where the user can give their opinion and vote about movies, and read reviews/opinions from other users about the movies.")
-            .version("v1.0")
+            .version("v1.0.0")
             .contact(contact))
         .components(new Components().addSecuritySchemes(SECURITY_SCHEME_KEY, securityScheme));
   }

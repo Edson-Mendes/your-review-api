@@ -1,6 +1,6 @@
 # Server properties
 server:
-  port: ${APP_PORT}
+  port: ${PORT}
 
 # Application properties
 spring:
@@ -10,7 +10,7 @@ spring:
   # Datasource properties
   datasource:
     url: ${DB_URL}
-    username: ${DB_USER}
+    username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
 
   # JPA properties
@@ -26,6 +26,8 @@ spring:
   # Flyway properties
   flyway:
     table: flyway_schema_history_your_review
+    baseline-on-migrate: true
+    baseline-version: "00"
 
 # Logging properties
 logging:
